@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보장only 추가가입 예측 — 모델링 결과 보고서</title>
+<style>
+  :root{--bg:#eef1f5;--paper:#ffffff;--ink:#1c2430;--ink2:#5a6676;--line:#d7dde6;--accent:#2456a6;--accent-soft:#e5edf9;--ok:#1a7f4b;--ok-soft:#e3f2e9;--bad:#b03636;--bad-soft:#f7e7e7;--warn:#9a6b10;--tile:#f4f6f9;--serif:"Batang","Apple SD Gothic Neo",serif;--sans:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif}
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#111823;--paper:#1a232e;--ink:#e8edf4;--ink2:#96a3b5;--line:#2b3846;--accent:#6aa5e8;--accent-soft:#1d2c40;--ok:#5ec98a;--ok-soft:#1a3327;--bad:#e08080;--bad-soft:#3c2323;--warn:#d9b15c;--tile:#202b37}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);word-break:keep-all;line-height:1.65}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 20px 60px}
+  header{padding:8px 4px 22px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:12.5px;color:var(--ink2);letter-spacing:.06em;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:clamp(26px,4.5vw,36px);line-height:1.25;margin:0 0 10px;font-weight:600}
+  .lead{font-size:14.5px;color:var(--ink2);max-width:760px;margin:0}
+  .metarow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+  .meta,.chip{font-size:12.5px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:3px 11px;color:var(--ink2)}
+  .chip.c-ok{color:var(--ok);border-color:var(--ok);background:var(--ok-soft);font-weight:700}
+  .chip.c-bad{color:var(--bad);border-color:var(--bad);background:var(--bad-soft);font-weight:700}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 8px}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .stat b{display:block;font-family:Consolas,monospace;font-size:26px;line-height:1.2}
+  .stat span{font-size:12.5px;color:var(--ink2)}
+  section{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:20px 0}
+  h2{font-family:var(--serif);font-size:21px;margin:0 0 12px;display:flex;align-items:baseline;gap:10px}
+  h2>span{font-family:Consolas,monospace;font-size:14px;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;padding:1px 8px}
+  h3{font-size:15.5px;margin:22px 0 8px}
+  p{margin:8px 0;font-size:14px}
+  .mono{font-family:Consolas,monospace;font-size:.92em}
+  .tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+  .tbl th{font-size:12.5px;color:var(--ink2);text-align:left;border-bottom:2px solid var(--ink);padding:7px 8px;font-weight:600;white-space:nowrap}
+  .tbl td{border-bottom:1px solid var(--line);padding:8px 8px;vertical-align:top}
+  .tbl .r{text-align:right;font-family:Consolas,monospace;white-space:nowrap}
+  .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin:14px 0}
+  .verdict{border:1.5px solid var(--ok);background:var(--ok-soft);border-radius:10px;padding:12px 16px;font-size:14px;margin:14px 0;display:flex;gap:10px;align-items:flex-start}
+  .verdict .tag{flex:none;border:1.5px solid var(--ok);color:var(--ok);border-radius:6px;padding:1px 9px;font-weight:700;font-size:13px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--tile)}
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+  .card .h{font-weight:700;font-size:13.5px}
+  .card .b{font-size:13px;color:var(--ink2);margin-top:6px}
+  figure{margin:16px 0 6px}
+  svg{width:100%;max-width:700px;display:block;margin:0 auto}
+  figcaption{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:6px}
+  svg .grid line{stroke:var(--line);stroke-width:1}
+  svg .val text,svg .lbl text{fill:var(--ink2);font-size:12px;font-family:var(--sans)}
+  svg .bar rect{fill:var(--accent)}
+  svg .bar.pos rect{fill:var(--ok)}
+  svg .bar.soft rect{fill:#7e93b8}
+  svg .baseline{stroke:var(--ink2);stroke-width:1.2}
+  svg .rule{stroke:var(--ok);stroke-width:1.6;stroke-dasharray:6 4}
+  svg .rulelbl text{fill:var(--ok);font-size:12px;font-weight:700}
+  footer{font-size:12.5px;color:var(--ink2);padding:18px 4px;border-top:1px solid var(--line)}
+  @media print{body{background:#fff}.wrap{max-width:none;padding:0}section{border:none;box-shadow:none;padding:10px 0;page-break-inside:auto}.stat,.card{background:#f4f6f9!important}header{padding-top:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">ABA 1차 프로젝트 · 3단계 모델링 결과 보고서 · 2026-10-16</div>
+  <h1>기초 모델은 판정을 넘었고,<br>성능 상한은 트리 계열이 보여줬다</h1>
+  <p class="lead">문제 정의와 평가 지표를 고른 근거 → 4개 모델 공정 비교(반복 20회·동일 분할) → 한계와 개선 방향. 확정 모델은 설명 가능성을 위해 로지스틱 v3, 성능 상한의 참고선으로 랜덤포레스트를 병기합니다.</p>
+  <div class="metarow">
+    <span class="meta">프레임 T=2024년 말 · 풀 38,932명 · 양성 1,137명(2.9%)</span><span class="meta">피처 13개 — 가설 4회차로 살아남은 신호만</span><span class="chip c-ok">판정 충족</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>0.720<small>±0.010</small></b><span>확정 모델(로지스틱 v3) ROC-AUC<br>반복 20회 평균 — CI 0.700~0.740</span></div>
+    <div class="stat"><b>8.2<small>%</small></b><span>판정 지점(상위 1,000명) 실제 가입률<br>기준선 2.9%의 2.8배 — CI 하한 7.1%</span></div>
+    <div class="stat"><b>+1.6<small>%p</small></b><span>랜덤포레스트가 같은 지점에서 더<br>올린 농도(9.8%) — 유의한 성능 상한</span></div>
+  </div>
+</header>
+<!-- S1 -->
+<!-- S2 -->
+<!-- S3 -->
+<!-- S4 -->
+<section id="s2b">
+<div style="font-size:12px;letter-spacing:.1em;color:#2456a6;font-weight:700;margin-bottom:6px">모델링 과정</div>
+<h2 style="margin:0 0 14px">무엇을 어떻게 만들었나</h2>
+<div style="margin:0 0 18px">
+<svg viewBox="0 0 640 180" style="width:100%;max-width:640px;display:block" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Malgun Gothic, sans-serif" font-size="11" text-anchor="middle">
+<rect x="8" y="14" width="145" height="46" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="80" y="33" fill="#1F2D3D" font-weight="bold">원본 385,019행</text><text x="80" y="48" fill="#54637A">22열 · 보험+증권 혼합</text>
+<line x1="153" y1="37" x2="166" y2="37" stroke="#8A93A6"/><polygon points="168,37 160,33 160,41" fill="#8A93A6"/>
+<rect x="168" y="14" width="145" height="46" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="240" y="33" fill="#1F2D3D" font-weight="bold">보험만 필터</text><text x="240" y="48" fill="#54637A">증권 고객 0명 겹침</text>
+<line x1="313" y1="37" x2="326" y2="37" stroke="#8A93A6"/><polygon points="328,37 320,33 320,41" fill="#8A93A6"/>
+<rect x="328" y="14" width="145" height="46" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="400" y="33" fill="#1F2D3D" font-weight="bold">고객 편성</text><text x="400" y="48" fill="#54637A">1행=상품 1건 → 1행=1명</text>
+<line x1="473" y1="37" x2="486" y2="37" stroke="#8A93A6"/><polygon points="488,37 480,33 480,41" fill="#8A93A6"/>
+<rect x="488" y="14" width="145" height="46" rx="6" fill="#E7F0EA" stroke="#2F6B4F"/><text x="560" y="33" fill="#1F2D3D" font-weight="bold">풀 38,932명</text><text x="560" y="48" fill="#2F6B4F">양성 1,137 (2.9%)</text>
+<path d="M560,60 L560,84 L80,84 L80,100" fill="none" stroke="#8A93A6"/><polygon points="80,104 76,96 84,96" fill="#8A93A6"/>
+<rect x="8" y="104" width="145" height="46" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="80" y="123" fill="#1F2D3D" font-weight="bold">피처 13개</text><text x="80" y="138" fill="#54637A">범주 8 + 수치 5 · 교차</text>
+<line x1="153" y1="127" x2="166" y2="127" stroke="#8A93A6"/><polygon points="168,127 160,123 160,131" fill="#8A93A6"/>
+<rect x="168" y="104" width="145" height="46" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="240" y="123" fill="#1F2D3D" font-weight="bold">계층화 70/30</text><text x="240" y="138" fill="#54637A">시드 20회 반복</text>
+<line x1="313" y1="127" x2="326" y2="127" stroke="#8A93A6"/><polygon points="328,127 320,123 320,131" fill="#8A93A6"/>
+<rect x="328" y="104" width="145" height="46" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="400" y="123" fill="#1F2D3D" font-weight="bold">학습</text><text x="400" y="138" fill="#54637A">balanced 가중치</text>
+<line x1="473" y1="127" x2="486" y2="127" stroke="#8A93A6"/><polygon points="488,127 480,123 480,131" fill="#8A93A6"/>
+<rect x="488" y="104" width="145" height="46" rx="6" fill="#E7F0EA" stroke="#2F6B4F"/><text x="560" y="123" fill="#1F2D3D" font-weight="bold">상위 k 농도</text><text x="560" y="138" fill="#2F6B4F">판정선 5.8% 대비</text>
+</g>
+</svg>
+<div style="font-size:12px;color:#54637A;margin-bottom:4px">전체 파이프라인 — 원본에서 판정까지의 8단계</div>
+</div>
+<div style="margin:0 0 18px">
+<svg viewBox="0 0 640 300" style="width:100%;max-width:640px;display:block" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Malgun Gothic, sans-serif" font-size="11">
+<rect x="8" y="40" width="150" height="160" rx="6" fill="#FFF8E6" stroke="#B45309"/>
+<text x="83" y="60" text-anchor="middle" fill="#1F2D3D" font-weight="bold">예시 고객</text>
+<text x="24" y="86" fill="#54637A">40대 · 여 · 기혼</text>
+<text x="24" y="106" fill="#54637A">경기도 · 소득 5000미만</text>
+<text x="24" y="126" fill="#54637A">위험 A · 신용 900이상</text>
+<text x="24" y="146" fill="#2F6B4F" font-weight="bold">보유 2개 · 특약 있음</text>
+<text x="24" y="166" fill="#54637A">경과 1년</text>
+<line x1="158" y1="120" x2="178" y2="120" stroke="#8A93A6"/><polygon points="180,120 172,116 172,124" fill="#8A93A6"/>
+<rect x="182" y="40" width="140" height="44" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="252" y="60" text-anchor="middle" fill="#1F2D3D" font-weight="bold">① 원-핫 인코딩</text><text x="252" y="75" text-anchor="middle" fill="#54637A">기준 범주는 전부 0</text>
+<rect x="182" y="98" width="140" height="44" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="252" y="118" text-anchor="middle" fill="#1F2D3D" font-weight="bold">② 수치 표준화</text><text x="252" y="133" text-anchor="middle" fill="#54637A">평균 0 · 표준편차 1</text>
+<rect x="182" y="156" width="140" height="44" rx="6" fill="#EEF3F9" stroke="#2456A6"/><text x="252" y="176" text-anchor="middle" fill="#1F2D3D" font-weight="bold">③ 교차 피처</text><text x="252" y="191" text-anchor="middle" fill="#54637A">40대 더미 × 기혼 = 1</text>
+<line x1="322" y1="120" x2="342" y2="120" stroke="#8A93A6"/><polygon points="344,120 336,116 336,124" fill="#8A93A6"/>
+<line x1="350" y1="250" x2="620" y2="250" stroke="#8A93A6"/>
+<line x1="350" y1="30" x2="350" y2="250" stroke="#8A93A6"/>
+<text x="344" y="254" text-anchor="end" fill="#8A93A6">0%</text>
+<text x="344" y="144" text-anchor="end" fill="#8A93A6">50%</text>
+<text x="344" y="34" text-anchor="end" fill="#8A93A6">100%</text>
+<text x="350" y="264" text-anchor="middle" fill="#8A93A6">z=-4</text>
+<text x="485" y="264" text-anchor="middle" fill="#8A93A6">z=0</text>
+<text x="620" y="264" text-anchor="middle" fill="#8A93A6">z=+4</text>
+<polyline points="350,246 384,240 417,224 434,210 451,191 468,167 485,140 502,113 518,89 535,70 552,56 585,40 620,34" fill="none" stroke="#2456A6" stroke-width="2"/>
+<line x1="367" y1="244" x2="367" y2="250" stroke="#8A93A6" stroke-dasharray="3,3"/>
+<circle cx="367" cy="244" r="4" fill="#8A93A6"/>
+<text x="372" y="236" fill="#54637A" font-weight="bold">평균 고객 2.9%</text>
+<line x1="422" y1="221" x2="422" y2="250" stroke="#B45309" stroke-dasharray="3,3"/>
+<circle cx="422" cy="221" r="5" fill="#B45309"/>
+<text x="430" y="205" fill="#B45309" font-weight="bold">예시 고객 13.4%</text>
+<text x="485" y="292" text-anchor="middle" fill="#54637A">z(로그오즈): 평균 -3.5 → 예시 -1.9 (특약 +0.84 · 보유수 2개 이상 등의 합 +1.6)</text>
+</g>
+</svg>
+<div style="font-size:12px;color:#54637A;margin-bottom:4px">한 고객이 확률로 바뀌는 과정 — 좌: 고객 특성, 중: 피처 변환 3단계, 우: 로지스틱 곡선 위의 위치</div>
+</div>
+<table style="width:100%;border-collapse:collapse;font-size:13px">
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;width:110px;font-weight:700">파이프라인</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">원본 385,019행 → 보험 필터 → 고객 편성 → T=2024 풀 38,932명(양성 1,137·2.9%) → 피처 13개 → 계층화 70/30 분할 → 학습(불균형 가중치) → 상위 k 농도 → 판정선 5.8% 대비</td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;font-weight:700">한 고객 예시</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">①범주형 원-핫(기준 범주는 전부 0) ②수치형 표준화 ③연령×기혼 교차 ④z = b0 + Σ(계수×피처) → 확률 = 1/(1+e⁻ᶻ) — 특약 계수 +0.84가 z를 올림 ⑤로그오즈 합산 +1.6 (특약 +0.84·보유수 2개 이상 등) → 확률 13.4% = 평균 2.9%의 4.6배 → 상위권 스코어 (가상 예시)</td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;font-weight:700">더미</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">학습 없이 전원 "미가입" 예측 — 기준선 0.500 제공</td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;font-weight:700">로지스틱 v3</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">위 파이프라인 그대로 + class_weight="balanced"(양성 1건 ≈ 음성 33건 무게) — 시드 20회</td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;font-weight:700">랜덤포레스트</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">300개 트리(부트스트랩+무작위 피처 부분집합)의 평균으로 확률 산출. 그리드 12조합: leaf노드 16/32/무제한 × 깊이 6/무제한 × 피처비 sqrt/0.5 — 1단계 12×5시드 탐색 → 최고 조합 20시드 확정</td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;font-weight:700">LightGBM</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">잎 중심 부스팅 300라운드 · 학습률 0.05 · scale_pos_weight≈33 — 20시드</td></tr>
+<tr><td style="padding:6px 8px;font-weight:700">왜 20회 반복인가</td><td style="padding:6px 8px">단일 분할의 우연 제거(상위 500명 표본 44명) + 페어 비교(같은 시드 차이의 평균±sd — 예: RF vs 로지스틱 상위 1,000명 +0.10%p±0.60 → 유의하지 않음)</td></tr>
+</table>
+</section>
+<section id="s2c">
+<div style="font-size:12px;letter-spacing:.1em;color:#2456a6;font-weight:700;margin-bottom:6px">그림으로 읽는 로지스틱 회귀와 AUC</div>
+<h2 style="margin:0 0 10px">로지스틱 회귀가 하는 일</h2>
+<p style="margin:0 0 12px;font-size:14px">한 줄 정의 — 각 특성에 <b>중요도(계수)</b>를 곱해 더한 값(로그오즈)을, 0~100% 확률로 바꿔 주는 모델.</p>
+<svg viewBox="0 0 640 240" style="width:100%;max-width:640px;display:block;margin:0 auto 18px">
+<rect x="10" y="14" width="240" height="44" rx="8" fill="#EEF3F9" stroke="#2456a6"/><text x="130" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">고객 특성 → 숫자 18개</text><text x="130" y="48" text-anchor="middle" font-size="11" fill="#54637A">연령·소득·특약·보유수…</text>
+<line x1="130" y1="58" x2="130" y2="72" stroke="#8A93A6" stroke-width="2"/><polygon points="130,74 126,66 134,66" fill="#8A93A6"/>
+<rect x="10" y="76" width="240" height="44" rx="8" fill="#EEF3F9" stroke="#2456a6"/><text x="130" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">각 피처 × 계수(중요도)</text><text x="130" y="110" text-anchor="middle" font-size="11" fill="#54637A">예: 특약 보유 × (+0.84)</text>
+<line x1="130" y1="120" x2="130" y2="134" stroke="#8A93A6" stroke-width="2"/><polygon points="130,136 126,128 134,128" fill="#8A93A6"/>
+<rect x="10" y="138" width="240" height="44" rx="8" fill="#EEF3F9" stroke="#2456a6"/><text x="130" y="156" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">모두 더하면 z = -1.9</text><text x="130" y="172" text-anchor="middle" font-size="11" fill="#54637A">평균 고객은 z = -3.5</text>
+<line x1="130" y1="182" x2="130" y2="196" stroke="#8A93A6" stroke-width="2"/><polygon points="130,198 126,190 134,190" fill="#8A93A6"/>
+<rect x="10" y="200" width="240" height="30" rx="8" fill="#2456a6"/><text x="130" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">시그모이드 변환 → 확률</text>
+<rect x="270" y="14" width="360" height="216" fill="#FBFCFD" stroke="#D5DEE6"/>
+<line x1="310" y1="220" x2="610" y2="220" stroke="#8A93A6"/><line x1="310" y1="20" x2="310" y2="220" stroke="#8A93A6"/>
+<text x="610" y="236" text-anchor="end" font-size="11" fill="#54637A">z (로그오즈)</text><text x="300" y="24" text-anchor="end" font-size="11" fill="#54637A">확률</text>
+<text x="310" y="236" font-size="11" fill="#54637A">-4</text><text x="422" y="236" text-anchor="middle" font-size="11" fill="#54637A">-2</text><text x="485" y="236" text-anchor="middle" font-size="11" fill="#54637A">0</text><text x="547" y="236" text-anchor="middle" font-size="11" fill="#54637A">2</text><text x="600" y="236" text-anchor="middle" font-size="11" fill="#54637A">4</text>
+<text x="304" y="224" text-anchor="end" font-size="11" fill="#54637A">0%</text><text x="304" y="124" text-anchor="end" font-size="11" fill="#54637A">50%</text><text x="304" y="24" text-anchor="end" font-size="11" fill="#54637A">100%</text>
+<line x1="310" y1="120" x2="610" y2="120" stroke="#D5DEE6" stroke-dasharray="4 4"/>
+<polyline points="310,216 364,211 403,207 422,196 440,184 459,166 477,144 485,120 494,96 503,74 512,56 521,40 540,29 559,24 610,20" fill="none" stroke="#2456a6" stroke-width="2.5"/>
+<line x1="328" y1="214" x2="328" y2="220" stroke="#8A93A6" stroke-dasharray="3 3"/><circle cx="328" cy="214" r="4" fill="#8A93A6"/><text x="336" y="208" font-size="11" fill="#54637A">평균 고객 2.9%</text>
+<line x1="390" y1="193" x2="390" y2="220" stroke="#B42318" stroke-dasharray="3 3"/><circle cx="390" cy="193" r="5" fill="#B42318"/><text x="398" y="187" font-size="11.5" font-weight="700" fill="#B42318">예시 고객 13.4% (평균의 4.6배)</text>
+</svg>
+<h3 style="margin:16px 0 8px">가중치는 이렇게 쌓인다 — 예시 고객의 폭포 계산</h3>
+<svg viewBox="0 0 640 220" style="width:100%;max-width:640px;display:block;margin:0 auto 18px">
+<line x1="40" y1="40" x2="620" y2="40" stroke="#8A93A6"/><text x="620" y="30" text-anchor="end" font-size="11" fill="#54637A">z = 0 (확률 50%)</text>
+<rect x="60" y="40" width="80" height="140" fill="#1F2D3D"/><text x="100" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">기준(평균)</text><text x="100" y="52" text-anchor="middle" font-size="11" fill="#fff">-3.51</text>
+<rect x="180" y="147" width="80" height="33" fill="#2F6B4F"/><text x="220" y="196" text-anchor="middle" font-size="12" fill="#1F2D3D">+ 특약 보유</text><text x="220" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">+0.84</text>
+<rect x="300" y="132" width="80" height="15" fill="#2F6B4F"/><text x="340" y="196" text-anchor="middle" font-size="12" fill="#1F2D3D">+ 보유수 2개 이상</text><text x="340" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">+0.37</text>
+<rect x="420" y="114" width="80" height="18" fill="#2F6B4F"/><text x="460" y="196" text-anchor="middle" font-size="12" fill="#1F2D3D">+ 기혼·연령·기타</text><text x="460" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">+0.44</text>
+<rect x="540" y="40" width="80" height="115" fill="#2456a6"/><text x="580" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#2456a6">합계</text><text x="580" y="52" text-anchor="middle" font-size="11" fill="#fff">-1.87</text>
+<line x1="580" y1="155" x2="580" y2="196" stroke="#2456a6" stroke-dasharray="3 3"/>
+<text x="580" y="170" text-anchor="middle" font-size="11.5" font-weight="700" fill="#B42318">→ 13.4%</text>
+<text x="40" y="16" font-size="11" fill="#54637A">세로 막대 길이 = 로그오즈 크기 (초록 = 점수를 올리는 계수)</text>
+</svg>
+<h2 style="margin:18px 0 10px">AUC란 무엇이고 어떻게 읽나</h2>
+<p style="margin:0 0 12px;font-size:14px">한 줄 정의 — <b>ROC 곡선 아래 면적</b>. 뜻으로 읽으면: <b>"무작위로 양성 고객과 음성 고객을 한 쌍 뽑았을 때, 모델이 양성 쪽에 더 높은 점수를 줄 확률."</b> 우리 모델 0.720 = 100쌍 중 약 72쌍을 올바르게 판별.</p>
+<svg viewBox="0 0 640 260" style="width:100%;max-width:640px;display:block;margin:0 auto 12px">
+<rect x="60" y="20" width="280" height="220" fill="#FBFCFD" stroke="#D5DEE6"/>
+<line x1="60" y1="240" x2="340" y2="20" stroke="#8A93A6" stroke-dasharray="5 5"/><text x="150" y="120" font-size="11" fill="#8A93A6" transform="rotate(-38 150 120)">무작위 (AUC 0.5)</text>
+<path d="M60,240 L60,218 L74,163 L88,130 L116,104 L158,82 L200,64 L256,49 L340,20 L340,240 Z" fill="#2456a6" opacity="0.14"/>
+<polyline points="60,240 60,218 74,163 88,130 116,104 158,82 200,64 256,49 340,20" fill="none" stroke="#2456a6" stroke-width="2.5"/>
+<text x="200" y="232" text-anchor="middle" font-size="11" fill="#54637A">틀린 고객 비율 (가짜 경보)</text>
+<text x="52" y="24" text-anchor="end" font-size="11" fill="#54637A">100%</text><text x="52" y="244" text-anchor="end" font-size="11" fill="#54637A">0%</text>
+<text x="200" y="252" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">가로 = 잘못 잡은 비율 ↑, 세로 = 진짜 잡은 비율 ↑</text>
+<rect x="390" y="30" width="230" height="190" rx="10" fill="#EEF3F9" stroke="#D5DEE6"/>
+<text x="505" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2D3D">AUC 읽는 법</text>
+<text x="404" y="84" font-size="12" fill="#1F2D3D">0.5 — 동전 던지기(무작위)</text>
+<text x="404" y="110" font-size="12" fill="#1F2D3D">1.0 — 완벽한 구분</text>
+<text x="404" y="136" font-size="12" font-weight="700" fill="#2456a6">0.720 — 100쌍 중 72쌍 올바르게</text>
+<text x="404" y="162" font-size="12" fill="#54637A">20회 반복 평균±sd</text>
+<text x="404" y="180" font-size="12" fill="#54637A">0.720 ± 0.010 (우연 제거 후)</text>
+<text x="404" y="206" font-size="12" fill="#B42318">비교: RF 0.743 → 확정 실험에서</text>
+<text x="404" y="224" font-size="12" fill="#B42318">운용 우위 유의X → 로지스틱 채택</text>
+</svg>
+<h3 style="margin:16px 0 8px">실제 읽기 예 — "상위 1,000명 집중 상담"이 뜻하는 것</h3>
+<svg viewBox="0 0 640 170" style="width:100%;max-width:640px;display:block;margin:0 auto 12px">
+<rect x="90" y="30" width="120" height="123" fill="#2456a6"/><text x="150" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#2456a6">모델 상위 1,000명</text><text x="150" y="100" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">82명</text><text x="150" y="168" text-anchor="middle" font-size="11" fill="#54637A">실제 가입 8.2%</text>
+<rect x="330" y="30" width="120" height="43" fill="#8A93A6"/><text x="390" y="22" text-anchor="middle" font-size="12" fill="#54637A">무작위 1,000명</text><text x="390" y="55" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">29명</text><text x="390" y="88" text-anchor="middle" font-size="11" fill="#54637A">전체 평균 2.9%</text>
+<line x1="215" y1="90" x2="325" y2="90" stroke="#8A93A6"/><polygon points="330,90 320,85 320,95" fill="#8A93A6"/>
+<text x="270" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#B42318">2.8배</text>
+</svg>
+<div style="background:#F2F5F8;border-left:4px solid #2456a6;padding:10px 14px;margin:8px 0 0;font-size:13.5px"><b>판정선 읽는 법</b> — 사전 합의 기준 "상위 1,000명 중 5.8% 이상(기준선의 2배)". 반복 20회의 95% 신뢰구간 하한 <b>7.1%</b>이 판정선을 넘어 <b>도입 가치 확인</b>. "±0.5%p"는 20회 분할에서 농도가 흔들리는 폭 — 이 폭까지 보고해야 우연과 실력을 구분할 수 있습니다.</div>
+</section>
+<section id="s2c">
+<div style="font-size:12px;letter-spacing:.1em;color:#2456a6;font-weight:700;margin-bottom:6px">그림으로 읽는 로지스틱 회귀와 AUC</div>
+<h2 style="margin:0 0 10px">로지스틱 회귀가 하는 일</h2>
+<p style="margin:0 0 12px;font-size:14px">한 줄 정의 — 각 특성에 <b>중요도(계수)</b>를 곱해 더한 값(로그오즈)을, 0~100% 확률로 바꿔 주는 모델.</p>
+<svg viewBox="0 0 640 240" style="width:100%;max-width:640px;display:block;margin:0 auto 18px">
+<rect x="10" y="14" width="240" height="44" rx="8" fill="#EEF3F9" stroke="#2456a6"/><text x="130" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">고객 특성 → 숫자 18개</text><text x="130" y="48" text-anchor="middle" font-size="11" fill="#54637A">연령·소득·특약·보유수…</text>
+<line x1="130" y1="58" x2="130" y2="72" stroke="#8A93A6" stroke-width="2"/><polygon points="130,74 126,66 134,66" fill="#8A93A6"/>
+<rect x="10" y="76" width="240" height="44" rx="8" fill="#EEF3F9" stroke="#2456a6"/><text x="130" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">각 피처 × 계수(중요도)</text><text x="130" y="110" text-anchor="middle" font-size="11" fill="#54637A">예: 특약 보유 × (+0.84)</text>
+<line x1="130" y1="120" x2="130" y2="134" stroke="#8A93A6" stroke-width="2"/><polygon points="130,136 126,128 134,128" fill="#8A93A6"/>
+<rect x="10" y="138" width="240" height="44" rx="8" fill="#EEF3F9" stroke="#2456a6"/><text x="130" y="156" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">모두 더하면 z = -1.9</text><text x="130" y="172" text-anchor="middle" font-size="11" fill="#54637A">평균 고객은 z = -3.5</text>
+<line x1="130" y1="182" x2="130" y2="196" stroke="#8A93A6" stroke-width="2"/><polygon points="130,198 126,190 134,190" fill="#8A93A6"/>
+<rect x="10" y="200" width="240" height="30" rx="8" fill="#2456a6"/><text x="130" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">시그모이드 변환 → 확률</text>
+<rect x="270" y="14" width="360" height="216" fill="#FBFCFD" stroke="#D5DEE6"/>
+<line x1="310" y1="220" x2="610" y2="220" stroke="#8A93A6"/><line x1="310" y1="20" x2="310" y2="220" stroke="#8A93A6"/>
+<text x="610" y="236" text-anchor="end" font-size="11" fill="#54637A">z (로그오즈)</text><text x="300" y="24" text-anchor="end" font-size="11" fill="#54637A">확률</text>
+<text x="310" y="236" font-size="11" fill="#54637A">-4</text><text x="422" y="236" text-anchor="middle" font-size="11" fill="#54637A">-2</text><text x="485" y="236" text-anchor="middle" font-size="11" fill="#54637A">0</text><text x="547" y="236" text-anchor="middle" font-size="11" fill="#54637A">2</text><text x="600" y="236" text-anchor="middle" font-size="11" fill="#54637A">4</text>
+<text x="304" y="224" text-anchor="end" font-size="11" fill="#54637A">0%</text><text x="304" y="124" text-anchor="end" font-size="11" fill="#54637A">50%</text><text x="304" y="24" text-anchor="end" font-size="11" fill="#54637A">100%</text>
+<line x1="310" y1="120" x2="610" y2="120" stroke="#D5DEE6" stroke-dasharray="4 4"/>
+<polyline points="310,216 364,211 403,207 422,196 440,184 459,166 477,144 485,120 494,96 503,74 512,56 521,40 540,29 559,24 610,20" fill="none" stroke="#2456a6" stroke-width="2.5"/>
+<line x1="328" y1="214" x2="328" y2="220" stroke="#8A93A6" stroke-dasharray="3 3"/><circle cx="328" cy="214" r="4" fill="#8A93A6"/><text x="336" y="208" font-size="11" fill="#54637A">평균 고객 2.9%</text>
+<line x1="390" y1="193" x2="390" y2="220" stroke="#B42318" stroke-dasharray="3 3"/><circle cx="390" cy="193" r="5" fill="#B42318"/><text x="398" y="187" font-size="11.5" font-weight="700" fill="#B42318">예시 고객 13.4% (평균의 4.6배)</text>
+</svg>
+<h3 style="margin:16px 0 8px">가중치는 이렇게 쌓인다 — 예시 고객의 폭포 계산</h3>
+<svg viewBox="0 0 640 220" style="width:100%;max-width:640px;display:block;margin:0 auto 18px">
+<line x1="40" y1="40" x2="620" y2="40" stroke="#8A93A6"/><text x="620" y="30" text-anchor="end" font-size="11" fill="#54637A">z = 0 (확률 50%)</text>
+<rect x="60" y="40" width="80" height="140" fill="#1F2D3D"/><text x="100" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#1F2D3D">기준(평균)</text><text x="100" y="52" text-anchor="middle" font-size="11" fill="#fff">-3.51</text>
+<rect x="180" y="147" width="80" height="33" fill="#2F6B4F"/><text x="220" y="196" text-anchor="middle" font-size="12" fill="#1F2D3D">+ 특약 보유</text><text x="220" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">+0.84</text>
+<rect x="300" y="132" width="80" height="15" fill="#2F6B4F"/><text x="340" y="196" text-anchor="middle" font-size="12" fill="#1F2D3D">+ 보유수 2개 이상</text><text x="340" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">+0.37</text>
+<rect x="420" y="114" width="80" height="18" fill="#2F6B4F"/><text x="460" y="196" text-anchor="middle" font-size="12" fill="#1F2D3D">+ 기혼·연령·기타</text><text x="460" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">+0.44</text>
+<rect x="540" y="40" width="80" height="115" fill="#2456a6"/><text x="580" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#2456a6">합계</text><text x="580" y="52" text-anchor="middle" font-size="11" fill="#fff">-1.87</text>
+<line x1="580" y1="155" x2="580" y2="196" stroke="#2456a6" stroke-dasharray="3 3"/>
+<text x="580" y="170" text-anchor="middle" font-size="11.5" font-weight="700" fill="#B42318">→ 13.4%</text>
+<text x="40" y="16" font-size="11" fill="#54637A">세로 막대 길이 = 로그오즈 크기 (초록 = 점수를 올리는 계수)</text>
+</svg>
+<h2 style="margin:18px 0 10px">AUC란 무엇이고 어떻게 읽나</h2>
+<p style="margin:0 0 12px;font-size:14px">한 줄 정의 — <b>ROC 곡선 아래 면적</b>. 뜻으로 읽으면: <b>"무작위로 양성 고객과 음성 고객을 한 쌍 뽑았을 때, 모델이 양성 쪽에 더 높은 점수를 줄 확률."</b> 0.720이면 100쌍 중 약 72쌍을 올바르게 판별합니다.</p>
+<svg viewBox="0 0 360 262" style="width:100%;max-width:360px;display:block;margin:0 auto 12px">
+<rect x="50" y="14" width="290" height="220" fill="#FBFCFD" stroke="#D5DEE6"/>
+<line x1="50" y1="234" x2="340" y2="14" stroke="#8A93A6" stroke-dasharray="5 5"/>
+<path d="M50,234 L50,212 L64,158 L78,125 L106,100 L148,79 L190,62 L246,47 L340,14 L340,234 Z" fill="#2456a6" opacity="0.14"/>
+<polyline points="50,234 50,212 64,158 78,125 106,100 148,79 190,62 246,47 340,14" fill="none" stroke="#2456a6" stroke-width="2.5"/>
+<text x="195" y="228" text-anchor="middle" font-size="11" fill="#54637A">가로: 잘못 잡은 비율 / 세로: 진짜 잡은 비율</text>
+<text x="196" y="250" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2456a6">점선 = 무작위(AUC 0.5) · 파란 면적 = AUC 0.720</text>
+</svg>
+<h3 style="margin:16px 0 8px">실제 읽기 예 — "상위 1,000명 집중 상담"이 뜻하는 것</h3>
+<svg viewBox="0 0 640 170" style="width:100%;max-width:640px;display:block;margin:0 auto 12px">
+<rect x="90" y="30" width="120" height="123" fill="#2456a6"/><text x="150" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#2456a6">모델 상위 1,000명</text><text x="150" y="100" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">82명</text><text x="150" y="168" text-anchor="middle" font-size="11" fill="#54637A">실제 가입 8.2%</text>
+<rect x="330" y="30" width="120" height="43" fill="#8A93A6"/><text x="390" y="22" text-anchor="middle" font-size="12" fill="#54637A">무작위 1,000명</text><text x="390" y="55" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">29명</text><text x="390" y="88" text-anchor="middle" font-size="11" fill="#54637A">전체 평균 2.9%</text>
+<line x1="215" y1="90" x2="325" y2="90" stroke="#8A93A6"/><polygon points="330,90 320,85 320,95" fill="#8A93A6"/>
+<text x="270" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#B42318">2.8배</text>
+</svg>
+<div style="background:#F2F5F8;border-left:4px solid #2456a6;padding:10px 14px;margin:8px 0 0;font-size:13.5px"><b>판정선 읽는 법</b> — 사전 합의 기준 "상위 1,000명 중 5.8% 이상(기준선의 2배)". 반복 20회의 95% 신뢰구간 하한 <b>7.1%</b>이 판정선을 넘어 <b>도입 가치 확인</b>. "±0.5%p"는 20회 분할에서 농도가 흔들리는 폭 — 이 폭까지 보고해야 우연과 실력을 구분할 수 있습니다.</div>
+</section>
+<div style="font-size:12px;letter-spacing:.1em;color:#2456a6;font-weight:700;margin-bottom:6px">RF 확정 실험 (A안 · 2026-10-16)</div>
+<h2 style="margin:0 0 14px">튜닝은 상한을 못 넘었다 — 로지스틱 v3 확정 유지</h2>
+<table style="width:100%;border-collapse:collapse;font-size:13px">
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;width:110px;font-weight:700">1단계 탐색</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">12조합×5시드 — 최고: leaf노드 32·깊이 무제한·sqrt (AUC 0.724±0.007). 무성장 트리(leaf=1)는 AUC 0.65대로 급락 — 과적합 정량 확인</td></tr>
+<tr><td style="padding:6px 8px;border-bottom:1px solid #ddd;font-weight:700">2단계 확정</td><td style="padding:6px 8px;border-bottom:1px solid #ddd">RF 0.725±0.008 (상위 500/1000/2000 = 9.8/8.3/7.0%) vs 로지스틱 페어 0.718±0.010 (8.2%)</td></tr>
+<tr><td style="padding:6px 8px;font-weight:700">페어 판정</td><td style="padding:6px 8px">상위 1,000명 차이 +0.10%p±0.60 — <b>유의하지 않음</b>(승 13/20). AUC +0.007 승 17/20 — 경향성 수준. 기본 RF(0.743)도 못 넘음 — 이전 "+1.6%p"는 leaf=20 축의 효과로 규명</td></tr>
+</table>
+<div style="background:#eef4ea;border-left:4px solid #2F6B4F;padding:10px 14px;margin-top:12px"><b>판정: 운용안 유지</b> — 티어 A 9.7% / B 8.2% / C 6.7% 그대로. RF 전환 근거 없음(우위는 특정 설정의 상한으로만 기록). 남은 미실행: 풀링 1건.</div>
+</section>
+<footer>
+  <p>재현: <span class="mono">scripts/step3_model_v3.py</span>(확정 모델) · <span class="mono">scripts/step3_model_compare.py</span>(3절 모델 비교 원본) · <span class="mono">scripts/check_EF_strength.py</span>(소거 실험) — 반복 20회, seed 0~19 동일 분할.</p>
+  <p>근거 문서: <span class="mono">1_2단계_확정본.md</span>(가설·피처) · 이 문서(3단계) · <span class="mono">4단계_리포트.md</span>(인사이트·운용안) — 판정 기준(상위 1,000명 ≥ 5.8%)은 모델링 도입 전 사전 합의(2026-10-15).</p>
+  <p>데이터 출처: [데이터] 보험상품가입자의 보험유지 특성 분석(보험계약 등) — Training/02.라벨링데이터/TL_2.소비자.zip (보험 거래만 사용)</p>
+</footer>
+</div>
+<script>
+  const root = document.documentElement;
+  const setTheme = t => { root.dataset.theme = t; try { localStorage.setItem('report-theme', t); } catch(e) {} };
+  try { const saved = localStorage.getItem('report-theme'); if (saved) setTheme(saved); } catch(e) {}
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보장only 추가가입 예측 — 인사이트 도출 보고서 (별도 버전 · 입문판)</title>
+<style>
+  :root{--bg:#eef1f5;--paper:#ffffff;--ink:#1c2430;--ink2:#5a6676;--line:#d7dde6;--accent:#2456a6;--accent-soft:#e5edf9;--ok:#1a7f4b;--ok-soft:#e3f2e9;--bad:#b03636;--bad-soft:#f7e7e7;--warn:#9a6b10;--warn-soft:#fdf6e7;--tile:#f4f6f9;--serif:"Batang","Apple SD Gothic Neo",serif;--sans:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif}
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#111823;--paper:#1a232e;--ink:#e8edf4;--ink2:#96a3b5;--line:#2b3846;--accent:#6aa5e8;--accent-soft:#1d2c40;--ok:#5ec98a;--ok-soft:#1a3327;--bad:#e08080;--bad-soft:#3c2323;--warn:#d9b15c;--warn-soft:#332a17;--tile:#202b37}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);word-break:keep-all;line-height:1.7}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 20px 60px}
+  header{padding:8px 4px 22px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:12.5px;color:var(--ink2);letter-spacing:.06em;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:clamp(26px,4.5vw,36px);line-height:1.25;margin:0 0 12px;font-weight:600}
+  .lead{font-size:14.5px;color:var(--ink2);max-width:780px;margin:0}
+  .metarow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+  .meta,.chip{font-size:12.5px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:3px 11px;color:var(--ink2)}
+  .chip.c-ok{color:var(--ok);border-color:var(--ok);background:var(--ok-soft);font-weight:700}
+  .banner{border:1.5px dashed var(--warn);background:var(--warn-soft);border-radius:10px;padding:11px 15px;font-size:13.5px;margin:16px 0 2px}
+  .banner b{color:var(--warn)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 8px}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .stat b{display:block;font-family:Consolas,monospace;font-size:26px;line-height:1.2}
+  .stat span{font-size:12.5px;color:var(--ink2)}
+  section{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:20px 0}
+  .sec-label{font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:700;margin-bottom:6px}
+  h2{font-family:var(--serif);font-size:21px;margin:0 0 12px}
+  h3{font-size:15.5px;margin:24px 0 8px}
+  p{margin:8px 0;font-size:14px}
+  .mono{font-family:Consolas,monospace;font-size:.92em}
+  .tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+  .tbl th{font-size:12.5px;color:var(--ink2);text-align:left;border-bottom:2px solid var(--ink);padding:7px 8px;font-weight:600;white-space:nowrap}
+  .tbl td{border-bottom:1px solid var(--line);padding:8px 8px;vertical-align:top}
+  .tbl .r{text-align:right;font-family:Consolas,monospace;white-space:nowrap}
+  .tbl tr.hl td{background:var(--ok-soft)}
+  .tbl tr.dim td{color:var(--ink2)}
+  .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin:14px 0}
+  .note.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+  .lesson{border-top:1px solid var(--line);margin-top:20px;padding-top:12px;font-size:13.5px;color:var(--ink2)}
+  .lesson b{color:var(--ink)}
+  .qcard{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;background:var(--tile)}
+  .qcard .qno{font-family:Consolas,monospace;font-size:12px;color:var(--accent);font-weight:700}
+  .qcard .qt{font-size:14px;margin-top:4px}
+  .steps{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+  .step{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--tile)}
+  .step .no{font-family:Consolas,monospace;font-size:12px;color:var(--accent);font-weight:700}
+  .step .h{font-weight:700;font-size:13.5px;margin-top:3px}
+  .step .b{font-size:12.5px;color:var(--ink2);margin-top:5px}
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+  .card{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--tile)}
+  .card .h{font-weight:700;font-size:13.5px}
+  .card .b{font-size:12.5px;color:var(--ink2);margin-top:6px}
+  .card.tierA{border:2px solid var(--accent)}
+  .card.tierB{border:2px solid #7b9bd0}
+  .card.tierC{border:2px solid #a8bcd8}
+  .ans{border-left:3px solid var(--ok);background:var(--ok-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin:10px 0}
+  .icard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0;background:var(--paper)}
+  .icard .ih{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .icard .num{display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font:700 13px/1 var(--sans);flex:none}
+  .icard .num.bad{background:var(--bad)}
+  .icard .ih b{font-size:15px}
+  .icard .ev{background:var(--tile);border-radius:10px;padding:10px 14px;font-size:13.5px;margin:8px 0}
+  .icard .use{border-left:3px solid var(--ok);background:var(--ok-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin:10px 0 2px}
+  .icard figure{margin:10px 0 4px}
+  figure{margin:16px 0 6px}
+  svg{width:100%;max-width:720px;display:block;margin:0 auto}
+  figcaption{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:6px}
+  dl.terms dt{font-weight:700;font-size:13.5px;margin-top:12px}
+  dl.terms dd{margin:2px 0 0;font-size:13px;color:var(--ink2)}
+  footer{font-size:12.5px;color:var(--ink2);padding:18px 4px;border-top:1px solid var(--line)}
+  footer p{margin:5px 0}
+  @media print{body{background:#fff}.wrap{max-width:none;padding:0}section{border:none;padding:10px 0;page-break-inside:auto}.stat,.card,.step,.qcard{background:#f4f6f9!important}header{padding-top:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">ABA 1차 프로젝트 · 인사이트 도출 보고서 · 별도 버전(입문판) · 2026-10-21</div>
+  <h1>잘 가입한 고객의 얼굴은<br>어떻게 찾았나</h1>
+  <div class="banner"><b>별도 버전 안내</b> — 이 문서는 기존 보고서(<span class="mono">artifacts/insight_report.html</span> · 2026-10-15 확정)와 <b>같은 결과를 다른 설명으로 다시 쓴 별도 버전</b>입니다. 수치와 판정은 동일하고, 전문 용어를 줄이고 수업자료 문체로 재구성했습니다. 어느 한쪽만 읽어도 됩니다.</div>
+  <p class="lead">분석에서 도출한 비즈니스 인사이트(1~2절) → 근거가 되는 수치와 그래프(2절) → 실무 활용 제안(3절). 결론을 통보하는 문서가 아니라, 결론에 도달한 길을 보여주는 문서입니다 — 처음 읽는 사람 기준으로 썼습니다.</p>
+  <div class="metarow">
+    <span class="meta">프레임 T=2024년 말 · 풀 38,932명 · 양성 1,137명(2.9%)</span>
+    <span class="meta">확정 모델 로지스틱 회귀 v3 — 피처 13종</span>
+    <span class="chip c-ok">판정 충족 — 상위 1,000명 8.2% ≥ 판정선 5.8%</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>2.9<small>%</small></b><span>아무 조건 없이 전화했을 때의<br>가입률 — 기준선</span></div>
+    <div class="stat"><b>9.7<small>%</small></b><span>모델 상위 500명의 실제 가입률<br>기준선의 3.3배</span></div>
+    <div class="stat"><b>82<small>명</small></b><span>모델 상위 1,000명 안의 실제 가입자<br>무작위(2.9%)라면 약 29명 — 2.8배 농도</span></div>
+  </div>
+</header>
+
+<section id="s0">
+  <div class="sec-label">읽기 전 질문 · 0</div>
+  <h2>이 보고서를 다 읽고 나면 답할 수 있는 질문</h2>
+  <p>답은 마지막 절(7절)에 있습니다 — 먼저 스스로 한 번 답해 보세요.</p>
+  <div class="qcard"><div class="qno">질문 1</div><div class="qt">"고소득 고객부터 전화하면 잘 팔립니다" — 이 상식이 틀렸다는 걸 데이터로 어떻게 알았을까요?</div></div>
+  <div class="qcard"><div class="qno">질문 2</div><div class="qt">단순 규칙("상품 2개 이상 보유 고객만 전화")이 199명 규모에서는 모델과 동률(11.6%)입니다. 그래도 모델이 필요한 이유는 무엇일까요?</div></div>
+  <div class="qcard"><div class="qno">질문 3</div><div class="qt">상담원에게 "이 고객은 가입 확률 3.4%입니다"라고 말하면 왜 안전하지 않을까요?</div></div>
+  <div class="qcard"><div class="qno">질문 4</div><div class="qt">대구 고객의 가입률이 경기의 1/4 수준입니다 — "대구 고객은 보험에 관심이 없다"고 말해도 될까요?</div></div>
+</section>
+
+<section id="s1">
+  <div class="sec-label">인사이트 한 장 · 1</div>
+  <h2>잘 가입한 고객의 얼굴</h2>
+  <div class="note">잘 가입한 고객의 얼굴은 <b>"반복 구매(보유 상품 2개 이상) + 특약 포함 상품 보유 + 기혼 중년 + 중간 소득"</b>이었습니다. <b>고소득·고신용·오래된 고객이 아니었습니다</b> — 처음 세웠던 직관적 가설은 전부 반박됐습니다.</div>
+  <p>인사이트 6개를 한 표로 요약하면 다음과 같습니다 — 자세한 근거는 2절, 현장 사용법은 3절에 있습니다.</p>
+  <table class="tbl">
+    <tr><th style="width:26px">#</th><th>인사이트</th><th>기준선 2.9% 대비</th><th style="width:200px">신뢰 근거</th></tr>
+    <tr class="hl"><td>1</td><td><b>반복 구매 고객이 가장 잘 산다</b></td><td class="r">4.1배 (11.6% vs 2.8%)</td><td>두 프레임 복제</td></tr>
+    <tr class="hl"><td>2</td><td><b>특약 보유는 관계 깊이의 표시</b></td><td class="r">5.3배 (3.7% vs 0.7%)</td><td>복제 + 소거 실험 기여 1위</td></tr>
+    <tr><td>3</td><td>결혼 효과는 연령과 함께 읽는다</td><td class="r">50대 기혼 3.9% vs 미혼 0.7%</td><td>복제 — 단, 20대는 역전</td></tr>
+    <tr><td>4</td><td>소득은 역U — 고소득이 정답은 아니다</td><td class="r">정점 3.4% (5000미만)</td><td>역U 두 프레임 복제</td></tr>
+    <tr><td>5</td><td>지역 격차 — 성향으로 단정 금지</td><td class="r">경기 3.8% vs 대구 0.8%</td><td>재현 — 원인(채널) 불명</td></tr>
+    <tr><td>6</td><td>신용 300점대만 걸러내기</td><td class="r">300점대 1.6% vs 상위 2.6~3.1%</td><td>재현 — 하단 전용</td></tr>
+  </table>
+  <p>이 표의 모든 신호는 <b>두 프레임(T=2023년 말 · 2024년 말)에서 모두 재현될 때만</b> 남겼습니다. 한 번만 나타난 신호(갱신형 보유, 경과 기간)는 이 규칙으로 걸러냈습니다 — "한 번의 우연"과 "진짜 신호"를 가르는 절차입니다.</p>
+  <div class="lesson"><b>한 줄 정리</b> — 인사이트 6개는 전부 "누구에게 전화할까"에 관한 것입니다. "무엇을 제안할까"는 3절에서 답합니다.</div>
+</section>
+
+<section id="s2">
+  <div class="sec-label">인사이트 6개 · 2</div>
+  <h2>근거 수치와 그래프 — 여섯 장의 카드</h2>
+  <p>숫자는 모두 2024년 말 기존 고객 38,932명 중 2025년 실제 가입자 1,137명 기준입니다(기준선 2.9%). 각 카드의 초록 박스가 "그래서 현장에서 뭘 하라"입니다.</p>
+
+  <div class="icard">
+    <div class="ih"><span class="num">1</span><b>반복 구매 고객이 가장 잘 산다</b></div>
+    <div class="ev"><b>근거 수치</b> — 보유 상품 <b>2개 이상</b> 680명의 가입률 <b>11.6%</b> vs 1개 보유(38,252명) 2.8% — <b>4.1배</b>. 나이 때문이 아닙니다: 연령 조각 안에서 비교해도 전 조각 우위(30대 1.5→8.8% · 40대 2.8→13.9% · 50대 3.3→14.0%, 셀 최소 39명). 두 번째 프레임(T=2023)에서도 복제(24.7% vs 5.8%).</div>
+    <figure>
+    <svg viewBox="0 0 640 235" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif">
+        <text x="150" y="32" text-anchor="end" fill="#5a6676" font-size="12">1개 보유</text>
+        <rect x="160" y="14" width="93" height="26" fill="#8ba7c4"/>
+        <text x="261" y="32" fill="#5a6676" font-size="12" font-weight="bold">2.8% (38,252명)</text>
+        <text x="150" y="80" text-anchor="end" fill="#5a6676" font-size="12">2개 이상</text>
+        <rect x="160" y="62" width="386" height="26" fill="#1a7f4b"/>
+        <text x="540" y="80" text-anchor="end" fill="#ffffff" font-size="12" font-weight="bold">11.6% (680명)</text>
+        <line x1="575" y1="27" x2="575" y2="62" stroke="#1a7f4b"/>
+        <polygon points="575,23 571,31 579,31" fill="#1a7f4b"/><polygon points="575,66 571,58 579,58" fill="#1a7f4b"/>
+        <text x="589" y="48" fill="#1a7f4b" font-size="12" font-weight="bold">4.1배</text>
+        <line x1="160" y1="96" x2="620" y2="96" stroke="#8a93a6"/>
+        <line x1="160" y1="108" x2="620" y2="108" stroke="#d7dde6"/>
+        <text x="20" y="126" fill="#5a6676" font-size="12.5" font-weight="bold">연령 조각 안에서 비교 — "나이 많은 사람들이라" 의심 제거</text>
+        <rect x="430" y="116" width="12" height="12" fill="#8ba7c4"/><text x="448" y="126" fill="#5a6676" font-size="11">1개 보유</text>
+        <rect x="520" y="116" width="12" height="12" fill="#1a7f4b"/><text x="538" y="126" fill="#5a6676" font-size="11">2개 이상</text>
+        <line x1="160" y1="210" x2="620" y2="210" stroke="#8a93a6"/>
+        <rect x="206" y="190" width="40" height="20" fill="#8ba7c4"/><rect x="252" y="93" width="40" height="117" fill="#1a7f4b"/>
+        <text x="226" y="184" text-anchor="middle" fill="#5a6676" font-size="10.5">1.5</text><text x="272" y="87" text-anchor="middle" fill="#1a7f4b" font-size="10.5" font-weight="bold">8.8</text>
+        <rect x="366" y="173" width="40" height="37" fill="#8ba7c4"/><rect x="412" y="25" width="40" height="185" fill="#1a7f4b"/>
+        <text x="386" y="167" text-anchor="middle" fill="#5a6676" font-size="10.5">2.8</text><text x="432" y="19" text-anchor="middle" fill="#1a7f4b" font-size="10.5" font-weight="bold">13.9</text>
+        <rect x="526" y="166" width="40" height="44" fill="#8ba7c4"/><rect x="572" y="24" width="40" height="186" fill="#1a7f4b"/>
+        <text x="546" y="160" text-anchor="middle" fill="#5a6676" font-size="10.5">3.3</text><text x="592" y="18" text-anchor="middle" fill="#1a7f4b" font-size="10.5" font-weight="bold">14.0</text>
+        <text x="250" y="226" text-anchor="middle" fill="#5a6676" font-size="11">30대</text><text x="410" y="226" text-anchor="middle" fill="#5a6676" font-size="11">40대</text><text x="570" y="226" text-anchor="middle" fill="#5a6676" font-size="11">50대</text>
+      </g>
+    </svg>
+    <figcaption>보유 상품 수별 가입률(%, 위)과 연령 조각별 비교(아래) — 조각 안에서도 2개 이상 보유 고객이 전부 우위.</figcaption>
+    </figure>
+    <div class="use"><b>운용 시사점</b> — 최우선 티어의 1순위 조건. 다만 "왜"(접점이 많아서 등)는 채널 기록이 없어 확인 불가 — 원인 설명 없이 <b>행동 신호로만</b> 사용합니다.</div>
+  </div>
+
+  <div class="icard">
+    <div class="ih"><span class="num">2</span><b>특약 보유 = 관계가 깊은 고객의 표시</b></div>
+    <div class="ev"><b>근거 수치</b> — 주보험+특약 보유자 <b>29,280명 가입률 3.7%</b> vs 주보험만 0.7% — 표면 <b>5.3배</b>. 주력 계열(M-케어)이 없는 고객 안에서도 <b>6.9배</b>(4.2% vs 0.6%) — 인기 상품의 그림자가 아님. 소거 실험에서 <b>모델 기여 1위</b>(빼면 상위 1,000명 8.15→7.24%). 순수 보장형만 골라도 2.2~2.3배. 계수 안정 0.84±0.04.</div>
+    <figure>
+    <svg viewBox="0 0 640 132" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="12">
+        <text x="142" y="40" text-anchor="end" fill="#5a6676">주보험만</text>
+        <rect x="150" y="22" width="32" height="26" fill="#8ba7c4"/><text x="190" y="40" fill="#5a6676" font-weight="bold">0.7%</text>
+        <text x="142" y="84" text-anchor="end" fill="#5a6676">특약 보유</text>
+        <rect x="150" y="66" width="167" height="26" fill="#1a7f4b"/><text x="310" y="84" text-anchor="end" fill="#ffffff" font-weight="bold">3.7% (29,280명)</text>
+        <text x="345" y="60" fill="#1a7f4b" font-weight="bold">5.3배</text>
+        <line x1="395" y1="14" x2="395" y2="100" stroke="#d7dde6" stroke-dasharray="5 4"/>
+        <text x="412" y="40" text-anchor="end" fill="#5a6676">주보험만</text>
+        <rect x="420" y="22" width="27" height="26" fill="#8ba7c4"/><text x="455" y="40" fill="#5a6676" font-weight="bold">0.6%</text>
+        <text x="412" y="84" text-anchor="end" fill="#5a6676">특약 보유</text>
+        <rect x="420" y="66" width="189" height="26" fill="#1a7f4b"/><text x="602" y="84" text-anchor="end" fill="#ffffff" font-weight="bold">4.2% (6.9배)</text>
+        <text x="630" y="60" text-anchor="end" fill="#1a7f4b" font-weight="bold">6.9배</text>
+        <line x1="150" y1="100" x2="620" y2="100" stroke="#8a93a6"/>
+        <text x="250" y="122" text-anchor="middle" fill="#5a6676" font-size="11">전체 고객</text>
+        <text x="515" y="122" text-anchor="middle" fill="#5a6676" font-size="11">M-케어(주력 계열) 없는 고객</text>
+      </g>
+    </svg>
+    <figcaption>특약 보유 여부별 가입률(%) — 같은 축척으로 그린 두 비교. 왼쪽이 표면 차이(5.3배), 오른쪽이 주력 계열을 통제한 차이(6.9배).</figcaption>
+    </figure>
+    <div class="use"><b>운용 시사점</b> — 상담 스크립트에서 특약 고객에게는 <b>기존 계약 내용을 아는 대화 거리</b>를 확보. 서술은 "특약 포함 상품 보유"까지만 — 왜 그런지(상담 깊이?)는 접점 기록이 없어 인과 단정 금지.</div>
+  </div>
+
+  <div class="icard">
+    <div class="ih"><span class="num">3</span><b>결혼 효과는 연령과 함께 읽어야 한다</b></div>
+    <div class="ev"><b>근거 수치</b> — 기혼 3.3% vs 미혼 1.5%(전체). 그러나 나이별로 쪼개면 모양이 다릅니다 — 50대는 기혼 3.9% vs 미혼 0.7%로 기혼이 크게 우위, <b>20대는 역전</b>(기혼 1.0% vs 미혼 2.2%). 두 프레임에서 같은 방향으로 재현됐습니다.</div>
+    <table class="tbl">
+      <tr><th>비교</th><th class="r">기혼</th><th class="r">미혼</th><th>읽는 법</th></tr>
+      <tr><td>전체</td><td class="r">3.3%</td><td class="r">1.5%</td><td>표면 차이 2.2배</td></tr>
+      <tr class="hl"><td>50대</td><td class="r">3.9%</td><td class="r">0.7%</td><td>기혼 우위 — 40대 이상에서 성립</td></tr>
+      <tr><td>20대</td><td class="r">1.0%</td><td class="r">2.2%</td><td><b>역전</b> — 기혼 여부로 판단하면 오판</td></tr>
+    </table>
+    <p>그래서 피처도 "기혼" 단독이 아니라 <b>연령×결혼 교차</b>(예: "50대이면서 기혼")로 설계했습니다 — 결혼 효과가 나이에 따라 방향이 바뀌기 때문입니다.</p>
+    <div class="use"><b>운용 시사점</b> — 40대 이상 기혼에게 우선 접근. 20대는 기혼 여부로 판단하지 않습니다(역전이 실측이고, 20대 기혼 셀 자체가 작음).</div>
+  </div>
+
+  <div class="icard">
+    <div class="ih"><span class="num bad">4</span><b>소득은 역U — 고소득이 정답은 아니다</b></div>
+    <div class="ev"><b>근거 수치</b> — 가입률 정점은 <b>5000만원미만 3.4%</b>: 3000미만 3.2% → 5000미만 3.4% → 8000미만 2.6% → 10000이상 3.1%. 고소득 구간이 정점보다 낮습니다. "고소득은 이미 충분히 보유해서"라는 설명도 반박됐습니다 — 납입액 구간을 맞춰 비교해도 소득 격차가 유지. T=2023에서 역U 복제.</div>
+    <figure>
+    <svg viewBox="0 0 640 195" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="11">
+        <line x1="110" y1="30" x2="600" y2="30" stroke="#e3e6eb"/><line x1="110" y1="90" x2="600" y2="90" stroke="#e3e6eb"/>
+        <text x="100" y="34" text-anchor="end" fill="#8a93a6">4%</text><text x="100" y="94" text-anchor="end" fill="#8a93a6">3%</text><text x="100" y="154" text-anchor="end" fill="#8a93a6">2%</text>
+        <line x1="110" y1="150" x2="600" y2="150" stroke="#8a93a6"/>
+        <line x1="110" y1="96" x2="600" y2="96" stroke="#c09237" stroke-dasharray="5 4"/>
+        <text x="598" y="90" text-anchor="end" fill="#c09237" font-size="10.5">평균 2.9%</text>
+        <polyline points="150,78 290,66 430,114 570,84" fill="none" stroke="#3e6ea8" stroke-width="2.5"/>
+        <circle cx="150" cy="78" r="5" fill="#3e6ea8"/><circle cx="290" cy="66" r="6" fill="#1a7f4b"/><circle cx="430" cy="114" r="5" fill="#3e6ea8"/><circle cx="570" cy="84" r="5" fill="#3e6ea8"/>
+        <text x="150" y="64" text-anchor="middle" fill="#5a6676" font-weight="bold">3.2%</text>
+        <text x="290" y="50" text-anchor="middle" fill="#1a7f4b" font-weight="bold" font-size="13">3.4% — 정점</text>
+        <text x="430" y="132" text-anchor="middle" fill="#5a6676" font-weight="bold">2.6%</text>
+        <text x="570" y="72" text-anchor="middle" fill="#5a6676" font-weight="bold">3.1%</text>
+        <text x="595" y="46" text-anchor="end" fill="#b03636" font-size="11">구 가설 "고소득 우선" 폐기</text>
+        <text x="150" y="172" text-anchor="middle" fill="#5a6676">3000미만</text><text x="290" y="172" text-anchor="middle" fill="#1a7f4b" font-weight="bold">5000미만</text><text x="430" y="172" text-anchor="middle" fill="#5a6676">8000미만</text><text x="570" y="172" text-anchor="middle" fill="#5a6676">10000이상</text>
+        <text x="355" y="192" text-anchor="middle" fill="#5a6676" font-size="10.5">소득 구간별 가입률 — 정점이 중간 구간(만원 단위)</text>
+      </g>
+    </svg>
+    <figcaption>소득 구간별 가입률(%) — 산 중간이 높은 역U. 오른쪽 끝(10000이상)이 되돌아오는 비단조형이므로 "고소득일수록 좋다"도 "고소득일수록 나쁘다"도 아닙니다.</figcaption>
+    </figure>
+    <div class="use"><b>운용 시사점</b> — 구 문서의 "고소득 우선 상담"은 <b>폐기</b>. 실제 반응 구간은 중간 소득(5000미만) — 소득 상위 고객은 제외가 아니라 낮은 우선순위로 둡니다.</div>
+  </div>
+
+  <div class="icard">
+    <div class="ih"><span class="num bad">5</span><b>지역 격차 — 4배 차이, 그러나 성향 단정은 금물</b></div>
+    <div class="ev"><b>근거 수치</b> — 경기 3.8%·부산 3.3% vs 인천 1.6%·대전 0.9%·대구 0.8% — 4배 이상 갈라짐. 그런데 저지역 3곳의 고객 구성(중장년 50~57%·기혼 72~79%)은 경기와 유사 — <b>구성의 그림자 아님</b>. 채널·지점 열이 데이터에 없어 원인은 불명.</div>
+    <figure>
+    <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="11.5">
+        <text x="110" y="32" text-anchor="end" fill="#5a6676">경기</text><rect x="120" y="16" width="361" height="22" fill="#3e6ea8"/><text x="489" y="32" fill="#5a6676" font-weight="bold">3.8%</text>
+        <text x="110" y="64" text-anchor="end" fill="#5a6676">부산</text><rect x="120" y="48" width="314" height="22" fill="#3e6ea8"/><text x="442" y="64" fill="#5a6676" font-weight="bold">3.3%</text>
+        <text x="110" y="96" text-anchor="end" fill="#5a6676">인천</text><rect x="120" y="80" width="152" height="22" fill="#8ba7c4"/><text x="280" y="96" fill="#5a6676" font-weight="bold">1.6%</text>
+        <text x="110" y="128" text-anchor="end" fill="#5a6676">대전</text><rect x="120" y="112" width="86" height="22" fill="#c98a8a"/><text x="214" y="128" fill="#b03636" font-weight="bold">0.9%</text>
+        <text x="110" y="160" text-anchor="end" fill="#5a6676">대구</text><rect x="120" y="144" width="76" height="22" fill="#c98a8a"/><text x="204" y="160" fill="#b03636" font-weight="bold">0.8%</text>
+        <line x1="396" y1="10" x2="396" y2="172" stroke="#c09237" stroke-dasharray="5 4"/>
+        <text x="396" y="8" text-anchor="middle" fill="#c09237" font-size="10.5">평균 2.9%</text>
+        <text x="360" y="184" text-anchor="middle" fill="#5a6676" font-size="10.5">지역별 가입률 — 빨간 막대는 후순위 지역(고객 구성은 경기와 유사)</text>
+      </g>
+    </svg>
+    <figcaption>지역별 가입률(%) — 격차는 실측이지만 원인 열이 없어 "관심 차이"로 말할 수 없습니다.</figcaption>
+    </figure>
+    <div class="use"><b>운용 시사점</b> — 상담 자원 배분의 참고 지표로만 사용. "대구 고객이 보험에 관심 없다"는 서술 금지 — 채널 그림자 가능성을 리포트 한계로 기록했습니다.</div>
+  </div>
+
+  <div class="icard">
+    <div class="ih"><span class="num">6</span><b>신용 300점대는 최후순위 — 상위 구간은 무차별</b></div>
+    <div class="ev"><b>근거 수치</b> — 신용 300점대 가입률 <b>1.6%</b> — 상위 구간(700~900이상)은 2.6~3.1%로 <b>무차별</b>. 위험등급도 A 최고·D 최저지만 D·E는 가입자 수가 적어 비율 불안정 — 등급 간 우열로 쓰기엔 얇습니다.</div>
+    <p>"고신용 고객이 잘 산다"는 초기 가설이 반박된 지점입니다. 차이는 <b>하단(300점대)에서만</b> 나타나므로, 신용 정보의 쓸모는 우수 고객 가리기가 아니라 하단 걸러내기입니다.</p>
+    <div class="use"><b>운용 시사점</b> — 신용 정보는 <b>하단 걸러내기</b> 용도로만 활용 — 상위 구간 간 우열로 순위를 매기지 않습니다.</div>
+  </div>
+
+  <div class="note">핵심 — 예측 기여 순위로 보면 <b>1위 특약 보유, 2위 보유수 2개 이상</b>. 고객의 "등급"이 아니라 <b>행동과 상품 구성</b>이 가입을 갈랐습니다.</div>
+</section>
+
+<section id="s3">
+  <div class="sec-label">실무 활용 제안 · 3</div>
+  <h2>그래서 현장에서는 — 누구에게, 무엇을</h2>
+  <p>이 분석을 상담 배치에 쓸 때의 운용안입니다. <b>모델 스코어 상위 순으로 뽑되</b>, 검증된 예외 규칙 3개와 제안 방향을 함께 적용합니다.</p>
+
+  <h3>3-1. 티어 3단 — 상담 대상과 규모</h3>
+  <div class="cards3">
+    <div class="card tierA"><div class="h">티어 A — 최우선</div><div class="b">스코어 상위 <b>~500명</b><br><b>실제 가입률 9.7%</b> (기준선 3.3배)<br>숙련 상담사 배치 · 교육 문구: "약 10명 중 1명이 가입한 이력"</div></div>
+    <div class="card tierB"><div class="h">티어 B — 1차 확장</div><div class="b">스코어 <b>~1,000명</b><br><b>실제 가입률 8.2%</b> (2.8배)<br>판정 지점 — 1,000명 중 실제 가입자 약 <b>82명</b></div></div>
+    <div class="card tierC"><div class="h">티어 C — 2차 확장</div><div class="b">스코어 <b>~2,000명</b><br><b>실제 가입률 6.7%</b> (2.3배)<br>여력 있을 때 확장 — 2,000명 중 실제 가입자 약 <b>134명</b></div></div>
+  </div>
+  <figure>
+  <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="Malgun Gothic, sans-serif" font-size="11">
+      <line x1="70" y1="140" x2="620" y2="140" stroke="#e3e6eb"/><line x1="70" y1="80" x2="620" y2="80" stroke="#e3e6eb"/><line x1="70" y1="20" x2="620" y2="20" stroke="#e3e6eb"/>
+      <text x="62" y="144" text-anchor="end" fill="#8a93a6">4%</text><text x="62" y="84" text-anchor="end" fill="#8a93a6">8%</text><text x="62" y="24" text-anchor="end" fill="#8a93a6">12%</text>
+      <rect x="90" y="54" width="90" height="146" fill="#3e6ea8"/><rect x="230" y="77" width="90" height="123" fill="#3e6ea8"/><rect x="370" y="99" width="90" height="101" fill="#8ba7c4"/><rect x="520" y="156" width="70" height="44" fill="#a9b4c2"/>
+      <text x="135" y="46" text-anchor="middle" fill="#5a6676" font-weight="bold">9.7% (3.3배)</text>
+      <text x="275" y="69" text-anchor="middle" fill="#5a6676" font-weight="bold">8.2% (2.8배)</text>
+      <text x="415" y="91" text-anchor="middle" fill="#5a6676" font-weight="bold">6.7% (2.3배)</text>
+      <text x="555" y="148" text-anchor="middle" fill="#5a6676" font-weight="bold">2.9%</text>
+      <line x1="70" y1="113" x2="620" y2="113" stroke="#b03636" stroke-dasharray="5 4"/>
+      <text x="616" y="107" text-anchor="end" fill="#b03636" font-weight="bold">판정선 5.8%</text>
+      <line x1="70" y1="200" x2="620" y2="200" stroke="#8a93a6"/>
+      <text x="135" y="220" text-anchor="middle" fill="#5a6676">상위 500명</text><text x="275" y="220" text-anchor="middle" fill="#5a6676">상위 1,000명</text><text x="415" y="220" text-anchor="middle" fill="#5a6676">상위 2,000명</text><text x="555" y="220" text-anchor="middle" fill="#5a6676">기준선(무작위)</text>
+      <text x="275" y="234" text-anchor="middle" fill="#5a6676" font-size="10">가입자 약 82명</text><text x="415" y="234" text-anchor="middle" fill="#5a6676" font-size="10">가입자 약 134명</text>
+    </g>
+  </svg>
+  <figcaption>모델이 매긴 순위 상위 k명의 실제 가입률(반복 20회 평균) — 확장할수록 농도는 줄지만 기준선은 계속 넘습니다. 점선은 사전 합의 판정선 5.8%.</figcaption>
+  </figure>
+
+  <h3>3-2. 티어 안에 있어도 순서를 조정하는 예외 3개</h3>
+  <table class="tbl">
+    <tr><th style="width:170px">조건</th><th>근거 수치</th><th style="width:220px">지침</th></tr>
+    <tr><td><b>20대 기혼</b></td><td>1.0% vs 미혼 2.2% — 역전(40대 이상에서만 기혼 우위)</td><td>후순위 — 20대 미혼은 정상 순위</td></tr>
+    <tr><td><b>대구·대전·인천</b></td><td>0.8~1.6% — 경기(3.8%)의 1/4~1/2, 고객 구성은 유사</td><td>후순위 — 1순위 자원 배분 금지(채널 원인 확인 전까지)</td></tr>
+    <tr><td><b>신용 300점대</b></td><td>1.6% — 상위 구간은 무차별인데 하단만 낮음</td><td>최후순위 — 다른 신호가 모두 충족돼도 가장 뒤로</td></tr>
+    <tr><td><b>충돌 시 적용 순서</b></td><td>예외 규칙이 티어 배정과 겹치거나 서로 충돌할 때</td><td>신용(최후) → 지역(후순위) → 20대 기혼(후순위) 순으로 적용</td></tr>
+  </table>
+
+  <div class="note"><b>경계선 — 유지·해지는 이 분석의 밖입니다</b> — 이 명단은 "새 가입"만 다룹니다. 기존 계약의 유지·해지는 보유 스냅샷 데이터에서 관측되지 않아, "이 고객은 유지도 잘 하고 있는가"라는 질문에는 답할 수 없습니다. 상담 중 유지 관리 이슈가 보이면 별도 채널로 기록·전달하세요 — 다음 데이터 과제입니다.</div>
+
+  <h3>3-3. 무엇을 제안할까 — 같은 계열 보강</h3>
+  <div class="note"><b>근거</b> — 2025년 신규 가입의 <b>90%</b>가 M-케어 건강보험 계열(상위 5종 전부 M-케어·연금저축). M-케어 보유자의 다음 가입은 <b>87%</b>가 또 같은 계열 — 계열을 바꾸는 전환보다 <b>같은 계열 보강이 압도적</b>입니다. 따라서 제안 상품은 <b>같은 계열 보강</b>(간편고지형·치매간병 등)부터 꺼내고, 변액·연금 전환 제안은 우선순위에서 제외합니다.</div>
+
+  <h3>3-4. 월 단위 운용 절차</h3>
+  <div class="steps">
+    <div class="step"><div class="no">01</div><div class="h">스코어 갱신</div><div class="b">매월 1일 — 13개 피처로 전 보장only 고객 스코어 재계산(스크립트 재실행)</div></div>
+    <div class="step"><div class="no">02</div><div class="h">티어 배정 + 예외 필터</div><div class="b">상위 순으로 A/B/C 배정 → 예외 3개로 순위 재조정(20대 기혼·저지역 후순위, 300점대 최후순위)</div></div>
+    <div class="step"><div class="no">03</div><div class="h">상담 실행·기록</div><div class="b">티어별 상담 실행 — 접촉 결과(가입/거절/무응답)를 기록해 다음 달 검증 데이터로 축적</div></div>
+    <div class="step"><div class="no">04</div><div class="h">월간 성과 대조</div><div class="b">티어별 실제 가입률을 기준선(2.9%)과 대조 — 티어 A가 9.7%를 크게 하회하면 피처·모델 재점검 신호</div></div>
+  </div>
+  <div class="note"><b>확률을 말하는 방법(보정 곡선 근거)</b> — 모델 확률을 5등급으로 나눈 것과 실제 가입률이 순서·간격이 일치합니다(Q1 2.30 → Q5 3.66%). 덕분에 티어 수치를 <b>실제 빈도</b>로 말할 수 있습니다. 상담원에게는 "가입 확률 3.4%"가 아니라 <b>"이 티어 고객은 유사 고객이 과거에 약 10명 중 1명 가입한 이력"</b>으로 안내하세요 — 확률을 예측치로 읽게 하지 않는 것이 안전합니다.</div>
+  <div class="note bad"><b>하지 말라 3가지</b> — ① 고소득·고신용을 "원래 잘 사는 사람"이라는 이유로 우선 배치(인사이트 4·6에서 반박됨) ② 지역 격차를 성향으로 설명(채널 그림자 가능성 — 인사이트 5) ③ 데이터 근거 없는 콜 타이밍·시즌 운영(데이터에 월 단위가 없어 검증 불가 — 상담 기록 축적 후 확정).</div>
+  <div class="lesson"><b>한 줄 정리</b> — 제안은 "누구"와 "무엇"이 한 세트입니다. 티어로 누구를 정하고, 같은 계열 보강으로 무엇을 정합니다.</div>
+</section>
+
+<section id="s4">
+  <div class="sec-label">답 · 4</div>
+  <h2>읽기 전 질문의 답</h2>
+  <div class="ans"><b>질문 1 — "고소득부터"가 틀렸다는 걸 어떻게 알았나?</b><br>소득 구간별 가입률을 직접 재 보니 정점이 5000미만(3.4%)이었고 고소득 구간은 더 낮았습니다(2.6~3.1%). 두 프레임에서 재현됐고, "고소득은 이미 충분히 보유해서"라는 설명도 납입액 구간을 맞춰 비교했을 때 격차가 유지되어 반박됐습니다. 초기 가설은 이 숫자로 폐기됐습니다.</div>
+  <div class="ans"><b>질문 2 — 규칙과 동률인데 왜 모델인가?</b><br>규칙은 199명에서 끝납니다. 모델은 규모를 500~2,000명으로 넓혀도 농도를 유지합니다(3.3배 → 2.3배) — 상위 2,000명 안에 실제 가입자가 약 134명(무작위는 약 58명) 남습니다. 소수만 쳐도 되면 규칙, 전 고객의 기회비용을 관리하려면 모델입니다. 실제 운용안은 둘을 병행합니다(규칙 집단 = 최우선 티어 선두).</div>
+  <div class="ans"><b>질문 3 — "확률 3.4%"로 말하면 안 되는 이유?</b><br>그 숫자는 "이 고객이 가입할 확률"이 아니라 "같은 스코어 등급의 유사 고객이 과거에 가입한 비율"입니다. 보정 곡선 검증(등급과 실제 빈도의 순서·간격 일치 — Q1 2.30 → Q5 3.66%) 덕분에 <b>티어 단위의 실제 빈도</b>로 말하는 것이 정확하고 안전합니다. 개인 확률로 말하면 "왜 나는 100%가 아니지"라는 오해가 시작됩니다.</div>
+  <div class="ans"><b>질문 4 — "대구 고객은 관심이 없다"고 말해도 되나?</b><br>아니요. 저지역 3곳의 고객 구성(중장년 50~57%·기혼 72~79%)은 경기와 유사합니다 — 관심 차이가 아니라 채널·지점 환경 같은 그림자 변수 가능성이 유력하고, 원인 열이 없어 단정 자체가 불가능합니다. 운용에서는 "후순위" 조건으로만 사용합니다.</div>
+</section>
+
+<section id="s5">
+  <div class="sec-label">부록 · 이 보고서에서 쓰는 말</div>
+  <h2>이 보고서에서 쓰는 말</h2>
+  <dl class="terms">
+    <dt>기준선</dt><dd>모델 없이 내놓는 답의 점수 — "아무나 전화"했을 때의 가입률 2.9%.</dd>
+    <dt>리프트(배수)</dt><dd>기준선의 몇 배인가. "3.3배"는 무작위 대비 3.3배 농도.</dd>
+    <dt>복제</dt><dd>다른 프레임(T=2023 · T=2024)에서 같은 방향으로 다시 나타나는 것. 이 보고서는 두 번 나타난 신호만 채택했습니다.</dd>
+    <dt>그림자 변수</dt><dd>데이터에 없어서 보이지 않는 원인(채널·지점 등). 지역 격차의 유력한 의심 원인.</dd>
+    <dt>조각 비교</dt><dd>혼란 변수(연령 등)를 고정한 상태에서 비교하는 것. "연령 조각 안에서" 비교해 그림자 여부를 확인.</dd>
+    <dt>소거 실험</dt><dd>신호를 하나 빼고 모델을 다시 돌려 기여를 잰 것. 특약을 빼면 상위 1,000명 8.15→7.24% — 기여 1위.</dd>
+    <dt>보정 곡선</dt><dd>모델 확률 등급과 실제 빈도가 맞는지 본 것 — 맞아야 확률을 "실제 빈도"로 말할 수 있음.</dd>
+    <dt>티어</dt><dd>스코어 순위를 자원 규모에 맞춰 나눈 상담 배치 단위(A ~500명 · B ~1,000명 · C ~2,000명).</dd>
+    <dt>역U</dt><dd>양 끝이 낮고 산 중간이 높은 모양. 소득-가입률 관계(정점 5000미만).</dd>
+  </dl>
+  <div class="note">몰라도 되는 말 — 위 용어를 전부 몰라도 결론 한 줄은 이해됩니다: <b>"반복 구매·특약·기혼 중년·중간 소득 고객부터 전화하고, 제안은 같은 계열 보강부터."</b></div>
+</section>
+
+<footer>
+  <p><b>버전</b> — 본 문서는 별도 버전(입문판)입니다. 기존판: <span class="mono">artifacts/insight_report.html</span> (2026-10-15 확정, 기관 리포트 톤) — 수치·판정은 동일하고 문체와 구성이 다릅니다. 기존판 본문의 소득 10000이상 수치(2.1%)는 4단계 리포트·EDA 검증값(3.1%)으로 통일했습니다.</p>
+  <p><b>재현</b> — <span class="mono">scripts/step3_model_v3.py</span>(모델·티어 수치) · <span class="mono">scripts/step4_next_three.py</span>(보정 곡선·다음 상품 패턴) · <span class="mono">scripts/check_EF_strength.py</span>(가설 E·F 강도) · <span class="mono">output/새가설_*.png</span>(인사이트 그림 원본). 근거 문서: <span class="mono">4단계_리포트.md</span>(인사이트 6개·운용안) · EDA/모델링 입문판.</p>
+  <p><b>데이터 출처</b> — [데이터] 보험상품가입자의 보험유지 특성 분석(보험계약 등) — Training/02.라벨링데이터/TL_2.소비자.zip (보험 거래만 사용) · 인사이트 입문판 · 2026-10-21</p>
+</footer>
+</div>
+</body>
+</html>

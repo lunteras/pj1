@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보장only 추가가입 예측 — 최종발표 대시보드</title>
+<style>
+:root{
+  --bg:#1c1f26;--surface:#242833;--surface2:#2b303d;--line:#383e4d;
+  --text:#f3f4f6;--muted:#a9b1d0;--red:#e8b44c;--redsoft:#ee7b74;
+  --green:#54c98a;--amber:#f2b84b;--max:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:dark light}
+body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--text);
+  font-family:Pretendard,"Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  line-height:1.65;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p{margin-top:0}
+.site-header{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(255,255,255,.08);
+  background:.rgba(28,31,38,.94);backdrop-filter:blur(14px)}
+.nav-wrap{width:min(var(--max),calc(100% - 48px));min-height:66px;margin:auto;display:flex;
+  align-items:center;justify-content:space-between;gap:28px}
+.brand-mark{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.02em}
+.brand-symbol{display:grid;place-items:center;width:34px;height:34px;border-radius:8px;
+  background:rgba(232,180,76,.16);color:var(--redsoft);font-size:1.05rem;font-weight:850}
+.brand-mark small{display:block;color:var(--muted);font-size:.76rem;font-weight:600}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{padding:9px 11px;color:#bcc3df;font-size:.9rem;border-radius:4px}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+.nav-links a.active{color:#fff;background:rgba(232,180,76,.15);box-shadow:inset 0 -2px var(--red)}
+.menu-toggle{display:none;color:#fff;background:transparent;border:1px solid var(--line);border-radius:4px;padding:7px 10px}
+.container{width:min(var(--max),calc(100% - 48px));margin:0 auto}
+.hero{position:relative;overflow:hidden;padding:88px 0 70px;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 82% 18%,rgba(232,180,76,.17),transparent 31%),
+  linear-gradient(110deg,transparent 55%,rgba(255,255,255,.02))}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:64px;align-items:center}
+.eyebrow{margin:0 0 16px;color:var(--redsoft);font-size:.74rem;font-weight:800;letter-spacing:.17em;text-transform:uppercase}
+h1{max-width:860px;margin-bottom:22px;font-size:clamp(2.3rem,5vw,4.4rem);line-height:1.1;letter-spacing:-.05em}
+h2{margin-bottom:12px;font-size:clamp(1.6rem,3vw,2.3rem);line-height:1.22;letter-spacing:-.03em}
+h3{margin-bottom:8px;font-size:1.08rem;letter-spacing:-.015em}
+.lead{max-width:780px;color:#c6cde6;font-size:1.06rem}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border:1px solid var(--line);
+  border-radius:4px;background:var(--surface2);font-size:.88rem;font-weight:750}
+.btn-primary{border-color:var(--red);background:var(--red);color:#fff}
+.btn:hover{transform:translateY(-1px)}
+.section{padding:74px 0}
+.section-alt{background:#171a21;border-block:1px solid var(--line)}
+.analysis-section{scroll-margin-top:70px}
+.section-intro{max-width:780px;margin-bottom:32px}
+.section-intro p{color:var(--muted);font-size:1rem}
+.kicker{color:var(--redsoft);font-weight:800;font-size:.84rem;letter-spacing:.05em}
+.rule{width:44px;height:3px;margin:14px 0 18px;background:var(--red)}
+.scenario{display:grid;grid-template-columns:150px 1fr;gap:34px;padding:30px;border-left:3px solid var(--red);background:var(--surface)}
+.scenario-label{color:var(--redsoft);font-size:.7rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+.scenario blockquote{margin:0;font-size:clamp(1.25rem,2.2vw,1.9rem);font-weight:720;line-height:1.45;letter-spacing:-.02em}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{border:1px solid var(--line);background:var(--surface);padding:25px}
+.card p:last-child{margin-bottom:0}
+.muted{color:var(--muted)}
+.metric-strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:var(--surface)}
+.metric{padding:22px;border-right:1px solid var(--line)}
+.metric:last-child{border-right:0}
+.metric strong{display:block;color:#fff;font-size:1.6rem;letter-spacing:-.04em}
+.metric span{color:var(--muted);font-size:.85rem}
+.flow{display:grid;grid-template-columns:repeat(5,1fr)}
+.flow-item{position:relative;padding:22px 26px 22px 18px;border-block:1px solid var(--line);background:var(--surface)}
+.flow-item+.flow-item{border-left:1px solid var(--line)}
+.flow-item::after{content:"→";position:absolute;right:-8px;top:50%;z-index:2;transform:translateY(-50%);color:var(--redsoft);background:var(--surface);padding:2px}
+.flow-item:last-child::after{display:none}
+.flow-item b{display:block;margin-bottom:4px;font-size:.9rem}
+.flow-item span{display:block;color:var(--muted);font-size:.83rem;line-height:1.5}
+.subsection{margin-top:46px}
+.subsection-title{margin-bottom:20px;font-size:1.32rem}
+.takeaway{border-left:2px solid var(--red);padding-left:16px}
+.takeaway strong{display:block;margin-bottom:5px;color:var(--redsoft);font-size:1.2rem}
+.takeaway p{margin:0;color:#c0c4cc;font-size:.92rem}
+.insight-line{margin-top:20px;padding:14px 16px;background:rgba(232,180,76,.09);color:#e4e5e8;font-size:.9rem}
+.note{padding:18px 20px;border:1px solid #4a4030;background:rgba(242,184,75,.07);color:#dcd4c2;font-size:.85rem}
+.table-wrap{overflow-x:auto;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:var(--surface);font-size:.88rem}
+th,td{padding:14px 18px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:#a8b1d4;background:#171a21;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+tr.best td{background:rgba(232,180,76,.09)}
+.score{color:var(--redsoft);font-weight:850}
+.method-note{margin-top:18px;color:var(--muted);font-size:.9rem}
+.evidence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.evidence-card{border-top:3px solid var(--red)}
+.card-label{color:var(--muted);font-size:.82rem;letter-spacing:.03em}
+.card-number{margin:10px 0 4px;font-size:2.1rem;line-height:1;font-weight:850;letter-spacing:-.05em}
+.evidence-card p{color:var(--muted);font-size:.88rem}
+.stat-table-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.chart{padding:20px;border:1px solid var(--line);background:#181b22}
+.chart-title{color:#cbd0d8;font-size:.78rem;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:15px;margin:10px 0 16px;color:var(--muted);font-size:.8rem}
+.legend i{display:inline-block;width:9px;height:9px;margin-right:5px;border-radius:50%;background:var(--red)}
+.legend .gray{background:#596170}
+.bar-chart{display:grid;gap:12px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 64px;align-items:center;gap:12px;color:#c8ccd3;font-size:.84rem}
+.bar-track{height:10px;background:#252a32;overflow:hidden}
+.bar-fill{height:100%;width:var(--w);background:var(--red)}
+.bar-fill.gray{background:#687180}
+.business-brief{padding:26px;border:1px solid var(--line);background:var(--surface)}
+.business-brief dl{margin:0}
+.business-brief div{padding:14px 0;border-top:1px solid var(--line)}
+.business-brief div:first-of-type{border-top:0}
+.business-brief dt{color:var(--muted);font-size:.82rem}
+.business-brief dd{margin:3px 0 0;font-weight:700}
+.closing{max-width:880px;margin:0 auto;padding:16px 0}
+.closing .kicker{display:inline-block;font-size:2.3rem;font-weight:750;letter-spacing:.01em}
+.closing-line{font-size:clamp(2.6rem,6vw,4rem);line-height:1.22;margin:16px 0 14px;letter-spacing:-.02em}
+.closing-sub{color:var(--muted);font-size:1.15rem;max-width:780px;margin:0 0 36px;line-height:1.6}
+.closing-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 30px}
+.closing-num{border:1px solid var(--line);border-radius:12px;padding:20px 14px;background:var(--surface)}
+.cn-big{font-size:1.7rem;font-weight:800;color:var(--red);letter-spacing:-.01em}
+.cn-cap{font-size:.88rem;color:var(--muted);margin-top:7px;line-height:1.5}
+.closing-lines p{margin:10px 0;font-size:1.08rem;line-height:1.6}
+.closing-limits{border:1px solid var(--line);border-left:4px solid var(--red);background:var(--surface);border-radius:10px;padding:16px 18px;font-size:1.02rem;line-height:1.65;margin-top:26px}
+.closing-limits b{color:var(--red)}
+.limits-list{margin:12px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px 26px}
+.limits-list li{font-size:.95rem;line-height:1.55;color:var(--muted)}
+.kpi-tbd{border:2px dashed var(--line);border-radius:10px;padding:20px 10px;text-align:center;color:var(--muted);font-weight:750;font-size:1.05rem;letter-spacing:.06em}
+.script-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 0;font-size:.92rem}
+.script-signal{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 13px;font-weight:700;white-space:nowrap}
+.script-arr{color:var(--red);font-weight:800}
+.script-first{border:1px solid var(--red);background:var(--surface);border-radius:999px;padding:6px 13px;font-weight:700;white-space:nowrap}
+.script-x{color:var(--muted);font-size:.85rem;text-decoration:line-through}
+.site-footer{border-top:1px solid var(--line);padding:30px 0;color:#858b95;font-size:.83rem}
+.footer-row{display:flex;justify-content:space-between;gap:20px}
+@media (max-width:920px){
+  .menu-toggle{display:block}
+  .nav-links{display:none;position:absolute;top:66px;left:0;right:0;padding:12px 24px 18px;flex-direction:column;align-items:stretch;background:#16191f;border-bottom:1px solid var(--line)}
+  .nav-links.open{display:flex}
+  .hero-grid{grid-template-columns:1fr;gap:34px}
+  .metric-strip,.flow{grid-template-columns:1fr}
+  .flow-item+.flow-item{border-left:0}
+  .flow-item::after{right:20px;transform:translateY(-50%) rotate(90deg)}
+  .evidence-grid,.grid-3{grid-template-columns:1fr}
+  .stat-table-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .container,.nav-wrap{width:min(100% - 28px,var(--max))}
+  .hero{padding:56px 0 46px}
+  .grid-2,.metric-strip,.flow{grid-template-columns:1fr}
+  .scenario{grid-template-columns:1fr;gap:10px}
+  .bar-row{grid-template-columns:96px 1fr 54px}
+  .footer-row{display:block}
+}
+@media (prefers-color-scheme:light){
+  :root{--bg:#f6f4ee;--surface:#fffdf8;--surface2:#efece2;--line:#d8d3c4;--text:#17191d;
+    --muted:#5e646e;--red:#b03636;--redsoft:#a12f2f;--green:#237a4c;--amber:#9a6500}
+  body{background:var(--bg);color:var(--text)}
+  .site-header{background:rgba(255,255,255,.94);border-color:var(--line)}
+  .nav-links a{color:#4f5560}
+  .nav-links a:hover{color:#17191d;background:#efece2}
+  .nav-links a.active{color:#8f1d1d;background:#fbf0f0}
+  .menu-toggle{color:#17191d}
+  .lead{color:#4f5560}
+  .section-alt{background:#eceade}
+  .scenario blockquote,.metric strong,.takeaway p,.insight-line,.bar-row{color:#24272c}
+  .flow-item::after{background:var(--surface)}
+.bar-track{background:#dfe1e5}
+  .bar-fill.gray{background:#8b93a1}
+  th{color:#fff;background:#3d4148}
+  tr.best td{background:#fbf0f0}
+  .note{color:#534722;background:#fff8e8;border-color:#d8c99f}
+  .insight-line{background:#fbf0f0}
+  .evidence-card p{color:#5e646e}
+  .chart{background:#fafafa;border-color:var(--line)}
+  .chart-title{color:#3f444c}
+  .takeaway strong{color:#a12f2f}
+}
+.chart{overflow-x:auto}
+.chart svg{width:100%;height:auto;min-width:560px;display:block}
+.chart svg text{font-family:inherit}
+.c-ink{fill:var(--text)} .c-mut{fill:var(--muted)} .c-dim{fill:var(--muted)} .c-red{fill:var(--red)}
+.l-axis{stroke:var(--line)} .l-red{stroke:var(--red)} .l-mut{stroke:var(--muted)}
+.c-bar{fill:var(--muted);opacity:.7} .c-barhi{fill:var(--red)}
+.c-box{fill:var(--surface2);stroke:var(--line)} .c-boxhi{fill:var(--red);fill-opacity:.16;stroke:var(--red)}
+.c-arr{fill:var(--muted)} .c-onbg{fill:var(--bg)}
+.calc-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:4px 0 14px}
+.calc-row input[type=range]{flex:1;min-width:220px;accent-color:var(--red)}
+.calc-row b{min-width:92px;text-align:right;font-size:1.02rem}
+.chart-note{margin-top:12px;color:var(--muted);font-size:.88rem}
+.chart-note b{color:var(--redsoft)}
+.eda-nav{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 30px}
+.eda-nav a{padding:9px 16px;border:1px solid var(--line);background:var(--surface);color:var(--muted);
+  font-size:.89rem;font-weight:750;border-radius:999px;transition:color .12s,background .12s}
+.eda-nav a:hover{color:var(--text);background:var(--surface2)}
+.eda-nav a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.eda-panel{scroll-margin-top:84px}
+.eda-panel+.eda-panel{margin-top:50px;padding-top:38px;border-top:1px solid var(--line)}
+.hm-cell{fill:var(--red)}
+.hm-diag{fill:var(--line);fill-opacity:.6}
+.hm-on{fill:var(--bg)}
+.hm-off{fill:var(--text)}
+.hm-outline{fill:none;stroke:var(--red);stroke-dasharray:4 3;stroke-width:1.5}
+</style>
+</head>
+<body class="main-analysis">
+<header class="site-header">
+  <nav class="nav-wrap" aria-label="주요 메뉴">
+    <a class="brand-mark" href="#overview"><span class="brand-symbol">보</span><span>추가가입 예측 Lab<small>보장only 고객 상담 전략 분석</small></span></a>
+    <button class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false">메뉴</button>
+    <div class="nav-links">
+      <a class="active" data-section="overview" href="#overview">개요</a>
+      <a data-section="eda" href="#eda">EDA</a>
+      <a data-section="modeling" href="#modeling">모델링</a>
+      <a data-section="insight" href="#insight">인사이트</a>
+      <a href="보장only_추가가입_예측_리포트.html">Full Report</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero analysis-section" id="overview">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">상담 운영팀 의사결정 지원 · 최종발표</p>
+        <h1>보장만 든 고객,<br><span class="accent" style="color:var(--redsoft)">다음 가입할 고객을</span> 데이터로 고른다</h1>
+        <p class="lead">보험 거래 스냅샷 데이터에서 정답 열이 없는 "추가 가입"을 정답으로 만들고, 고객 38,932명 중 누구에게 먼저 제안할지를 판정 기준(상위 1,000명 가입률)으로 검증한 뒤, 상담 우선순위 명단(티어 3단)과 운용 규칙으로 전환했습니다.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="#insight">운용안(티어 3단) 보기</a><a class="btn" href="#eda">분석 결과부터 보기</a></div>
+      </div>
+      <aside class="business-brief" aria-label="프로젝트 개요">
+        <dl>
+          <div><dt>검토 주체</dt><dd>보험사 상담 운영팀 (프로젝트 가정)</dd></div>
+          <div><dt>의사결정</dt><dd>추가 가입 제안 대상 선정 · 상담 자원 배분</dd></div>
+          <div><dt>분석 기준</dt><dd>고객 1명 = 1행 · T=2024년 말 보유 기준</dd></div>
+          <div><dt>판정 기준</dt><dd>상위 1,000명 실제 가입률 ≥ 5.8% (사전 합의)</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container scenario">
+      <div class="scenario-label">발표 동기</div>
+      <blockquote>이번 발표의 출발점은 사소한 일상입니다 — <b>또 걸려온 보험 상담 권유전화</b>였습니다. 받는 쪽은 성가시지만, 발신 쪽도 사실 누구에게 전화해야 할지 근거가 없습니다. 고객 38,932명을 전원 상담할 수는 없으니 "누구를 먼저 만날지"는 결국 정해야 하는 문제이고, <b>정답이 없다면 정답을 만들어 검증하면 됩니다</b> — 이번 발표는 그 시도의 기록입니다.</blockquote>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container scenario">
+      <div class="scenario-label">검토 질문</div>
+      <blockquote>보장 보험만 가진 고객 38,932명 중, 누구에게 먼저 추가 가입을 제안해야 상담 자원을 가장 잘 쓸 수 있는가?</blockquote>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-intro"><span class="kicker">분석 배경</span><div class="rule"></div><h2>왜 이 문제를 골랐는가</h2><p>보험 업계의 통상 인식은 신규 고객 유치보다 기존 고객 관계가 저렴합니다. 그러나 기존 고객 중에서도 "보장성 상품만 보유한 38,932명"에게 지금 어떤 제안을 할지는 데이터가 정해주지 않았습니다. 그 간극을 데이터로 메우는 것이 이 프로젝트의 출발점입니다.</p></div>
+      <p class="method-note">데이터는 2025년 말까지의 가입 기록을 담은 스냅샷이고, "추가 가입할 고객"이라는 열은 존재하지 않습니다. 대신 각 상품의 가입 연도가 있어, 시간을 뒤집어 정답을 직접 생성했습니다. 문제 정의와 판정 기준(5.8%)을 모델보다 먼저 합의한 뒤 분석을 진행했습니다.</p>
+      <div class="grid-2">
+        <article class="card"><h3>확인하려는 것</h3><p>보유 행동 신호(반복 구매·특약 등)가 1년 내 추가 가입을 얼마나 가르는지, 모델로 검증합니다.</p><ul class="muted"><li>개별 속성이 약해도 조합·순위로 명단을 만들 수 있는지 확인합니다</li></ul></article>
+        <article class="card"><h3>데이터의 범위와 한계</h3><p>보험 거래 77,305건(고객 74,776명)을 사용합니다 — 증권 거래는 제외.</p><ul class="muted"><li>채널·접점 기록이 없어 "왜 가입하는가"의 인과는 확인할 수 없습니다</li><li>데이터가 월 단위를 담고 있지 않아 시즌성 검증도 불가합니다</li></ul></article>
+      </div>
+      <div class="metric-strip subsection">
+        <div class="metric"><strong>38,932</strong><span>분석 풀 고객 (2024년 말 보유)</span></div>
+        <div class="metric"><strong>1,137</strong><span>2025년 실제 가입 — 기준선 2.9%</span></div>
+        <div class="metric"><strong>0.720</strong><span>확정 모델 AUC (반복 20회 ±0.010)</span></div>
+        <div class="metric"><strong>8.2%</strong><span>상위 1,000명 실제 가입률 — 기준선 2.8배</span></div>
+      </div>
+      <div class="flow subsection">
+        <div class="flow-item"><b>1. 기준 정의</b><span>가입 연도를 뒤집어 정답 생성 · 판정선 5.8% 사전 합의</span></div>
+        <div class="flow-item"><b>2. 신호 탐색</b><span>가설 6개 — 두 시점 프레임에서 복제 확인</span></div>
+        <div class="flow-item"><b>3. 피처 결합</b><span>범주 8 + 수치 5 + 교차 → 44열</span></div>
+        <div class="flow-item"><b>4. 모델 검증</b><span>반복 20회 · 기준선 비교 · 유의차 판정</span></div>
+        <div class="flow-item"><b>5. 운용 적용</b><span>티어 3단 · 예외 규칙 · 제안 방향</span></div>
+      </div>
+      <div class="takeaway subsection"><strong>이 분석이 지원하려는 의사결정</strong><p>상담 자원을 어디에 우선 배분할지의 근거를 제공하는 것이 목표입니다. 가입 여부 자체를 자동으로 확정하는 도구가 아니라, 상담 명단과 배분·제안 방향을 정할 때 참고할 데이터 기반 판단 기준입니다.</p></div>
+    </div>
+  </section>
+
+  <section class="section section-alt analysis-section" id="eda">
+    <div class="container">
+      <div class="section-intro"><span class="kicker">탐색적 데이터 분석</span><div class="rule"></div><h2>잘 가입한 고객은 개별 속성이 아니라 행동과 구성에 몰려 있었다</h2><p>EDA를 일곱 항목 — <b>타겟 · 결측치 · 범위·이상치 · 관계 · 상관관계 · 누수 · 정리</b> — 로 구분해 순서대로 담았습니다. 위 알약 목차로 항목을 바로 이동할 수 있습니다. 모든 신호는 두 시점 프레임(T=2023/2024)에서 재현된 것만 채택했고, 각 항목이 의사결정에 왜 중요한지를 함께 남겼습니다.</p></div>
+
+      <div class="eda-nav" aria-label="EDA 항목 바로가기">
+        <a href="#eda-target">타겟</a>
+        <a href="#eda-missing">결측치</a>
+        <a href="#eda-outlier">범위·이상치</a>
+        <a href="#eda-relations">관계</a>
+        <a href="#eda-corr">상관관계</a>
+        <a href="#eda-leak">누수</a>
+        <a href="#eda-summary">정리</a>
+      </div>
+
+      <div class="eda-panel" id="eda-target">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">1. 타겟 — 정답을 직접 만들기</h3>
+        <p>원본 385,019행은 "고객이 보유한 상품 1건 = 1행"이라 고객 1행이 아닙니다. 속성 열은 고객 내 완전 고정이라 고객 ID로 압축해 재편성했고, 정답은 2024년 말 보유 고객 38,932명 중 2025년 신규 가입 <b>1,137명(2.9%)</b>입니다.</p>
+        <div class="chart">
+          <div class="chart-title">분석 단위 만들기 — 1행을 상품 건에서 고객 명으로</div>
+          <svg viewBox="0 0 680 168" role="img" aria-label="원본은 상품 1건이 1행이고 속성이 반복 — 고객 ID로 압축해 고객 1행으로 재편성">
+            <rect class="c-box" x="20" y="14" width="280" height="24"/>
+            <text class="c-mut" x="40" y="30" font-size="11">고객ID</text><text class="c-mut" x="130" y="30" font-size="11">상품명</text><text class="c-mut" x="230" y="30" font-size="11">고객 속성</text>
+            <rect class="c-boxhi" x="20" y="38" width="280" height="24"/>
+            <text class="c-ink" x="40" y="54" font-size="11">A</text><text class="c-ink" x="130" y="54" font-size="11">무배당암보험</text><text class="c-red" x="230" y="54" font-size="11" font-weight="bold">50대·기혼</text>
+            <rect class="c-boxhi" x="20" y="62" width="280" height="24"/>
+            <text class="c-ink" x="40" y="78" font-size="11">A</text><text class="c-ink" x="130" y="78" font-size="11">종합건강보험</text><text class="c-red" x="230" y="78" font-size="11" font-weight="bold">50대·기혼</text>
+            <rect class="c-box" x="20" y="86" width="280" height="24"/>
+            <text class="c-ink" x="40" y="102" font-size="11">B</text><text class="c-ink" x="130" y="102" font-size="11">무배당암보험</text><text class="c-ink" x="230" y="102" font-size="11">30대·미혼</text>
+            <text class="c-mut" x="160" y="130" text-anchor="middle" font-size="10.5">원본 — 1행 = 상품 1건 (속성이 반복됨)</text>
+            <line class="l-mut" x1="316" y1="70" x2="356" y2="70"/><polygon class="c-arr" points="364,70 354,66 354,74"/>
+            <text class="c-mut" x="340" y="56" text-anchor="middle" font-size="10.5">고객ID로 압축</text>
+            <rect class="c-boxhi" x="380" y="26" width="240" height="30"/>
+            <text class="c-ink" x="396" y="45" font-size="12" font-weight="bold">고객 A — 50대·기혼 (거래 2건)</text>
+            <rect class="c-box" x="380" y="62" width="240" height="30"/>
+            <text class="c-ink" x="396" y="81" font-size="12" font-weight="bold">고객 B — 30대·미혼 (거래 1건)</text>
+            <text class="c-mut" x="500" y="116" text-anchor="middle" font-size="10.5">분석용 — 1행 = 고객 1명</text>
+            <text class="c-mut" x="500" y="136" text-anchor="middle" font-size="10.5">속성 중복 사라짐 · 거래는 따로 합산</text>
+          </svg>
+          <p class="chart-note">고객당 1행이 96.9%(최대 5행) — 속성 중복을 없애야 정직한 세기가 됩니다.</p>
+        </div>
+        <div class="chart">
+          <div class="chart-title">정답 분포 — 1 : 33.2 불균형</div>
+          <svg viewBox="0 0 680 200" role="img" aria-label="미가입 97.1% vs 가입 2.9% — 전원 미가입이라고 답해도 정확도 97.1%">
+            <line class="l-mut" x1="60" y1="156" x2="580" y2="156" stroke-width="1.4"/>
+            <rect class="c-bar" x="120" y="16" width="100" height="140"/>
+            <rect class="c-barhi" x="360" y="151" width="100" height="5"/>
+            <text class="c-ink" x="170" y="10" text-anchor="middle" font-size="14" font-weight="bold">97.1%</text>
+            <text class="c-red" x="410" y="142" text-anchor="middle" font-size="14" font-weight="bold">2.9%</text>
+            <text class="c-mut" x="170" y="176" text-anchor="middle" font-size="12">미가입 37,795명</text>
+            <text class="c-mut" x="410" y="176" text-anchor="middle" font-size="12">가입 1,137명</text>
+            <text class="c-red" x="320" y="194" text-anchor="middle" font-size="11.5">전원 "미가입"이라고만 답해도 정확도 97.1% — 그래서 평가는 상위 k명 가입률로</text>
+          </svg>
+          <p class="chart-note">학습은 불균형 가중치(balanced)로, 평가는 정확도가 아니라 상위 k명 가입률(리프트)로 합니다.</p>
+        </div>
+        <div class="chart">
+          <div class="chart-title">시뮬레이터 — 이건 운일까, 신호일까</div>
+          <div class="calc-row">
+            <span style="font-size:.9rem;color:var(--muted)">무작위로 상담할 명단 규모</span>
+            <input id="eda-k-range" type="range" min="500" max="3000" step="100" value="1000" aria-label="무작위 명단 규모">
+            <b id="eda-k-val">1,000명</b>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>같은 규모의 명단, 두 가지 운명</th><th>값</th></tr></thead><tbody>
+            <tr><td>무작위로 뽑은 명단의 기대 가입자 (기준선 2.9%)</td><td id="eda-out-rand">약 29명</td></tr>
+            <tr><td>운의 통상 범위 — 100번 중 95번은 이 안 (±2σ)</td><td id="eda-out-band">약 18~40명</td></tr>
+            <tr class="best"><td>모델이 고른 같은 규모 명단의 실제 가입자 (실측 보간)</td><td class="score" id="eda-out-model">약 82명</td></tr>
+          </tbody></table></div>
+          <p class="chart-note">모델 상위 명단은 운의 통상 범위보다도 훨씬 위 — <b>운으로는 재현할 수 없는 차이</b>입니다. 범위는 이항 분포(p=2.9%, 실측 기준선) 계산이고, 모델 값은 실측 4지점(500·1,000·2,000명·전체) 사이 선형 보간입니다.</p>
+        </div>
+        <div class="insight-line"><b>왜 중요한가</b> · 정답이 2.9%뿐이라 "전원 미가입"이라고만 답해도 정확도 97.1%가 나옵니다. 정확도가 아니라 상위 명단의 농도로 판정해야 하는 이유가 여기서 확정됩니다.</div>
+      </div>
+      </div>
+
+      <div class="eda-panel" id="eda-missing">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">2. 결측치 — NaN은 없지만 대체값이 있다</h3>
+        <p>표면상 결측(빈 칸)은 없습니다 — 대신 "사용하지 않음"과 "기타"가 그 자리를 대신하고 있습니다. 결측 0건이 아니라 결측 0건의 <b>함정</b>이 있는 데이터입니다.</p>
+        <div style="background:#242833;border:1px solid #383e4d;border-radius:10px;padding:12px 14px;margin:10px 0 14px">
+<div style="font-size:11.5px;color:#9ba3b0;margin-bottom:9px">결측 0건의 함정 — NaN은 없지만 대체값이 있습니다 (전체 고객 대비)</div>
+<div style="display:grid;grid-template-columns:110px 1fr 52px;gap:8px;align-items:center;margin-bottom:7px;font-size:11px;color:#9ba3b0"><div style="text-align:right">투자성향 '-'<br><span style="font-size:9.5px">사용하지 않음</span></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:100%;background:#e8b44c;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">100%</div></div>
+<div style="display:grid;grid-template-columns:110px 1fr 52px;gap:8px;align-items:center;margin-bottom:7px;font-size:11px;color:#9ba3b0"><div style="text-align:right">직업군 '기타'<br><span style="font-size:9.5px">4,020명</span></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:10.3%;background:#59606f;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">10.3%</div></div>
+<div style="display:grid;grid-template-columns:110px 1fr 52px;gap:8px;align-items:center;margin-bottom:7px;font-size:11px;color:#9ba3b0"><div style="text-align:right">신용등급 '기타'<br><span style="font-size:9.5px">319명</span></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:0.8%;background:#59606f;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">0.8%</div></div>
+<div style="font-size:11px;color:#9ba3b0;margin-top:6px">'기타'는 제거·보간하지 않습니다 — 지우면 하위 소비층이 사라지고, 보간은 없는 고객을 만듭니다</div>
+</div>
+        <div class="insight-line"><b>왜 중요한가</b> · 결측·이상치 처리는 숨기면 안 되는 선택입니다. '기타'를 보간했다면 명단에서 하위 소비층 고객이 사라졌을 것입니다.</div>
+      </div>
+      </div>
+
+      <div class="eda-panel" id="eda-outlier">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">3. 범위·이상치 — 오경보와 진짜 꼬리를 구분</h3>
+        <p><b>이상치는 오경보와 진짜 꼬리를 구분</b>했습니다 — 기계적 규칙(IQR)이 지목하는 것과 실제 의미가 있는 것은 다릅니다.</p>
+        <div class="grid-2">
+          <article class="card"><h3>오경보 — 잘라도 되는 이상치</h3><div class="card-number">8,964건</div><p>경과연수는 0년이 77%라 IQR 규칙이 8,964건을 이상치로 지목하지만, 이 데이터에서 0년은 정상 범위 — 오경보입니다.</p></article>
+          <article class="card" style="border-color:var(--red)"><h3 style="color:var(--redsoft)">진짜 꼬리 — 남겨야 할 이상치</h3><div class="card-number" style="color:var(--redsoft)">680건</div><p>보유수 2개 이상(680건)은 가입률 4.1배 신호의 본체 — 큰 값에 찾는 대상이 있어 남깁니다.</p></article>
+        </div>
+        <p>큰 금액은 로그 변환으로 눌러 사용했고(찾는 대상이 꼬리에 있기 때문), 이 데이터는 스냅샷 — 가입 연도의 88.3%가 2024~2025라 '2024 코호트 → 오늘의 고객' 외삽 한계의 뿌리입니다.</p>
+        <div class="insight-line"><b>왜 중요한가</b> · 이상치를 "값이 크다"로만 잘랐다면 4.1배 신호의 본체가 사라졌습니다 — 판단 기준은 값의 크기가 아니라 의미입니다.</div>
+      </div>
+      </div>
+
+      <div class="eda-panel" id="eda-relations">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">4. 관계 — 속성과 가입률은 어떻게 연결되나</h3>
+        <p>가설 여정에서 살아남은 신호들이 실제 가입률을 어떻게 가르는지, 그룹 비교로 확인합니다.</p>
+        <p class="kicker" style="margin:32px 0 12px">가설의 생애 — 4회차 여정</p>
+        <div class="chart">
+          <div class="chart-title">가설은 한 번에 맞은 적이 없다 — 네 번의 여정과 무너진 구 가설들</div>
+          <svg viewBox="0 0 680 252" role="img" aria-label="가설 4회차 여정 타임라인과 대용라벨에서 실제 타겟으로 방향이 뒤집힌 구 가설 4개">
+            <rect class="c-box" x="16" y="14" width="150" height="58" rx="10"/>
+            <text class="c-ink" x="24" y="34" font-size="11" font-weight="700">1 · 대용라벨 가설 4개</text>
+            <text class="c-mut" x="24" y="52" font-size="10.5">✕ 전부 반박</text>
+            <polygon class="c-arr" points="182,43 173,39 173,47"/>
+            <rect class="c-box" x="184" y="14" width="150" height="58" rx="10"/>
+            <text class="c-ink" x="192" y="34" font-size="11" font-weight="700">2 · 실제 타겟 재검증</text>
+            <text class="c-mut" x="192" y="52" font-size="10.5">✕ 전부 반박 · 뒤집힘</text>
+            <polygon class="c-arr" points="350,43 341,39 341,47"/>
+            <rect class="c-boxhi" x="352" y="14" width="150" height="58" rx="10"/>
+            <text class="c-ink" x="360" y="34" font-size="11" font-weight="700">3 · 새 가설 A~D</text>
+            <text class="c-red" x="360" y="52" font-size="10.5" font-weight="700">A·B 지지 · C·D 반박</text>
+            <polygon class="c-arr" points="518,43 509,39 509,47"/>
+            <rect class="c-boxhi" x="520" y="14" width="150" height="58" rx="10"/>
+            <text class="c-ink" x="528" y="34" font-size="11" font-weight="700">4 · 미개척 축 E·F</text>
+            <text class="c-red" x="528" y="52" font-size="10.5" font-weight="700">E 지지·강화 · F 철회</text>
+            <text class="c-ink" x="16" y="104" font-size="12" font-weight="700">무너진 구 가설 — 대용라벨에서는 우위, 실제 타겟에서는 뒤집힘</text>
+            <line class="l-axis" x1="218" y1="114" x2="218" y2="248"/>
+            <line class="l-axis" x1="362" y1="114" x2="362" y2="248"/>
+            <text class="c-ink" x="16" y="130" font-size="11">40~50대·고소득 우위</text>
+            <text class="c-mut" x="225" y="130" font-size="10.5">1.4배</text>
+            <polygon class="c-arr" points="356,126 342,122 342,130"/>
+            <text class="c-red" x="370" y="130" font-size="11" font-weight="700">역방향 — 충족 2.4% vs 미충족 3.0%</text>
+            <text class="c-ink" x="16" y="168" font-size="11">신용 900점대 이상 1.5배</text>
+            <text class="c-mut" x="225" y="168" font-size="10.5">19.5% vs 12.4%</text>
+            <polygon class="c-arr" points="356,164 342,160 342,168"/>
+            <text class="c-mut" x="370" y="168" font-size="11" font-weight="700">계단 없음 — 0.97배</text>
+            <text class="c-ink" x="16" y="206" font-size="11">오래된 고객이 우위</text>
+            <text class="c-mut" x="225" y="206" font-size="10.5">46.9% vs 8.6%</text>
+            <polygon class="c-arr" points="356,202 342,198 342,206"/>
+            <text class="c-red" x="370" y="206" font-size="11" font-weight="700">역방향 — 최근 가입자 최고</text>
+            <text class="c-ink" x="16" y="244" font-size="11">갱신형 보유자가 덜 산다</text>
+            <text class="c-mut" x="225" y="244" font-size="10.5">12배 격차</text>
+            <polygon class="c-arr" points="356,240 342,236 342,244"/>
+            <text class="c-mut" x="370" y="244" font-size="11" font-weight="700">역방향 후 T=2024에서 소멸</text>
+          </svg>
+          <p class="chart-note">무너진 가설이 다음 가설의 재료였고, <b>반박된 기록이 피처 선택을 결정한 정보</b>였습니다 — 여정을 숨기지 않는 이유입니다.</p>
+        </div>
+        <div class="insight-line"><b>왜 중요한가</b> · 대용라벨(고객의 프로필)과 실제 행동(추가 가입)은 서로 다른 현상입니다. 대용라벨 기준이었다면 상담 대상을 반대쪽으로 골랐을 수 있습니다 — 정답을 직접 정의한 것이 이 분석의 첫 번째 승부수였습니다.</div>
+        <p class="kicker" style="margin:40px 0 12px">복제 신호 6개 — 두 프레임에서 재현된 것만 채택</p>
+        <div style="background:#242833;border:1px solid #383e4d;border-radius:10px;padding:12px 14px;margin:10px 0 14px">
+          <div style="font-size:11.5px;color:#9ba3b0;margin-bottom:9px">진한 막대 = 신호 그룹 · 연한 막대 = 비교 그룹 · 가로축은 실제 가입률(최대 12%)</div>
+          <div style="display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;margin-bottom:8px;font-size:11.5px"><div style="color:#9ba3b0;text-align:right">보유수 2개 이상<br><span style="font-size:9.5px;color:#6b7280">vs 1개 보유</span></div><div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative;margin-bottom:3px"><div style="position:absolute;left:0;top:0;bottom:0;width:97%;background:#e8b44c;border-radius:5px"></div></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:23%;background:#59606f;border-radius:5px"></div></div></div><div style="color:#e8b44c;font-weight:700;text-align:right">4.1배</div></div>
+          <div style="display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;margin-bottom:8px;font-size:11.5px"><div style="color:#9ba3b0;text-align:right">특약 보유<br><span style="font-size:9.5px;color:#6b7280">vs 주보험만</span></div><div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative;margin-bottom:3px"><div style="position:absolute;left:0;top:0;bottom:0;width:31%;background:#e8b44c;border-radius:5px"></div></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:6%;background:#59606f;border-radius:5px"></div></div></div><div style="color:#e8b44c;font-weight:700;text-align:right">5.3배</div></div>
+          <div style="display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;margin-bottom:8px;font-size:11.5px"><div style="color:#9ba3b0;text-align:right">50대 기혼<br><span style="font-size:9.5px;color:#6b7280">vs 50대 미혼</span></div><div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative;margin-bottom:3px"><div style="position:absolute;left:0;top:0;bottom:0;width:33%;background:#e8b44c;border-radius:5px"></div></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:6%;background:#59606f;border-radius:5px"></div></div></div><div style="color:#e8b44c;font-weight:700;text-align:right">5.6배</div></div>
+          <div style="display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;margin-bottom:8px;font-size:11.5px"><div style="color:#9ba3b0;text-align:right">소득 5000미만<br><span style="font-size:9.5px;color:#6b7280">vs 기준선</span></div><div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative;margin-bottom:3px"><div style="position:absolute;left:0;top:0;bottom:0;width:28%;background:#e8b44c;border-radius:5px"></div></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:24%;background:#59606f;border-radius:5px"></div></div></div><div style="color:#e8b44c;font-weight:700;text-align:right">1.2배</div></div>
+          <div style="display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;margin-bottom:8px;font-size:11.5px"><div style="color:#9ba3b0;text-align:right">지역 경기<br><span style="font-size:9.5px;color:#6b7280">vs 대구</span></div><div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative;margin-bottom:3px"><div style="position:absolute;left:0;top:0;bottom:0;width:32%;background:#e8b44c;border-radius:5px"></div></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:7%;background:#59606f;border-radius:5px"></div></div></div><div style="color:#e8b44c;font-weight:700;text-align:right">4.8배</div></div>
+          <div style="display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;font-size:11.5px"><div style="color:#9ba3b0;text-align:right">신용 300점대<br><span style="font-size:9.5px;color:#6b7280">vs 기준선</span></div><div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative;margin-bottom:3px"><div style="position:absolute;left:0;top:0;bottom:0;width:13%;background:#e8b44c;border-radius:5px"></div></div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:24%;background:#59606f;border-radius:5px"></div></div></div><div style="color:#9ba3b0;font-weight:700;text-align:right">0.55배</div></div>
+        </div>
+        <p class="chart-note" style="margin:0 0 6px">가설 여정에서 살아남은 신호를 두 시점 프레임에서 모두 재현되는지 확인 — 채택된 6개의 운용 용도는 <b>반복 구매 티어 1순위 · 특약 대화 거리 설계 · 기혼×중년 교차 피처 필수 · 소득 우선순위 조정 · 지역 후순위 · 신용 하단 걸러내기 전용</b>입니다.</p>
+        <div class="chart-grid subsection" style="display:grid;grid-template-columns:minmax(0,1.45fr) minmax(230px,.55fr);gap:28px;align-items:center;margin-top:26px">
+          <div class="chart"><div class="chart-title">가입률 비교 — 그룹 평균 (T=2024)</div><div class="legend"><span><i></i>신호 그룹</span><span><i class="gray"></i>비교 그룹</span></div><div class="bar-chart">
+            <div class="bar-row"><span>보유수 2개 이상</span><div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div><b>11.6%</b></div>
+            <div class="bar-row"><span>보유수 1개</span><div class="bar-track"><div class="bar-fill gray" style="--w:24%"></div></div><b>2.8%</b></div>
+            <div class="bar-row"><span>특약 보유</span><div class="bar-track"><div class="bar-fill" style="--w:32%"></div></div><b>3.7%</b></div>
+            <div class="bar-row"><span>주보험만</span><div class="bar-track"><div class="bar-fill gray" style="--w:6%"></div></div><b>0.7%</b></div>
+          </div></div>
+          <div class="takeaway"><strong>조합의 힘</strong><p>개별 신호와 타겟의 상관은 최고 +0.070에 불과하지만, 이 신호들이 겹치면 기준선의 3~4배 농도가 만들어집니다. 모델이 필요한 이유입니다.</p></div>
+        </div>
+        <div class="insight-line"><b>왜 중요한가</b> · 표면 5.3배인 특약은 주력 계열 그림자일 수 있어 순수 보장형만 비교(2.2~2.3배)했고, 소수 셀은 최소 표본(39명)을 확인했습니다. 숫자를 그대로 믹는 대신 그림자를 걸러낸 뒤 채택한 신호만 모델 피처가 됩니다.</div>
+        <p class="kicker" style="margin:40px 0 12px">소득과 지역 — 상식을 데이터로 다시 읽기</p>
+        <div style="background:#242833;border:1px solid #383e4d;border-radius:10px;padding:12px 14px;margin:10px 0 14px">
+<div style="font-size:11.5px;color:#9ba3b0;margin-bottom:6px">소득 구간별 실제 가입률 — 점선은 기준선 2.9%</div>
+<div style="position:relative;display:flex;gap:10px;padding:0 6px;height:96px;align-items:flex-end">
+<div style="position:absolute;left:6px;right:6px;bottom:58px;border-top:2px dashed #9ba3b0;opacity:.6"></div>
+<div style="flex:1;text-align:center"><div style="font-size:10.5px;color:#c8cdd6;margin-bottom:2px">3.2%</div><div style="height:64px;background:#59606f;border-radius:4px 4px 0 0"></div><div style="font-size:10px;color:#9ba3b0;margin-top:3px">3000미만</div></div>
+<div style="flex:1;text-align:center"><div style="font-size:10.5px;color:#e8b44c;font-weight:700;margin-bottom:2px">3.4%</div><div style="height:68px;background:#e8b44c;border-radius:4px 4px 0 0"></div><div style="font-size:10px;color:#9ba3b0;margin-top:3px">5000미만</div></div>
+<div style="flex:1;text-align:center"><div style="font-size:10.5px;color:#c8cdd6;margin-bottom:2px">2.6%</div><div style="height:52px;background:#59606f;border-radius:4px 4px 0 0"></div><div style="font-size:10px;color:#9ba3b0;margin-top:3px">8000미만</div></div>
+<div style="flex:1;text-align:center"><div style="font-size:10.5px;color:#c8cdd6;margin-bottom:2px">3.1%</div><div style="height:62px;background:#59606f;border-radius:4px 4px 0 0"></div><div style="font-size:10px;color:#9ba3b0;margin-top:3px">1억 이상</div></div>
+</div>
+<div style="font-size:11px;color:#9ba3b0;margin-top:6px">정점은 5000미만 — 고소득 우선이라는 구 가설은 반박됐습니다</div>
+</div>
+        <div style="background:#242833;border:1px solid #383e4d;border-radius:10px;padding:12px 14px;margin:10px 0 14px">
+<div style="font-size:11.5px;color:#9ba3b0;margin-bottom:8px">지역별 실제 가입률 — 세로 점선은 기준선 2.9%</div>
+<div style="position:relative">
+<div style="position:absolute;top:2px;bottom:2px;left:76%;border-left:2px dashed #9ba3b0;opacity:.6"></div>
+<div style="display:grid;grid-template-columns:64px 1fr 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:11px;color:#9ba3b0"><div style="text-align:right">경기</div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:100%;background:#e8b44c;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">3.8%</div></div>
+<div style="display:grid;grid-template-columns:64px 1fr 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:11px;color:#9ba3b0"><div style="text-align:right">부산</div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:87%;background:#59606f;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">3.3%</div></div>
+<div style="display:grid;grid-template-columns:64px 1fr 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:11px;color:#9ba3b0"><div style="text-align:right">인천</div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:42%;background:#59606f;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">1.6%</div></div>
+<div style="display:grid;grid-template-columns:64px 1fr 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:11px;color:#9ba3b0"><div style="text-align:right">대전</div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:24%;background:#59606f;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">0.9%</div></div>
+<div style="display:grid;grid-template-columns:64px 1fr 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:11px;color:#9ba3b0"><div style="text-align:right">대구</div><div style="height:9px;border-radius:5px;background:#2b303d;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:21%;background:#e8b44c;border-radius:5px"></div></div><div style="color:#c8cdd6;text-align:right">0.8%</div></div>
+</div>
+<div style="font-size:11px;color:#9ba3b0;margin-top:6px">경기(3.8%)와 대구(0.8%)는 4.8배 격차 — 구성은 유사해 채널 그림자 가능성, 후순위용 지표</div>
+</div>
+        <p class="method-note">"고소득은 이미 충분히 보유해서"라는 설명도 반박됐습니다 — 납입액 구간을 맞춰 비교해도 소득 격차가 유지됐습니다. 지역은 저지역 3곳의 고객 구성(중장년 50~57%·기혼 72~79%)이 경기와 유사해 구성의 그림자가 아니지만, 채널·지점 열이 없어 원인은 불명입니다.</p>
+        <div class="insight-line"><b>왜 중요한가</b> · 실제 반응 구간은 중간 소득(5000미만)입니다. "고소득 우선 상담" 같은 관행을 폐기하고 우선순위를 재배치하는 근거가 되며, 지역은 성향으로 설명하지 말고 후순위 조건으로만 운용합니다.</div>
+      </div>
+      </div>
+
+      <div class="eda-panel" id="eda-corr">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">5. 상관관계 — 변수끼리는 겹치고, 타겟과는 얇다</h3>
+        <p>두 종류의 상관을 히트맵 한 장에 담았습니다 — <b>변수끼리의 겹침</b>(크라메르 V)과 <b>라벨(정답)과의 연관</b>. 가장 짙은 셀은 연령대×결혼 0.642이지만, 빨간 <b>라벨 행은 전부 0.05 이하</b> — "겹침은 있고, 정답과는 얇다"는 구조가 한눈에 보입니다.</p>
+        <div class="chart">
+          <div class="chart-title">범주형 변수 9개 크라메르 V 히트맵 — 빨간 라벨 행·열 = 정답(추가 가입)과의 연관 · 셀 숫자 = 크라메르 V</div>
+                  <svg viewBox="0 0 508 542" role="img" aria-label="범주형 변수 9개와 라벨 사이의 크라메르 V 히트맵 — 변수끼리는 연령대×결혼 0.642 등 짙은 셀이 있지만, 라벨 행은 전부 0.05 이하로 얇다">
+            <text class="c-red" x="130.0" y="80" font-size="12" font-weight="700" text-anchor="end" transform="rotate(-45 130.0 80)">라벨</text>
+            <text class="c-mut" x="174.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 174.0 80)">연령대</text>
+            <text class="c-mut" x="218.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 218.0 80)">성별</text>
+            <text class="c-mut" x="262.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 262.0 80)">지역</text>
+            <text class="c-mut" x="306.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 306.0 80)">소득구간</text>
+            <text class="c-mut" x="350.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 350.0 80)">직업군</text>
+            <text class="c-mut" x="394.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 394.0 80)">위험등급</text>
+            <text class="c-mut" x="438.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 438.0 80)">신용점수대</text>
+            <text class="c-mut" x="482.0" y="80" font-size="12" font-weight="400" text-anchor="end" transform="rotate(-45 482.0 80)">결혼</text>
+            <text class="c-red" x="96" y="114.5" font-size="12.5" font-weight="700" text-anchor="end">라벨</text>
+              <rect class="hm-diag" x="106" y="90" width="40" height="40"/>
+              <rect class="hm-cell" x="150" y="90" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="170.0" y="113.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-cell" x="194" y="90" width="40" height="40" fill-opacity="0.03"/>
+              <text class="hm-off" x="214.0" y="113.5" font-size="10" text-anchor="middle">0.03</text>
+              <rect class="hm-cell" x="238" y="90" width="40" height="40" fill-opacity="0.05"/>
+              <text class="hm-off" x="258.0" y="113.5" font-size="10" text-anchor="middle">0.05</text>
+              <rect class="hm-cell" x="282" y="90" width="40" height="40" fill-opacity="0.03"/>
+              <text class="hm-off" x="302.0" y="113.5" font-size="10" text-anchor="middle">0.03</text>
+              <rect class="hm-cell" x="326" y="90" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="346.0" y="113.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-cell" x="370" y="90" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="390.0" y="113.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-cell" x="414" y="90" width="40" height="40" fill-opacity="0.02"/>
+              <text class="hm-off" x="434.0" y="113.5" font-size="10" text-anchor="middle">0.02</text>
+              <rect class="hm-cell" x="458" y="90" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="478.0" y="113.5" font-size="10" text-anchor="middle">0.04</text>
+            <text class="c-mut" x="96" y="158.5" font-size="12.5" font-weight="400" text-anchor="end">연령대</text>
+              <rect class="hm-cell" x="106" y="134" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="126.0" y="157.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-diag" x="150" y="134" width="40" height="40"/>
+              <rect class="hm-cell" x="194" y="134" width="40" height="40" fill-opacity="0.10"/>
+              <text class="hm-off" x="214.0" y="157.5" font-size="10" text-anchor="middle">0.10</text>
+              <rect class="hm-cell" x="238" y="134" width="40" height="40" fill-opacity="0.07"/>
+              <text class="hm-off" x="258.0" y="157.5" font-size="10" text-anchor="middle">0.07</text>
+              <rect class="hm-cell" x="282" y="134" width="40" height="40" fill-opacity="0.28"/>
+              <text class="hm-off" x="302.0" y="157.5" font-size="10" text-anchor="middle">0.28</text>
+              <rect class="hm-cell" x="326" y="134" width="40" height="40" fill-opacity="0.21"/>
+              <text class="hm-off" x="346.0" y="157.5" font-size="10" text-anchor="middle">0.21</text>
+              <rect class="hm-cell" x="370" y="134" width="40" height="40" fill-opacity="0.13"/>
+              <text class="hm-off" x="390.0" y="157.5" font-size="10" text-anchor="middle">0.13</text>
+              <rect class="hm-cell" x="414" y="134" width="40" height="40" fill-opacity="0.14"/>
+              <text class="hm-off" x="434.0" y="157.5" font-size="10" text-anchor="middle">0.14</text>
+              <rect class="hm-cell" x="458" y="134" width="40" height="40" fill-opacity="0.64"/>
+              <text class="hm-on" x="478.0" y="157.5" font-size="10" text-anchor="middle" font-weight="700">0.64</text>
+            <text class="c-mut" x="96" y="202.5" font-size="12.5" font-weight="400" text-anchor="end">성별</text>
+              <rect class="hm-cell" x="106" y="178" width="40" height="40" fill-opacity="0.03"/>
+              <text class="hm-off" x="126.0" y="201.5" font-size="10" text-anchor="middle">0.03</text>
+              <rect class="hm-cell" x="150" y="178" width="40" height="40" fill-opacity="0.10"/>
+              <text class="hm-off" x="170.0" y="201.5" font-size="10" text-anchor="middle">0.10</text>
+              <rect class="hm-diag" x="194" y="178" width="40" height="40"/>
+              <rect class="hm-cell" x="238" y="178" width="40" height="40" fill-opacity="0.09"/>
+              <text class="hm-off" x="258.0" y="201.5" font-size="10" text-anchor="middle">0.09</text>
+              <rect class="hm-cell" x="282" y="178" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="302.0" y="201.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="326" y="178" width="40" height="40" fill-opacity="0.49"/>
+              <text class="hm-on" x="346.0" y="201.5" font-size="10" text-anchor="middle" font-weight="700">0.49</text>
+              <rect class="hm-cell" x="370" y="178" width="40" height="40" fill-opacity="0.36"/>
+              <text class="hm-off" x="390.0" y="201.5" font-size="10" text-anchor="middle">0.36</text>
+              <rect class="hm-cell" x="414" y="178" width="40" height="40" fill-opacity="0.05"/>
+              <text class="hm-off" x="434.0" y="201.5" font-size="10" text-anchor="middle">0.05</text>
+              <rect class="hm-cell" x="458" y="178" width="40" height="40" fill-opacity="0.00"/>
+              <text class="hm-off" x="478.0" y="201.5" font-size="10" text-anchor="middle">0.00</text>
+            <text class="c-mut" x="96" y="246.5" font-size="12.5" font-weight="400" text-anchor="end">지역</text>
+              <rect class="hm-cell" x="106" y="222" width="40" height="40" fill-opacity="0.05"/>
+              <text class="hm-off" x="126.0" y="245.5" font-size="10" text-anchor="middle">0.05</text>
+              <rect class="hm-cell" x="150" y="222" width="40" height="40" fill-opacity="0.07"/>
+              <text class="hm-off" x="170.0" y="245.5" font-size="10" text-anchor="middle">0.07</text>
+              <rect class="hm-cell" x="194" y="222" width="40" height="40" fill-opacity="0.09"/>
+              <text class="hm-off" x="214.0" y="245.5" font-size="10" text-anchor="middle">0.09</text>
+              <rect class="hm-diag" x="238" y="222" width="40" height="40"/>
+              <rect class="hm-cell" x="282" y="222" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="302.0" y="245.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="326" y="222" width="40" height="40" fill-opacity="0.10"/>
+              <text class="hm-off" x="346.0" y="245.5" font-size="10" text-anchor="middle">0.10</text>
+              <rect class="hm-cell" x="370" y="222" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="390.0" y="245.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="414" y="222" width="40" height="40" fill-opacity="0.09"/>
+              <text class="hm-off" x="434.0" y="245.5" font-size="10" text-anchor="middle">0.09</text>
+              <rect class="hm-cell" x="458" y="222" width="40" height="40" fill-opacity="0.12"/>
+              <text class="hm-off" x="478.0" y="245.5" font-size="10" text-anchor="middle">0.12</text>
+            <text class="c-mut" x="96" y="290.5" font-size="12.5" font-weight="400" text-anchor="end">소득구간</text>
+              <rect class="hm-cell" x="106" y="266" width="40" height="40" fill-opacity="0.03"/>
+              <text class="hm-off" x="126.0" y="289.5" font-size="10" text-anchor="middle">0.03</text>
+              <rect class="hm-cell" x="150" y="266" width="40" height="40" fill-opacity="0.28"/>
+              <text class="hm-off" x="170.0" y="289.5" font-size="10" text-anchor="middle">0.28</text>
+              <rect class="hm-cell" x="194" y="266" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="214.0" y="289.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="238" y="266" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="258.0" y="289.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-diag" x="282" y="266" width="40" height="40"/>
+              <rect class="hm-cell" x="326" y="266" width="40" height="40" fill-opacity="0.19"/>
+              <text class="hm-off" x="346.0" y="289.5" font-size="10" text-anchor="middle">0.19</text>
+              <rect class="hm-cell" x="370" y="266" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="390.0" y="289.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="414" y="266" width="40" height="40" fill-opacity="0.19"/>
+              <text class="hm-off" x="434.0" y="289.5" font-size="10" text-anchor="middle">0.19</text>
+              <rect class="hm-cell" x="458" y="266" width="40" height="40" fill-opacity="0.20"/>
+              <text class="hm-off" x="478.0" y="289.5" font-size="10" text-anchor="middle">0.20</text>
+            <text class="c-mut" x="96" y="334.5" font-size="12.5" font-weight="400" text-anchor="end">직업군</text>
+              <rect class="hm-cell" x="106" y="310" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="126.0" y="333.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-cell" x="150" y="310" width="40" height="40" fill-opacity="0.21"/>
+              <text class="hm-off" x="170.0" y="333.5" font-size="10" text-anchor="middle">0.21</text>
+              <rect class="hm-cell" x="194" y="310" width="40" height="40" fill-opacity="0.49"/>
+              <text class="hm-on" x="214.0" y="333.5" font-size="10" text-anchor="middle" font-weight="700">0.49</text>
+              <rect class="hm-cell" x="238" y="310" width="40" height="40" fill-opacity="0.10"/>
+              <text class="hm-off" x="258.0" y="333.5" font-size="10" text-anchor="middle">0.10</text>
+              <rect class="hm-cell" x="282" y="310" width="40" height="40" fill-opacity="0.19"/>
+              <text class="hm-off" x="302.0" y="333.5" font-size="10" text-anchor="middle">0.19</text>
+              <rect class="hm-diag" x="326" y="310" width="40" height="40"/>
+              <rect class="hm-cell" x="370" y="310" width="40" height="40" fill-opacity="0.57"/>
+              <text class="hm-on" x="390.0" y="333.5" font-size="10" text-anchor="middle" font-weight="700">0.57</text>
+              <rect class="hm-cell" x="414" y="310" width="40" height="40" fill-opacity="0.09"/>
+              <text class="hm-off" x="434.0" y="333.5" font-size="10" text-anchor="middle">0.09</text>
+              <rect class="hm-cell" x="458" y="310" width="40" height="40" fill-opacity="0.15"/>
+              <text class="hm-off" x="478.0" y="333.5" font-size="10" text-anchor="middle">0.15</text>
+            <text class="c-mut" x="96" y="378.5" font-size="12.5" font-weight="400" text-anchor="end">위험등급</text>
+              <rect class="hm-cell" x="106" y="354" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="126.0" y="377.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-cell" x="150" y="354" width="40" height="40" fill-opacity="0.13"/>
+              <text class="hm-off" x="170.0" y="377.5" font-size="10" text-anchor="middle">0.13</text>
+              <rect class="hm-cell" x="194" y="354" width="40" height="40" fill-opacity="0.36"/>
+              <text class="hm-off" x="214.0" y="377.5" font-size="10" text-anchor="middle">0.36</text>
+              <rect class="hm-cell" x="238" y="354" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="258.0" y="377.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="282" y="354" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="302.0" y="377.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="326" y="354" width="40" height="40" fill-opacity="0.57"/>
+              <text class="hm-on" x="346.0" y="377.5" font-size="10" text-anchor="middle" font-weight="700">0.57</text>
+              <rect class="hm-diag" x="370" y="354" width="40" height="40"/>
+              <rect class="hm-cell" x="414" y="354" width="40" height="40" fill-opacity="0.07"/>
+              <text class="hm-off" x="434.0" y="377.5" font-size="10" text-anchor="middle">0.07</text>
+              <rect class="hm-cell" x="458" y="354" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="478.0" y="377.5" font-size="10" text-anchor="middle">0.11</text>
+            <text class="c-mut" x="96" y="422.5" font-size="12.5" font-weight="400" text-anchor="end">신용점수대</text>
+              <rect class="hm-cell" x="106" y="398" width="40" height="40" fill-opacity="0.02"/>
+              <text class="hm-off" x="126.0" y="421.5" font-size="10" text-anchor="middle">0.02</text>
+              <rect class="hm-cell" x="150" y="398" width="40" height="40" fill-opacity="0.14"/>
+              <text class="hm-off" x="170.0" y="421.5" font-size="10" text-anchor="middle">0.14</text>
+              <rect class="hm-cell" x="194" y="398" width="40" height="40" fill-opacity="0.05"/>
+              <text class="hm-off" x="214.0" y="421.5" font-size="10" text-anchor="middle">0.05</text>
+              <rect class="hm-cell" x="238" y="398" width="40" height="40" fill-opacity="0.09"/>
+              <text class="hm-off" x="258.0" y="421.5" font-size="10" text-anchor="middle">0.09</text>
+              <rect class="hm-cell" x="282" y="398" width="40" height="40" fill-opacity="0.19"/>
+              <text class="hm-off" x="302.0" y="421.5" font-size="10" text-anchor="middle">0.19</text>
+              <rect class="hm-cell" x="326" y="398" width="40" height="40" fill-opacity="0.09"/>
+              <text class="hm-off" x="346.0" y="421.5" font-size="10" text-anchor="middle">0.09</text>
+              <rect class="hm-cell" x="370" y="398" width="40" height="40" fill-opacity="0.07"/>
+              <text class="hm-off" x="390.0" y="421.5" font-size="10" text-anchor="middle">0.07</text>
+              <rect class="hm-diag" x="414" y="398" width="40" height="40"/>
+              <rect class="hm-cell" x="458" y="398" width="40" height="40" fill-opacity="0.20"/>
+              <text class="hm-off" x="478.0" y="421.5" font-size="10" text-anchor="middle">0.20</text>
+            <text class="c-mut" x="96" y="466.5" font-size="12.5" font-weight="400" text-anchor="end">결혼</text>
+              <rect class="hm-cell" x="106" y="442" width="40" height="40" fill-opacity="0.04"/>
+              <text class="hm-off" x="126.0" y="465.5" font-size="10" text-anchor="middle">0.04</text>
+              <rect class="hm-cell" x="150" y="442" width="40" height="40" fill-opacity="0.64"/>
+              <text class="hm-on" x="170.0" y="465.5" font-size="10" text-anchor="middle" font-weight="700">0.64</text>
+              <rect class="hm-cell" x="194" y="442" width="40" height="40" fill-opacity="0.00"/>
+              <text class="hm-off" x="214.0" y="465.5" font-size="10" text-anchor="middle">0.00</text>
+              <rect class="hm-cell" x="238" y="442" width="40" height="40" fill-opacity="0.12"/>
+              <text class="hm-off" x="258.0" y="465.5" font-size="10" text-anchor="middle">0.12</text>
+              <rect class="hm-cell" x="282" y="442" width="40" height="40" fill-opacity="0.20"/>
+              <text class="hm-off" x="302.0" y="465.5" font-size="10" text-anchor="middle">0.20</text>
+              <rect class="hm-cell" x="326" y="442" width="40" height="40" fill-opacity="0.15"/>
+              <text class="hm-off" x="346.0" y="465.5" font-size="10" text-anchor="middle">0.15</text>
+              <rect class="hm-cell" x="370" y="442" width="40" height="40" fill-opacity="0.11"/>
+              <text class="hm-off" x="390.0" y="465.5" font-size="10" text-anchor="middle">0.11</text>
+              <rect class="hm-cell" x="414" y="442" width="40" height="40" fill-opacity="0.20"/>
+              <text class="hm-off" x="434.0" y="465.5" font-size="10" text-anchor="middle">0.20</text>
+              <rect class="hm-diag" x="458" y="442" width="40" height="40"/>
+            <rect class="hm-outline" x="104" y="88" width="396" height="44"/>
+            <rect class="hm-outline" x="104" y="88" width="44" height="396"/>
+            <line class="l-axis" x1="104" y1="88" x2="502" y2="88"/>
+            <line class="l-axis" x1="104" y1="88" x2="104" y2="492"/>
+            <text class="c-mut" x="8" y="522" font-size="11.5">진한 셀일수록 두 변수가 많이 겹침(크라메르 V, 0~1) · 대각선(같은 변수끼리)은 회색 · 빨간 점선 테두리 행·열 = 정답(추가 가입)과의 연관</text>
+            <text class="c-mut" x="8" y="537" font-size="11.5">테두리 안 셀은 전부 0.05 이하 — 개별 속성만으로는 정답이 갈라지지 않는다</text>
+          </svg>
+          <p class="chart-note">변수끼리는 짙은 셀이 3쌍(연령대×결혼 0.642 · 직업군×위험등급 0.572 · 성별×직업군 0.490) 있지만 <b>라벨 행은 전부 0.05 이하</b>(최고 지역 0.047) — 개별 속성만으로는 정답이 갈라지지 않습니다. 숫자형 신호의 피어슨 상관도 얇습니다: 보유상품수 +0.070 · 납입액(로그) +0.050 · 상품금액(로그) +0.020 · 경과연수 +0.004.</p>
+        </div>
+        <div class="note"><b>변수끼리도 겹쳐 있습니다</b> — 그래서 교차 피처(연령×결혼)를 따로 만들었고, 겹치는 특성의 계수가 흔들리는 현상은 <a href="#modeling" style="color:var(--redsoft)">모델 절(⑤ 계수)</a>에서 다룹니다.</div>
+        <div class="insight-line"><b>왜 중요한가</b> · 개별 상관 0.070으로는 명단이 만들어지지 않지만, 겹치는 신호들을 결합하면 기준선의 3~4배 농도가 만들어집니다 — 모델이 필요한 이유입니다.</div>
+      </div>
+      </div>
+      <div class="eda-panel" id="eda-leak">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">6. 누수 — 미래 정보와 가짜 신호를 걸러내기</h3>
+        <p>학습 데이터에 미래 정보가 새어 들어가면 평가 점수는 올라가지만 운영에서는 무너집니다. 이 프로젝트는 누수를 두 층으로 관리했습니다 — 파생 피처는 모두 2024년 이전 거래로만 계산해 미래 정보가 새는 길을 코드 구조로 막았고, 데이터 단계에서는 <b>시점 얽힘(코호트)과 한쪽 프레임에서만 강한 가짜 신호</b>를 걸러냈습니다.</p>
+        <p class="kicker" style="margin:32px 0 12px">데이터 단계 — 걸러낸 가짜 신호 4개</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px">
+<div style="flex:1;min-width:150px;background:#242833;border:1px solid #383e4d;border-radius:8px;padding:8px 10px;font-size:11px;color:#c8cdd6"><b style="color:#e8b44c">✕ 갱신형 보유</b><br>코호트 얽힘 — 두 프레임에서 소멸</div>
+<div style="flex:1;min-width:150px;background:#242833;border:1px solid #383e4d;border-radius:8px;padding:8px 10px;font-size:11px;color:#c8cdd6"><b style="color:#e8b44c">✕ 경과 기간</b><br>역방향 후 소멸 — 최근 가입자 최고</div>
+<div style="flex:1;min-width:150px;background:#242833;border:1px solid #383e4d;border-radius:8px;padding:8px 10px;font-size:11px;color:#c8cdd6"><b style="color:#e8b44c">✕ 병력 기록</b><br>방향 뒤집힘 — 피처 제외</div>
+<div style="flex:1;min-width:150px;background:#242833;border:1px solid #383e4d;border-radius:8px;padding:8px 10px;font-size:11px;color:#c8cdd6"><b style="color:#e8b44c">✕ 결혼 단독</b><br>단독으론 약함 — 교차(연령×결혼)로만 유효</div>
+</div>
+        <div class="note"><b>복제 실패·방향 뒤집힘은 버립니다</b> — 갱신형·경과기간처럼 T에 따라 신호가 사라진 것(소멸 2개), 병력·결혼 단독처럼 관계가 없는 것(무관 2개), 보유수×납입액 교차처럼 소거 실험에서 기여가 0이었던 것은 피처에서 제외했습니다.</div>
+        <div class="note"><b>신뢰 규칙</b> — 모든 신호는 T=2023과 T=2024 양쪽 프레임에 재현될 때만 채택했습니다. 이 규칙이 갱신형 보유·경과 기간이라는 가짜 신호(코호트 얽힘)를 걸러냈습니다.</div>
+        <p class="kicker" style="margin:32px 0 12px">모델 단계 — 코드가 막은 누수</p>
+        <div class="grid-2">
+          <article class="card"><h3>방어 ① 데이터 누수 차단</h3><div class="card-number">누수 0건</div><p>파생 피처는 모두 2024년 이전 거래로만 계산 — 미래 정보가 학습에 새는 길을 코드 구조로 차단</p></article>
+          <article class="card"><h3>방어 ② 고객 단위 층화 분할</h3><div class="card-number">70 : 30</div><p>같은 고객의 거래가 학습·평가에 동시에 들어가 성능이 뻥튜기되는 함정 방지</p></article>
+        </div>
+        <div class="insight-line"><b>왜 중요한가</b> · 한 프레임에서만 강했던 신호를 모델에 넣으면 평가 점수가 올라가는 것처럼 보이지만 운영에서는 무너집니다. "두 프레임 복제"라는 채택 규칙이 모델의 신뢰를 만듭니다.</div>
+      </div>
+      </div>
+
+      <div class="eda-panel" id="eda-summary">
+      <div class="subsection" style="margin-top:0">
+        <h3 class="subsection-title">7. 정리 — 살아남은 신호와 버려진 신호</h3>
+        <p>EDA의 결과를 한 장으로 — 채택된 신호 6개는 각자 운용에서 자리를 찾았고, 버려진 신호들은 모델에서 제외됐습니다. 살아남은 신호는 모델링의 입력(피처 13종)이 됩니다.</p>
+        <div class="table-wrap"><table><thead><tr><th>채택 신호 6개</th><th>실측</th><th>운용 용도</th></tr></thead><tbody>
+          <tr><td><b>보유수 2개 이상</b></td><td>11.6% vs 2.8% (4.1배)</td><td>반복 구매 — 티어 1순위</td></tr>
+          <tr><td><b>특약 보유</b></td><td>3.7% vs 0.7% (5.3배 · 통제 후 6.9배)</td><td>특약 — 대화 거리 설계</td></tr>
+          <tr><td><b>50대 기혼</b></td><td>vs 50대 미혼 5.6배</td><td>기혼×중년 교차 피처 필수</td></tr>
+          <tr><td><b>소득 5000미만</b></td><td>구간별 정점 3.4% (기준선 2.9%)</td><td>소득 우선순위 재배치</td></tr>
+          <tr><td><b>지역 경기</b></td><td>3.8% vs 대구 0.8% (4.8배)</td><td>지역 후순위용</td></tr>
+          <tr><td><b>신용 300점대</b></td><td>기준선 대비 0.55배</td><td>하단 걸러내기 전용</td></tr>
+        </tbody></table></div>
+        <div class="note" style="margin-top:16px"><b>버려진 신호</b> — 갱신형 보유·경과 기간(두 프레임에서 소멸), 병력 기록(방향 뒤집힘), 결혼 단독(교차로만 유효), 보유수×납입액 교차(소거 실험 기여 0)은 피처에서 제외했습니다.</div>
+        <div class="grid-3" style="margin-top:18px">
+          <article class="card"><h3>교훈 ① 평가</h3><p>정확도가 아니라 상위 k명의 농도 — 불균형 타겟(2.9%)에서 "전원 미가입"의 정확도 97.1%는 아무 정보가 없습니다.</p></article>
+          <article class="card"><h3>교훈 ② 신뢰</h3><p>두 프레임 복제가 신뢰를 만듭니다 — 한 프레임에서만 강한 신호는 운영에서 무너지는 가짜였습니다.</p></article>
+          <article class="card"><h3>교훈 ③ 검증</h3><p>그림자를 걸러낸 뒤 채택합니다 — 계열 그림자(특약), 코호트 얽힘(갱신형), 소수 셀(최소 39명)을 모두 점검했습니다.</p></article>
+        </div>
+        <div class="hero-actions"><a class="btn btn-primary" href="#modeling">살아남은 신호로 모델링 계속 보기</a><a class="btn" href="보장only_EDA_리포트.html">EDA 상세 리포트</a></div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section analysis-section" id="modeling">
+    <div class="container">
+      <div class="section-intro"><span class="kicker">분류 모델 검증</span><div class="rule"></div><h2>행동 신호로 추가 가입을 예측할 수 있었는가</h2><p>가설 검증에서 살아남은 신호 13종(범주 8 + 수치 5 + 교차)으로 이진 분류 모델을 만들고, 같은 조건에서 반복 20회(동일 고객 풀·70/30 층화 분할)로 성능을 쟀습니다. 판정 기준은 사전 합의된 상위 1,000명 실제 가입률 5.8%입니다.</p></div>
+      <div class="subsection">
+        <h3 class="subsection-title">모델을 만들기까지 — 여섯 단계</h3>
+        <div class="chart">
+          <div class="chart-title">1~4는 데이터 만들기 · 5~6은 학습과 판정 준비 — 왼쪽 위에서 오른쪽 아래로</div>
+          <svg viewBox="0 0 680 208" role="img" aria-label="모델링 여섯 단계 — 원본 zip에서 2024년 말 풀과 피처를 만들고 20회 반복 학습·판정까지">
+            <rect class="c-box" x="16" y="16" width="180" height="64" rx="10"/>
+            <text class="c-red" x="28" y="33" font-family="Consolas,monospace" font-size="11" font-weight="700">1</text>
+            <text class="c-ink" x="106" y="45" text-anchor="middle" font-size="12.5" font-weight="700">원본 zip</text>
+            <text class="c-mut" x="106" y="65" text-anchor="middle" font-size="11.5">보험+증권 혼합</text>
+            <line class="l-mut" x1="198" y1="48" x2="230" y2="48"/><polygon class="c-arr" points="238,48 227,44 227,52"/>
+            <rect class="c-box" x="240" y="16" width="180" height="64" rx="10"/>
+            <text class="c-red" x="252" y="33" font-family="Consolas,monospace" font-size="11" font-weight="700">2</text>
+            <text class="c-ink" x="330" y="45" text-anchor="middle" font-size="12.5" font-weight="700">보험 거래만</text>
+            <text class="c-mut" x="330" y="65" text-anchor="middle" font-size="11.5">77,305건</text>
+            <line class="l-mut" x1="422" y1="48" x2="454" y2="48"/><polygon class="c-arr" points="462,48 451,44 451,52"/>
+            <rect class="c-box" x="464" y="16" width="180" height="64" rx="10"/>
+            <text class="c-red" x="476" y="33" font-family="Consolas,monospace" font-size="11" font-weight="700">3</text>
+            <text class="c-ink" x="554" y="45" text-anchor="middle" font-size="12.5" font-weight="700">고객 1행 재편성</text>
+            <text class="c-mut" x="554" y="65" text-anchor="middle" font-size="11.5">74,776명</text>
+            <path d="M 554 80 L 554 104 L 106 104 L 106 124" fill="none" class="l-mut"/><polygon class="c-arr" points="106,132 101,122 111,122"/>
+            <rect class="c-boxhi" x="16" y="132" width="180" height="64" rx="10"/>
+            <text class="c-red" x="28" y="149" font-family="Consolas,monospace" font-size="11" font-weight="700">4</text>
+            <text class="c-ink" x="106" y="161" text-anchor="middle" font-size="12.5" font-weight="700">T=2024 풀 38,932명</text>
+            <text class="c-ink" x="106" y="181" text-anchor="middle" font-size="11.5">정답 1,137명(2.9%)</text>
+            <line class="l-mut" x1="198" y1="164" x2="230" y2="164"/><polygon class="c-arr" points="238,164 227,160 227,168"/>
+            <rect class="c-box" x="240" y="132" width="180" height="64" rx="10"/>
+            <text class="c-red" x="252" y="149" font-family="Consolas,monospace" font-size="11" font-weight="700">5</text>
+            <text class="c-ink" x="330" y="161" text-anchor="middle" font-size="12.5" font-weight="700">피처 13종 = 44열</text>
+            <text class="c-mut" x="330" y="181" text-anchor="middle" font-size="11.5">범주 8 + 수치 5 + 교차 5</text>
+            <line class="l-mut" x1="422" y1="164" x2="454" y2="164"/><polygon class="c-arr" points="462,164 451,160 451,168"/>
+            <rect class="c-boxhi" x="464" y="132" width="180" height="64" rx="10"/>
+            <text class="c-red" x="476" y="149" font-family="Consolas,monospace" font-size="11" font-weight="700">6</text>
+            <text class="c-ink" x="554" y="161" text-anchor="middle" font-size="12.5" font-weight="700">학습·평가 20회 반복</text>
+            <text class="c-ink" x="554" y="181" text-anchor="middle" font-size="11.5">→ 상위 1,000명 판정</text>
+          </svg>
+          <p class="chart-note">보험·증권이 섞인 원본에서 보험 거래만 골라 고객 1명=1행으로 재편성합니다. 파생값은 모두 2024년 이전 거래로만 계산 — 미래 정보(누수) 차단. 1:33 불균형은 학습 가중치로 대응합니다.</p>
+        </div>
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">① 모델 성능 비교 — 상위 1,000명 실제 가입률 (반복 20회)</h3>
+        <div class="chart">
+          <div class="chart-title">막대 = 상위 1,000명 실제 가입률(높을수록 좋음) · 점선 = 사전 합의 판정선 5.8% · 막대 옆 흔들림 = 20회 표준편차</div>
+          <svg viewBox="0 0 680 216" role="img" aria-label="모델별 상위 1,000명 실제 가입률 비교 — 로지스틱 8.2%로 판정선 통과">
+            <line class="l-axis" x1="170" y1="24" x2="170" y2="192"/>
+            <line class="l-red" x1="361" y1="24" x2="361" y2="192" stroke-dasharray="5 4"/>
+            <text class="c-red" x="367" y="17" font-size="11" font-weight="700">판정선 5.8%</text>
+            <rect class="c-bar" x="170" y="30" width="96" height="22"/>
+            <text class="c-ink" x="8" y="39" font-size="13" font-weight="700">더미(전원 미가입)</text>
+            <text class="c-mut" x="8" y="54" font-size="10.5">아무것도 안 한 기준선</text>
+            <text class="c-ink" x="276" y="45" font-size="12.5" font-weight="700">2.9%</text>
+            <rect class="c-barhi" x="170" y="72" width="271" height="22"/>
+            <line class="l-mut" x1="424.5" y1="83" x2="457.5" y2="83" stroke-width="1.5"/>
+            <line class="l-mut" x1="424.5" y1="80" x2="424.5" y2="86" stroke-width="1.5"/>
+            <line class="l-mut" x1="457.5" y1="80" x2="457.5" y2="86" stroke-width="1.5"/>
+            <text class="c-red" x="8" y="81" font-size="13" font-weight="800">로지스틱 회귀 v3</text>
+            <text class="c-mut" x="8" y="96" font-size="10.5">확정 · AUC 0.720</text>
+            <text class="c-red" x="467" y="87" font-size="13" font-weight="800">8.2% ±0.5</text>
+            <rect class="c-bar" x="170" y="114" width="290" height="22"/>
+            <line class="l-mut" x1="433.6" y1="125" x2="486.4" y2="125" stroke-width="1.5"/>
+            <line class="l-mut" x1="433.6" y1="122" x2="433.6" y2="128" stroke-width="1.5"/>
+            <line class="l-mut" x1="486.4" y1="122" x2="486.4" y2="128" stroke-width="1.5"/>
+            <text class="c-ink" x="8" y="123" font-size="13" font-weight="700">LightGBM</text>
+            <text class="c-mut" x="8" y="138" font-size="10.5">AUC 0.728</text>
+            <text class="c-ink" x="496" y="129" font-size="12.5" font-weight="700">8.8% ±0.8</text>
+            <rect class="c-bar" x="170" y="156" width="323" height="22"/>
+            <line class="l-mut" x1="469.9" y1="167" x2="516.1" y2="167" stroke-width="1.5"/>
+            <line class="l-mut" x1="469.9" y1="164" x2="469.9" y2="170" stroke-width="1.5"/>
+            <line class="l-mut" x1="516.1" y1="164" x2="516.1" y2="170" stroke-width="1.5"/>
+            <text class="c-ink" x="8" y="165" font-size="13" font-weight="700">랜덤포레스트(기본)</text>
+            <text class="c-mut" x="8" y="180" font-size="10.5">AUC 0.743</text>
+            <text class="c-ink" x="526" y="171" font-size="12.5" font-weight="700">9.8% ±0.7</text>
+          </svg>
+          <p class="chart-note">AUC만 보면 랜덤포레스트(0.743)가 앞서지만, 12조합 튜닝 후에도 상위 1,000명 차이는 <b>+0.10%p±0.60 — 우연 범위</b>(승 13/20). 차이가 우연이면 계수로 "왜 이 고객인가"에 답하는 <b>로지스틱을 확정</b>했습니다. 완전 성장 트리(잎당 1명)는 AUC 0.65대 급락 — 과적합 예시.</p>
+        </div>
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">② 명단을 넓힐수록 — 실제 가입률의 농도 (반복 20회 평균)</h3>
+        <div class="chart">
+          <div class="chart-title">빨간 선 = 모델이 고른 명단 · 회색 = 규칙·기준선 · 위 점선 = 판정선 5.8% / 아래 점선 = 기준선 2.9%</div>
+          <svg viewBox="0 0 680 252" role="img" aria-label="명단 규모별 실제 가입률 — 상위 1,000명 8.2%로 판정선 통과, 전체는 기준선 2.9%">
+            <line class="l-axis" x1="80" y1="113" x2="640" y2="113"/>
+            <line class="l-axis" x1="80" y1="71.5" x2="640" y2="71.5"/>
+            <line class="l-axis" x1="80" y1="30" x2="640" y2="30"/>
+            <text class="c-mut" x="72" y="204" font-size="11" text-anchor="end">0</text>
+            <text class="c-mut" x="72" y="117" font-size="11" text-anchor="end">6</text>
+            <text class="c-mut" x="72" y="75" font-size="11" text-anchor="end">9</text>
+            <text class="c-mut" x="72" y="34" font-size="11" text-anchor="end">12</text>
+            <text class="c-mut" x="8" y="20" font-size="11">실제 가입률(%)</text>
+            <line class="l-mut" x1="80" y1="155.9" x2="640" y2="155.9" stroke-dasharray="5 4" stroke-width="1.5"/>
+            <text class="c-mut" x="84" y="150" font-size="11">기준선 2.9%</text>
+            <line class="l-red" x1="80" y1="115.8" x2="640" y2="115.8" stroke-dasharray="5 4" stroke-width="1.5"/>
+            <text class="c-red" x="636" y="110" font-size="11" font-weight="700" text-anchor="end">판정선 5.8%</text>
+            <polyline class="l-mut" points="80,38.3 220,61.8" fill="none" stroke-dasharray="4 4" stroke-width="2"/>
+            <polyline class="l-red" points="220,61.8 360,82.6 500,103.3 640,155.9" fill="none" stroke-width="2.5"/>
+            <circle class="c-bar" cx="80" cy="38.3" r="5"/>
+            <circle class="c-barhi" cx="220" cy="61.8" r="5.5"/>
+            <circle class="c-barhi" cx="360" cy="82.6" r="5.5"/>
+            <circle class="c-barhi" cx="500" cy="103.3" r="5.5"/>
+            <circle class="c-bar" cx="640" cy="155.9" r="5"/>
+            <text class="c-mut" x="80" y="24" font-size="12" font-weight="700" text-anchor="middle">11.4%</text>
+            <text class="c-ink" x="220" y="48" font-size="12.5" font-weight="700" text-anchor="middle">9.7%</text>
+            <text class="c-red" x="360" y="66" font-size="15" font-weight="800" text-anchor="middle">8.2%</text>
+            <text class="c-ink" x="500" y="89" font-size="12.5" font-weight="700" text-anchor="middle">6.7%</text>
+            <text class="c-mut" x="640" y="142" font-size="12" font-weight="700" text-anchor="middle">2.9%</text>
+            <line class="l-axis" x1="80" y1="196" x2="640" y2="196"/>
+            <text class="c-mut" x="80" y="216" font-size="12" text-anchor="middle">규칙 199명</text>
+            <text class="c-mut" x="220" y="216" font-size="12" text-anchor="middle">상위 500</text>
+            <text class="c-mut" x="360" y="216" font-size="12" text-anchor="middle">상위 1,000</text>
+            <text class="c-mut" x="500" y="216" font-size="12" text-anchor="middle">상위 2,000</text>
+            <text class="c-mut" x="652" y="216" font-size="12" text-anchor="end">전체 38,932명</text>
+            <text class="c-mut" x="360" y="240" font-size="11" text-anchor="middle">명단 규모 — 넓어질수록 →</text>
+          </svg>
+          <p class="chart-note">상위 1,000명에서 <b>8.2% — 기준선 2.8배, 판정선 통과</b>. "보유수 2개 이상" 규칙은 11.4%로 더 진하지만 199명에서 끝나므로 규칙과 모델은 병행합니다.</p>
+          <div style="border-top:1px solid var(--line);margin:14px 0 0;padding-top:12px">
+            <svg viewBox="0 0 680 186" role="img" aria-label="모델이 고른 상위 1,000명의 실제 가입자 82명 — 무작위 1,000명 29명의 2.8배">
+              <text class="c-red" x="170" y="20" text-anchor="middle" font-size="12" font-weight="700">모델이 고른 상위 1,000명</text>
+              <rect class="c-barhi" x="110" y="30" width="120" height="123" rx="6"/>
+              <text class="c-onbg" x="170" y="100" text-anchor="middle" font-size="22" font-weight="800">82명</text>
+              <text class="c-mut" x="170" y="176" text-anchor="middle" font-size="11">실제 가입자 82명 (8.2%)</text>
+              <text class="c-mut" x="450" y="20" text-anchor="middle" font-size="12">무작위로 고른 1,000명</text>
+              <rect class="c-bar" x="390" y="110" width="120" height="43" rx="6"/>
+              <text class="c-ink" x="450" y="137" text-anchor="middle" font-size="15" font-weight="700">29명</text>
+              <text class="c-mut" x="450" y="176" text-anchor="middle" font-size="11">기준선 2.9%</text>
+              <line class="l-mut" x1="242" y1="96" x2="370" y2="112"/>
+              <polygon class="c-arr" points="378,113 367,107 369,118"/>
+              <text class="c-red" x="308" y="82" text-anchor="middle" font-size="14" font-weight="800">2.8배</text>
+            </svg>
+            <p class="chart-note" style="margin-top:10px">판정 지점의 뜻 — 같은 1,000명이라도 <b>누구를 고르느냐</b>에 따라 잡히는 실제 가입자가 82명 vs 29명으로 갈립니다.</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">③ 확률이 실제 빈도와 맞는가 — 보정 곡선 (반복 20회 평균)</h3>
+        <div class="chart">
+          <div class="chart-title">모델 확률을 5등급으로 나눠 실제 가입률과 대조 — Q1(낮음) → Q5(높음)</div>
+          <svg viewBox="0 0 680 236" role="img" aria-label="보정 곡선 — 모델 확률 5등급별 실제 가입률이 2.30%에서 3.66%까지 단조 상승">
+            <line class="l-axis" x1="80" y1="112" x2="640" y2="112"/>
+            <line class="l-axis" x1="80" y1="44" x2="640" y2="44"/>
+            <text class="c-mut" x="72" y="184" font-size="11" text-anchor="end">0</text>
+            <text class="c-mut" x="72" y="116" font-size="11" text-anchor="end">2</text>
+            <text class="c-mut" x="72" y="48" font-size="11" text-anchor="end">4</text>
+            <text class="c-mut" x="8" y="20" font-size="11">실제 가입률(%)</text>
+            <line class="l-axis" x1="80" y1="180" x2="640" y2="180"/>
+            <rect class="c-bar" x="106" y="101.8" width="60" height="78.2"/>
+            <rect class="c-bar" x="218" y="94.3" width="60" height="85.7"/>
+            <rect class="c-bar" x="330" y="80.7" width="60" height="99.3"/>
+            <rect class="c-bar" x="442" y="71.5" width="60" height="108.5"/>
+            <rect class="c-barhi" x="554" y="55.6" width="60" height="124.4"/>
+            <text class="c-ink" x="136" y="94" font-size="12.5" font-weight="700" text-anchor="middle">2.30%</text>
+            <text class="c-ink" x="248" y="86" font-size="12.5" font-weight="700" text-anchor="middle">2.52%</text>
+            <text class="c-ink" x="360" y="73" font-size="12.5" font-weight="700" text-anchor="middle">2.92%</text>
+            <text class="c-ink" x="472" y="63" font-size="12.5" font-weight="700" text-anchor="middle">3.19%</text>
+            <text class="c-red" x="584" y="48" font-size="13" font-weight="800" text-anchor="middle">3.66%</text>
+            <text class="c-mut" x="136" y="202" font-size="12" text-anchor="middle">Q1</text>
+            <text class="c-mut" x="248" y="202" font-size="12" text-anchor="middle">Q2</text>
+            <text class="c-mut" x="360" y="202" font-size="12" text-anchor="middle">Q3</text>
+            <text class="c-mut" x="472" y="202" font-size="12" text-anchor="middle">Q4</text>
+            <text class="c-mut" x="584" y="202" font-size="12" text-anchor="middle">Q5</text>
+            <text class="c-mut" x="360" y="228" font-size="11" text-anchor="middle">모델이 매긴 확률 등급 — 낮음 → 높음</text>
+          </svg>
+          <p class="chart-note">Q1 2.30% → Q5 3.66%, 꺾임 없이 단조 상승 — 티어 수치를 "이 티어는 10명 중 1명이 가입한 이력" 식 <b>실제 빈도</b>로 말할 수 있습니다.</p>
+        </div>
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">④ 확률 컷 0.5의 함정 — 판정은 명단 규모로</h3>
+        <div class="grid-3">
+          <article class="card"><h3>컷 0.5</h3><div class="card-number">4,748명</div><p>전체의 41% · 농도 5.1% — 재현율은 크지만 상담 불가능한 규모</p></article>
+          <article class="card"><h3>컷 0.7</h3><div class="card-number">1,168명</div><p>농도 7.7% — 상위 1,000명 명단(8.2%)과 사실상 같은 지점</p></article>
+          <article class="card" style="border-color:var(--red)"><h3 style="color:var(--redsoft)">판정 · 운용</h3><div class="card-number" style="color:var(--redsoft)">명단 규모(k)</div><p>"컷을 어디로"는 "명단을 얼마나 크게"의 다른 표현 — 상위 1,000명 · 8.2%</p></article>
+        </div>
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">⑤ 확정 모델의 표준화 계수 — 가입 방향과 미가입 방향 (반복 20회 평균)</h3>
+        <div class="chart">
+          <div class="chart-title">가운데 축 = 0 · 오른쪽(빨강) = 가입을 끄는 신호 · 왼쪽(회색) = 미가입 쪽으로 밀어내는 신호</div>
+          <svg viewBox="0 0 680 270" role="img" aria-label="로지스틱 회귀 표준화 계수 — 특약 +0.84, 20대 +0.70, 경기 +0.61, 위험A +0.48 vs 소득 −0.46, 위험D −0.65, 대구 −0.99, 60대 −1.42">
+            <line class="l-axis" x1="340" y1="8" x2="340" y2="238"/>
+            <rect class="c-barhi" x="340" y="18" width="101" height="17"/>
+            <text class="c-red" x="447" y="31" font-size="12.5" font-weight="700">특약 보유(rider)  +0.84</text>
+            <rect class="c-barhi" x="340" y="46" width="84" height="17"/>
+            <text class="c-red" x="430" y="59" font-size="12.5" font-weight="700">20대  +0.70</text>
+            <rect class="c-barhi" x="340" y="74" width="73" height="17"/>
+            <text class="c-red" x="419" y="87" font-size="12.5" font-weight="700">지역 경기도  +0.61</text>
+            <rect class="c-barhi" x="340" y="102" width="58" height="17"/>
+            <text class="c-red" x="404" y="115" font-size="12.5" font-weight="700">위험등급 A  +0.48</text>
+            <rect class="c-bar" x="285" y="130" width="55" height="17"/>
+            <text class="c-mut" x="279" y="143" font-size="12.5" font-weight="700" text-anchor="end">소득 8000만원 미만  −0.46</text>
+            <rect class="c-bar" x="262" y="158" width="78" height="17"/>
+            <text class="c-mut" x="256" y="171" font-size="12.5" font-weight="700" text-anchor="end">위험등급 D  −0.65</text>
+            <rect class="c-bar" x="221" y="186" width="119" height="17"/>
+            <text class="c-mut" x="215" y="199" font-size="12.5" font-weight="700" text-anchor="end">지역 대구  −0.99</text>
+            <rect class="c-bar" x="170" y="214" width="170" height="17"/>
+            <text class="c-mut" x="164" y="227" font-size="12.5" font-weight="700" text-anchor="end">60대  −1.42</text>
+            <text class="c-mut" x="170" y="258" font-size="11" text-anchor="middle">← 미가입 방향</text>
+            <text class="c-mut" x="510" y="258" font-size="11" text-anchor="middle">가입 방향 →</text>
+          </svg>
+          <p class="chart-note">가장 강하고 안정적인 신호는 특약 보유(+0.84, ±0.04). 연령×기혼 교차는 겉값이 가장 크지만 흔들림(±0.3~0.6)이 커서 그림에서 뺐습니다 — 서로 겹치는 특성은 계수가 불안정해집니다.</p>
+        </div>
+        <div class="chart">
+          <div class="chart-title">시뮬레이터 — 고객 신호를 체크하면 점수가 어떻게 되나</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin:4px 0 14px">
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="0.84" style="accent-color:var(--red)"> 특약 보유 <b style="color:var(--red)">+0.84</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="0.7" style="accent-color:var(--red)"> 20대 <b style="color:var(--red)">+0.70</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="0.61" style="accent-color:var(--red)"> 지역 경기도 <b style="color:var(--red)">+0.61</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="0.48" style="accent-color:var(--red)"> 위험등급 A <b style="color:var(--red)">+0.48</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="-0.46" style="accent-color:var(--red)"> 소득 8000만원 미만 <b>−0.46</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="-0.65" style="accent-color:var(--red)"> 위험등급 D <b>−0.65</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="-0.99" style="accent-color:var(--red)"> 지역 대구 <b>−0.99</b></label>
+            <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="-1.42" style="accent-color:var(--red)"> 60대 <b>−1.42</b></label>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+            <span style="font-size:.9rem;color:var(--muted)">가입 방향 점수 합계</span>
+            <b id="sig-sum" style="font-size:1.5rem">0.00</b>
+            <b id="sig-dir" style="font-size:.95rem">중립 — 우선순위 판단 보류</b>
+            <span id="sig-cnt" style="font-size:.85rem;color:var(--muted)">가입 방향 0개 · 미가입 방향 0개</span>
+          </div>
+          <p class="chart-note">확률이 아니라 <b>방향</b>입니다 — 계수는 상관이지 원인이 아니고, 개인의 "가입 확률 %"로 말하면 안전하지 않습니다. 이 점수 순서로 고객을 줄 세웠을 때 상위 1,000명 명단의 실제 가입률이 8.2%(실측)였습니다.</p>
+        </div>
+      </div>
+      <div class="subsection grid-2">
+        <article class="card"><h3>왜 로지스틱 v3인가 — 세 가지</h3><ul class="muted">
+          <li><b>차이가 우연 범위</b> — RF와의 같은 분할 페어 비교에서 상위 1,000명 차이 +0.10%p±0.60, 바꿀 숫자적 근거 없음</li>
+          <li><b>설명이 됩니다</b> — 계수로 "왜 이 고객인가"에 답하고, RF 중요도 1위(특약 0.23)도 같은 신호</li>
+          <li><b>운용안이 유지됩니다</b> — 티어 예상 가입률(9.7/8.2/6.7%)에 변동 없음</li>
+        </ul></article>
+        <article class="card"><h3>해석 범위와 모델의 한계</h3><ul class="muted">
+          <li>계수는 방향을 보여줄 뿐 인과를 입증하지 않습니다 — 채널·접점 열이 없어 "왜"는 가설 수준입니다</li>
+          <li>고객 속성 열은 2025년 스냅샷 — 예측 시점보다 1년 뒤 값이 섞일 수 있습니다</li>
+          <li>가입을 보장하는 공식이 아니라, 상담 명단의 우선순위를 정하는 운용 도구입니다</li>
+        </ul></article>
+      </div>
+    </div>
+        <div class="note"><b>덧붙임</b> — 소거 실험: 특약 보유를 빼면 상위 1,000명 8.15→7.24%·AUC 0.719→0.682(계수 1위 = 실제 기여 1위). 재현성: 재실행 검증 PASS(2026-10-18, AUC 0.72±0.01·상위 1,000명 8.19% 재현).</div>
+</section>
+
+  <section class="section section-alt analysis-section" id="insight">
+    <div class="container">
+      <div class="section-intro"><span class="kicker">인사이트</span><div class="rule"></div><h2>판정을 넘은 명단을 현장 규칙으로</h2><p>모델 순위를 상담 배치로 옮긴 운용안입니다. 명단 규모를 컷으로 쓰고, 검증된 예외 규칙과 제안 방향을 함께 적용합니다.</p></div>
+      <div class="subsection">
+        <h3 class="subsection-title">티어 3단 — 어디서 명단을 자를지 (반복 20회 평균)</h3>
+        <div class="chart">
+          <div class="chart-title">막대 = 티어별 실제 가입률 · 점선 = 사전 합의 판정선 5.8% · 회색 = 기준선(무작위)</div>
+          <svg viewBox="0 0 680 240" role="img" aria-label="티어별 실제 가입률 — 상위 500명 9.7 1,000명 8.2 2,000명 6.7 기준선 2.9, 판정선 5.8">
+            <line class="l-axis" x1="70" y1="140" x2="620" y2="140"/><line class="l-axis" x1="70" y1="80" x2="620" y2="80"/><line class="l-axis" x1="70" y1="20" x2="620" y2="20"/>
+            <text class="c-mut" x="62" y="144" text-anchor="end" font-size="11">4%</text><text class="c-mut" x="62" y="84" text-anchor="end" font-size="11">8%</text><text class="c-mut" x="62" y="24" text-anchor="end" font-size="11">12%</text>
+            <rect class="c-barhi" x="90" y="54" width="90" height="146"/>
+            <rect class="c-barhi" x="230" y="77" width="90" height="123"/>
+            <rect class="c-bar" x="370" y="99" width="90" height="101"/>
+            <rect class="c-bar" x="520" y="156" width="70" height="44"/>
+            <text class="c-red" x="135" y="46" text-anchor="middle" font-size="12.5" font-weight="bold">9.7% (3.3배)</text>
+            <text class="c-red" x="275" y="69" text-anchor="middle" font-size="12.5" font-weight="bold">8.2% (2.8배)</text>
+            <text class="c-ink" x="415" y="91" text-anchor="middle" font-size="12.5" font-weight="bold">6.7% (2.3배)</text>
+            <text class="c-mut" x="555" y="148" text-anchor="middle" font-size="12.5" font-weight="bold">2.9%</text>
+            <line class="l-red" x1="70" y1="113" x2="620" y2="113" stroke-dasharray="5 4"/>
+            <text class="c-red" x="616" y="107" text-anchor="end" font-size="11" font-weight="bold">판정선 5.8%</text>
+            <line class="l-axis" x1="70" y1="200" x2="620" y2="200"/>
+            <text class="c-mut" x="135" y="220" text-anchor="middle" font-size="12">상위 500명</text><text class="c-mut" x="275" y="220" text-anchor="middle" font-size="12">상위 1,000명</text><text class="c-mut" x="415" y="220" text-anchor="middle" font-size="12">상위 2,000명</text><text class="c-mut" x="555" y="220" text-anchor="middle" font-size="12">기준선(무작위)</text>
+            <text class="c-mut" x="275" y="234" text-anchor="middle" font-size="10.5">가입자 약 82명</text><text class="c-mut" x="415" y="234" text-anchor="middle" font-size="10.5">가입자 약 134명</text>
+          </svg>
+          <p class="chart-note">운용 — <b>A 전화 상담</b>·숙련 상담사("약 10명 중 1명이 가입한 이력") · <b>B 밀접 접촉</b>(가입자 약 82명 예상) · <b>C 문자·앱 푸시</b>(약 134명) · <b>제외</b>: 이번 캠페인 제외 후 다음 지평에 재평가.</p>
+        </div>
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">시뮬레이터 — 명단 규모(k)를 바꾸면 결과가 어떻게 달라지나</h3>
+        <div class="chart">
+          <div class="chart-title">슬라이더로 명단 규모를 정하면 아래 표가 실시간으로 바뀝니다</div>
+          <div class="calc-row">
+            <span style="font-size:.9rem;color:var(--muted)">명단 규모</span>
+            <input id="k-range" type="range" min="500" max="3000" step="100" value="1000" aria-label="명단 규모 선택">
+            <b id="k-val">1,000명</b>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>항목</th><th>값</th></tr></thead><tbody>
+            <tr><td>모델 명단의 예상 실제 가입률</td><td class="score" id="out-rate">8.2%</td></tr>
+            <tr class="best"><td>그 명단에서 실제로 가입할 사람</td><td class="score" id="out-model">약 82명</td></tr>
+            <tr><td>같은 규모를 무작위로 뽑으면 (기준선 2.9%)</td><td id="out-rand">약 29명</td></tr>
+            <tr><td>모델이 무작위보다 더 잡는 가입자</td><td class="score" id="out-diff">+53명</td></tr>
+            <tr><td>기준선 대비 농도</td><td id="out-lift">2.8배</td></tr>
+          </tbody></table></div>
+          <p class="chart-note">계산 근거 — 실측 4지점(500명·9.7% / 1,000명·8.2% / 2,000명·6.7% / 전체 38,932명·2.9%) 사이의 직선 보간. 실측 지점에서는 실측값 그대로, 사이 구간은 발표 시연용 추정치입니다. 참고: "보유수 2개+" 규칙은 199명·11.4%(실측) — 모델 명단이 아닌 별도 규칙 집단이라 이 계산에서 제외했습니다.</p>
+        </div>
+      </div>
+      <div class="subsection">
+        <h3 class="subsection-title">이 티어를 만든 두 신호 — 의심을 지운 통제 비교</h3>
+        <div class="chart">
+          <div class="chart-title">보유수 — 표면 4.1배, 연령 조각 안에서도 전 조각 우위</div>
+          <svg viewBox="0 0 680 104" role="img" aria-label="보유수별 가입률 — 1개 보유 2.8% vs 2개 이상 11.6%, 4.1배">
+            <text class="c-mut" x="150" y="32" text-anchor="end" font-size="12">1개 보유</text>
+            <rect class="c-bar" x="160" y="14" width="93" height="26"/>
+            <text class="c-mut" x="261" y="32" font-size="12" font-weight="bold">2.8% (38,252명)</text>
+            <text class="c-mut" x="150" y="80" text-anchor="end" font-size="12">2개 이상</text>
+            <rect class="c-barhi" x="160" y="62" width="386" height="26"/>
+            <text class="c-onbg" x="540" y="80" text-anchor="end" font-size="12" font-weight="bold">11.6% (680명)</text>
+            <line class="l-red" x1="575" y1="27" x2="575" y2="62"/>
+            <polygon class="c-arr" points="575,23 571,31 579,31"/><polygon class="c-arr" points="575,66 571,58 579,58"/>
+            <text class="c-red" x="589" y="48" font-size="12" font-weight="bold">4.1배</text>
+            <line class="l-axis" x1="160" y1="96" x2="620" y2="96"/>
+          </svg>
+          <div style="border-top:1px solid var(--line);margin:12px 0 0;padding-top:12px">
+          <svg viewBox="0 0 680 200" role="img" aria-label="연령 조각 안에서도 2개 이상이 전 조각 우위 — 30대 1.5 vs 8.8, 40대 2.8 vs 13.9, 50대 3.3 vs 14.0">
+            <text class="c-ink" x="16" y="16" font-size="12.5" font-weight="bold">연령 조각 안에서 비교 — "나이 많은 사람들이라" 의심 제거</text>
+            <rect class="c-bar" x="16" y="28" width="12" height="12"/><text class="c-mut" x="34" y="38" font-size="11">1개 보유</text>
+            <rect class="c-barhi" x="96" y="28" width="12" height="12"/><text class="c-mut" x="114" y="38" font-size="11">2개 이상</text>
+            <line class="l-axis" x1="160" y1="178" x2="620" y2="178"/>
+            <rect class="c-bar" x="196" y="163" width="40" height="15"/><rect class="c-barhi" x="242" y="90" width="40" height="88"/>
+            <text class="c-mut" x="216" y="157" text-anchor="middle" font-size="11.5">1.5</text><text class="c-red" x="262" y="84" text-anchor="middle" font-size="11.5" font-weight="bold">8.8</text>
+            <rect class="c-bar" x="372" y="150" width="40" height="28"/><rect class="c-barhi" x="418" y="39" width="40" height="139"/>
+            <text class="c-mut" x="392" y="144" text-anchor="middle" font-size="11.5">2.8</text><text class="c-red" x="438" y="33" text-anchor="middle" font-size="11.5" font-weight="bold">13.9</text>
+            <rect class="c-bar" x="548" y="145" width="40" height="33"/><rect class="c-barhi" x="594" y="38" width="40" height="140"/>
+            <text class="c-mut" x="568" y="139" text-anchor="middle" font-size="11.5">3.3</text><text class="c-red" x="614" y="32" text-anchor="middle" font-size="11.5" font-weight="bold">14.0</text>
+            <text class="c-mut" x="239" y="192" text-anchor="middle" font-size="11">30대</text><text class="c-mut" x="415" y="192" text-anchor="middle" font-size="11">40대</text><text class="c-mut" x="591" y="192" text-anchor="middle" font-size="11">50대</text>
+          </svg>
+          </div>
+          <p class="chart-note">나이 때문이 아닙니다 — 30대 1.5→8.8% · 40대 2.8→13.9% · 50대 3.3→14.0%(셀 최소 39명). T=2023 프레임에서도 복제(24.7% vs 5.8%).</p>
+        </div>
+        <div class="chart">
+          <div class="chart-title">특약 보유 — 표면 5.3배, 주력 계열을 통제해도 6.9배</div>
+          <svg viewBox="0 0 680 132" role="img" aria-label="특약 보유 여부별 가입률 — 전체 5.3배, 주력 계열 없는 고객에서도 6.9배">
+            <text class="c-mut" x="142" y="40" text-anchor="end" font-size="12">주보험만</text>
+            <rect class="c-bar" x="150" y="22" width="32" height="26"/><text class="c-mut" x="190" y="40" font-size="12" font-weight="bold">0.7%</text>
+            <text class="c-mut" x="142" y="84" text-anchor="end" font-size="12">특약 보유</text>
+            <rect class="c-barhi" x="150" y="66" width="167" height="26"/><text class="c-onbg" x="309" y="84" text-anchor="end" font-size="12" font-weight="bold">3.7% (29,280명)</text>
+            <text class="c-red" x="345" y="60" font-size="12" font-weight="bold">5.3배</text>
+            <line class="l-axis" x1="395" y1="14" x2="395" y2="100" stroke-dasharray="5 4"/>
+            <text class="c-mut" x="412" y="40" text-anchor="end" font-size="12">주보험만</text>
+            <rect class="c-bar" x="420" y="22" width="27" height="26"/><text class="c-mut" x="455" y="40" font-size="12" font-weight="bold">0.6%</text>
+            <text class="c-mut" x="412" y="84" text-anchor="end" font-size="12">특약 보유</text>
+            <rect class="c-barhi" x="420" y="66" width="189" height="26"/><text class="c-onbg" x="601" y="84" text-anchor="end" font-size="12" font-weight="bold">4.2%</text>
+            <text class="c-red" x="630" y="60" text-anchor="end" font-size="12" font-weight="bold">6.9배</text>
+            <line class="l-axis" x1="150" y1="100" x2="620" y2="100"/>
+            <text class="c-mut" x="250" y="122" text-anchor="middle" font-size="11">전체 고객</text>
+            <text class="c-mut" x="515" y="122" text-anchor="middle" font-size="11">M-케어(주력 계열) 없는 고객</text>
+          </svg>
+          <p class="chart-note">M-케어 계열이 없는 고객 안에서도 4.2% vs 0.6% — 인기 상품의 그림자가 아닙니다. 소거 실험 기여 1위(빼면 상위 1,000명 8.15→7.24%).</p>
+        </div>
+      </div>
+      <div class="grid-3 subsection">
+        <article class="card"><h3>예외 규칙 3개</h3><ul class="muted"><li><b>20대 기혼 후순위</b> — 1.0% vs 미혼 2.2% 역전이 실측</li><li><b>대구·대전·인천 후순위</b> — 경기의 1/4~1/2 농도(원인 확인 전)</li><li><b>신용 300점대 최후순위</b> — 1.6%, 하단 걸러내기 전용</li><li><b>충돌 시 적용 순서</b> — 신용(최후) → 지역(후순위) → 20대 기혼 순으로 적용</li></ul></article>
+        <article class="card"><h3>제안 상품 — 같은 계열 보강</h3><div class="card-number" style="color:var(--redsoft)">90% · 87%</div><p>2025년 신규 가입의 90%가 M-케어 건강보험 계열, M-케어 보유자의 다음 가입 87%가 같은 계열. 계열 전환이 아니라 <b>같은 계열 보강</b>(간편고지형·치매간병 등)부터 제안합니다.</p></article>
+        <article class="card"><h3>월 단위 운용 절차</h3><ul class="muted"><li><b>01</b> 스코어 갱신 — 매월 1일, 13개 피처로 재계산</li><li><b>02</b> 티어 배정 + 예외 3개로 순위 재조정</li><li><b>03</b> 상담 실행·기록 — 다음 달 검증 데이터로 축적</li><li><b>04</b> 월간 대조 — 티어 A가 9.7%를 크게 하회하면 재점검 신호</li></ul></article>
+      </div>
+      <div class="insight-line"><b>확률 말하기 규칙</b> · 보정 곡선 검증(모델 확률 5등급과 실제 가입률 단조 일치 — Q1 2.30% → Q5 3.66%) 덕분에 티어 수치를 실제 빈도로 말할 수 있습니다. 상담원에게는 "가입 확률 3.4%"가 아니라 "이 티어 고객은 유사 고객이 과거에 약 10명 중 1명 가입한 이력"으로 안내합니다.</div>
+      <p class="kicker" style="margin:34px 0 12px">비즈니스 제안 — 운용을 시작하며 할 일 3가지</p>
+        <div class="chart">
+          <div class="chart-title">제안 ① 파일럿 A/B — 상담의 실제 효과를 증명하는 무작위 대조 설계</div>
+          <svg viewBox="0 0 686 196" role="img" aria-label="상위 1,000명을 무작위로 상담군 500명과 대조군 500명으로 나누고, 두 그룹의 실제 가입률 차이로 상담 효과를 측정하는 실험 설계도">
+            <rect class="c-box" x="16" y="16" width="176" height="64" rx="10"/>
+            <text class="c-ink" x="28" y="40" font-size="11" font-weight="700">상위 1,000명 명단</text>
+            <text class="c-mut" x="28" y="58" font-size="10.5">기대 가입률 8.2%±0.5</text>
+            <text class="c-mut" x="220" y="32" font-size="10" text-anchor="middle">무작위 분할</text>
+            <polygon class="c-arr" points="240,48 231,44 231,52"/>
+            <rect class="c-boxhi" x="248" y="16" width="192" height="64" rx="10"/>
+            <text class="c-ink" x="260" y="40" font-size="11" font-weight="700">상담군 A — 500명</text>
+            <text class="c-red" x="260" y="58" font-size="10.5" font-weight="700">전화 상담 실행</text>
+            <rect class="c-box" x="498" y="16" width="172" height="64" rx="10"/>
+            <text class="c-ink" x="510" y="40" font-size="11" font-weight="700">대조군 B — 500명</text>
+            <text class="c-mut" x="510" y="58" font-size="10.5">상담 없음 — 그대로 둠</text>
+            <polygon class="c-arr" points="348,106 340,106 344,98"/>
+            <polygon class="c-arr" points="588,106 580,106 584,98"/>
+            <rect class="c-boxhi" x="248" y="110" width="422" height="64" rx="10"/>
+            <text class="c-ink" x="260" y="134" font-size="11" font-weight="700">실제 가입률 비교 — A와 B의 차이</text>
+            <text class="c-mut" x="260" y="152" font-size="10.5">차이 = <tspan class="c-red" font-weight="700">상담의 실제 효과</tspan> · 기준선 2.9%·판정선 5.8%와 대조</text>
+            <text class="c-ink" x="16" y="132" font-size="11" font-weight="700">왜 절반만 상담하나?</text>
+            <text class="c-mut" x="16" y="150" font-size="10.5">전원 상담하면 비교 대상이 없어져</text>
+            <text class="c-mut" x="16" y="166" font-size="10.5">효과를 측정할 수 없습니다</text>
+          </svg>
+          <p class="chart-note">상위 1,000명 중 <b>무작위 절반만</b> 먼저 상담하고 나머지는 대조군으로 둡니다 — 두 그룹의 실제 가입률 차이가 곧 "상담의 실제 효과"입니다.</p>
+        </div>
+        <p class="kicker" style="margin:24px 0 10px">제안 ② 운용 KPI 3개 — 월간 대조로 추적</p>
+        <div class="grid-3">
+          <article class="card">
+            <h3>명단 농도</h3>
+            <svg viewBox="0 0 240 66" role="img" aria-label="가입률 척도 위에 기준선 2.9%, 판정선 5.8%, 목표 밴드 8.2%±0.5가 표시된 게이지">
+              <text class="c-red" x="186" y="20" font-size="9.5" font-weight="700" text-anchor="middle">목표 8.2%±0.5</text>
+              <rect class="c-barhi" x="176" y="34" width="21" height="12" rx="6"/>
+              <line class="l-axis" x1="16" y1="40" x2="224" y2="40"/>
+              <line class="l-axis" x1="76" y1="36" x2="76" y2="44"/>
+              <line class="l-axis" x1="137" y1="36" x2="137" y2="44"/>
+              <text class="c-mut" x="76" y="60" font-size="9.5" text-anchor="middle">기준선 2.9</text>
+              <text class="c-mut" x="137" y="60" font-size="9.5" text-anchor="middle">판정선 5.8</text>
+            </svg>
+            <p>상위 1,000명 실제 가입률이 목표 밴드에 머무는가 — 매월 대조합니다.</p>
+          </article>
+          <article class="card">
+            <h3>상담 전환율</h3>
+            <div class="kpi-tbd">측정 시작</div>
+            <p>상담 완료 중 실제 가입 비율 — 상담 기록으로 첫 달부터 축적합니다.</p>
+          </article>
+          <article class="card">
+            <h3>대조군 대비 리프트</h3>
+            <div class="kpi-tbd">측정 시작</div>
+            <p>무작위 접촉(2.9%) 대비 몇 배인가 — 파일럿 A/B 결과로 확정합니다.</p>
+          </article>
+        </div>
+        <article class="card" style="margin-top:18px">
+          <h3>제안 ③ 상담 스크립트 가이드 — 신호별 첫 대화</h3>
+          <div class="script-row"><span class="script-signal">특약 보유 · 통제 후 6.9배</span><span class="script-arr">→</span><span class="script-first">첫 대화: "기존 특약 점검"</span><span class="script-x">✕ 바로 신상품 소개</span></div>
+          <div class="script-row"><span class="script-signal">보유수 2개 이상 · 4.1배</span><span class="script-arr">→</span><span class="script-first">첫 대화: "지금까지의 보험 이력 연장"</span><span class="script-x">✕ 상품 카탈로그 나열</span></div>
+        </article>
+      <div class="note"><b>경계선</b> · 이 명단은 "새 가입"만 다룹니다 — 기존 계약의 유지·해지는 보유 스냅샷 데이터에서 관측되지 않습니다. 상담 중 유지 관리 이슈가 보이면 별도 채널로 기록·전달하세요.</div>
+    </div>
+  </section>
+
+        <section class="section" id="closing">
+    <div class="container">
+      <div class="closing">
+        <span class="kicker">결론</span>
+        <h2 class="closing-line">신호가 겹치는 고객을<br><span style="color:var(--red)">먼저</span> 만나십시오</h2>
+        <p class="closing-sub">"보유수 2개 이상 · 특약 보유 · 50대 기혼" — 두 시점 프레임(T=2023/2024)에서 재현된 신호가 겹칠수록 가입률은 배수로 벌어집니다</p>
+        <div class="closing-numbers">
+          <div class="closing-num"><div class="cn-big">AUC 0.720</div><div class="cn-cap">반복 20회 ±0.010 — 더미 기준선 0.500 대비 판정</div></div>
+          <div class="closing-num"><div class="cn-big">8.2% = 2.8배</div><div class="cn-cap">상위 1,000명 실제 가입률 — 기준선 2.9%, 판정선 5.8% 통과</div></div>
+          <div class="closing-num"><div class="cn-big">약 82명</div><div class="cn-cap">상위 1,000명이 담아내는 실제 가입자 — 2025년 가입 1,137명 중</div></div>
+        </div>
+        <div class="closing-lines">
+          <p><b>운용</b> · 티어 3단으로 상담 우선순위를 배분하고, 제안은 같은 계열 보강(M-케어) — 매월 1일 스코어를 갱신해 명단을 유지합니다</p>
+        </div>
+        <div class="closing-limits"><b>한계</b> · 이 결론은 <b>예측 성능의 판정이지 실전 효과의 증명은 아닙니다</b> — 상담이 실제 가입률을 올리는가는 아직 관측된 바 없습니다. 데이터 분석 과정에서 확인된 한계점은 다음과 같습니다.
+          <ul class="limits-list">
+            <li>① 속성 열(소득·신용 등)은 2025 스냅샷 — 예측 시점보다 1년 뒤 값이라 계수에 미래 정보가 미량 유입될 수 있음</li>
+            <li>② 지역 신호의 원인 불명 — 채널·지점 열이 없어 "성향 차이" 단정 불가(채널 그림자 가능성)</li>
+            <li>③ 타겟이 "무엇이든 신규 가입" — 담보 확장과 같은 계열 보강 구분 불가</li>
+            <li>④ 2024년 코호트의 1년 행동을 오늘의 고객에 적용하는 외삽 — 최신 코호트에서 성능이 다를 수 있음</li>
+            <li>⑤ 특약 보유 신호의 메커니즘(상담 깊이 가설) 미확인 — "왜"의 설명은 가설 수준</li>
+            <li>⑥ 콜 타이밍 시즌성 확인 불가 — 데이터에 월 단위가 없음(연도만 존재)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="container footer-row"><span>보장only 추가가입 예측 · 상담 우선순위 분석</span><span>데이터: 보험상품가입자의 보험유지 특성 분석(보험계약 등) — Training/02.라벨링데이터/TL_2.소비자.zip (보험 거래만 사용) · 최종발표 대시보드 · 2026</span></div></footer>
+
+<script>
+(function(){
+  var toggle=document.querySelector(".menu-toggle"),links=document.querySelector(".nav-links");
+  if(toggle&&links){toggle.addEventListener("click",function(){var open=links.classList.toggle("open");toggle.setAttribute("aria-expanded",open?"true":"false");});}
+  var secs=Array.prototype.slice.call(document.querySelectorAll(".analysis-section"));
+  var navs=Array.prototype.slice.call(document.querySelectorAll(".nav-links a[data-section]"));
+  function onScroll(){
+    var y=window.scrollY+90,cur="overview";
+    for(var i=0;i<secs.length;i++){if(secs[i].offsetTop<=y){cur=secs[i].id;}}
+    navs.forEach(function(a){a.classList.toggle("active",a.getAttribute("data-section")===cur);});
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});onScroll();
+})();
+
+(function(){
+  var A=[[500,9.7],[1000,8.2],[2000,6.7],[38932,2.9]];
+  var rng=document.getElementById("k-range");if(!rng)return;
+  function fmt(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");}
+  function rate(k){
+    if(k<=A[0][0]){var s=(A[1][1]-A[0][1])/(A[1][0]-A[0][0]);return A[0][1]+(k-A[0][0])*s;}
+    for(var i=0;i<A.length-1;i++){if(k<=A[i+1][0]){var t=(k-A[i][0])/(A[i+1][0]-A[i][0]);return A[i][1]+t*(A[i+1][1]-A[i][1]);}}
+    return A[A.length-1][1];
+  }
+  function upd(){
+    var k=+rng.value,r=rate(k),m=k*r/100,rd=k*2.9/100,d=m-rd;
+    document.getElementById("k-val").textContent=fmt(k)+"명";
+    document.getElementById("out-rate").textContent=r.toFixed(1)+"%";
+    document.getElementById("out-model").textContent="약 "+fmt(m)+"명";
+    document.getElementById("out-rand").textContent="약 "+fmt(rd)+"명";
+    document.getElementById("out-diff").textContent="+"+fmt(d)+"명";
+    document.getElementById("out-lift").textContent=(r/2.9).toFixed(1)+"배";
+  }
+  rng.addEventListener("input",upd);upd();
+})();
+/* 시뮬레이터 2종 — EDA 운 범위 + 모델링 신호 계산기 */
+(function(){
+  var A=[[500,9.7],[1000,8.2],[2000,6.7],[38932,2.9]];
+  function rate(k){
+    if(k<=A[0][0]){var s=(A[1][1]-A[0][1])/(A[1][0]-A[0][0]);return A[0][1]+(k-A[0][0])*s;}
+    for(var i=0;i<A.length-1;i++){if(k<=A[i+1][0]){var t=(k-A[i][0])/(A[i+1][0]-A[i][0]);return A[i][1]+t*(A[i+1][1]-A[i][1]);}}
+    return A[A.length-1][1];
+  }
+  function fmt(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");}
+  var rng=document.getElementById("eda-k-range");
+  if(rng){
+    var upd=function(){
+      var k=+rng.value,p=0.029,m=k*p,sd=Math.sqrt(k*p*(1-p));
+      document.getElementById("eda-k-val").textContent=fmt(k)+"명";
+      document.getElementById("eda-out-rand").textContent="약 "+fmt(m)+"명";
+      document.getElementById("eda-out-band").textContent="약 "+fmt(m-2*sd)+"~"+fmt(m+2*sd)+"명";
+      document.getElementById("eda-out-model").textContent="약 "+fmt(k*rate(k)/100)+"명";
+    };
+    rng.addEventListener("input",upd);upd();
+  }
+  var boxes=[].slice.call(document.querySelectorAll("input[data-coef]"));
+  if(boxes.length){
+    var sum=document.getElementById("sig-sum"),dir=document.getElementById("sig-dir"),cnt=document.getElementById("sig-cnt");
+    var upd2=function(){
+      var s=0,pn=0,nn=0;
+      boxes.forEach(function(b){if(b.checked){var v=+b.getAttribute("data-coef");s+=v;if(v>0){pn++;}else{nn++;}}});
+      sum.textContent=(s>0?"+":"")+s.toFixed(2);
+      sum.style.color=s>0.3?"var(--red)":"";
+      dir.textContent=s>0.3?"가입 가능성 높은 쪽 — 상위 명단 후보":(s<-0.3?"가입 가능성 낮은 쪽 — 명단 후순위":"중립 — 우선순위 판단 보류");
+      cnt.textContent="가입 방향 "+pn+"개 · 미가입 방향 "+nn+"개";
+    };
+    boxes.forEach(function(b){b.addEventListener("change",upd2);});upd2();
+  }
+})();
+</script>
+</body>
+</html>
