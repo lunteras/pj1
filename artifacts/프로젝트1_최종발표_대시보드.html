@@ -177,12 +177,19 @@ tr.best td{background:rgba(232,180,76,.09)}
 .chart{overflow-x:auto}
 .chart svg{width:100%;height:auto;min-width:560px;display:block}
 .chart svg text{font-family:inherit}
-.sim-highlight{border:2px solid var(--accent);border-radius:14px;padding:22px 24px;margin:18px 0;background:linear-gradient(135deg,rgba(127,178,232,.07),rgba(127,178,232,.02));position:relative;overflow:visible}
-.sim-highlight::before{content:"";position:absolute;inset:-2px;border-radius:14px;border:2px solid transparent;background:linear-gradient(135deg,rgba(127,178,232,.3),transparent 60%) border-box;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;pointer-events:none}
-.sim-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7fb2e8,#5b8fd4);color:#1c1f26;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:999px;margin-bottom:14px;box-shadow:0 2px 8px rgba(127,178,232,.35)}
-.sim-badge::before{content:"▶";font-size:.6rem}
-.sim-highlight .chart-title{font-size:1rem;font-weight:800;color:var(--accent);margin-bottom:12px}
-.sim-highlight:hover{box-shadow:0 4px 20px rgba(127,178,232,.15)}
+.sim-highlight{border:3px solid var(--amber,#e8b44c);border-radius:18px;padding:26px 28px 28px;margin:28px 0 34px;background:linear-gradient(135deg,rgba(232,180,76,.16),rgba(127,178,232,.08) 55%,rgba(127,178,232,.02));position:relative;overflow:visible;box-shadow:0 0 0 5px rgba(232,180,76,.12),0 10px 34px rgba(0,0,0,.28)}
+.sim-highlight::before{content:"";position:absolute;inset:-7px;border-radius:22px;border:2px dashed rgba(232,180,76,.65);pointer-events:none}
+.sim-highlight::after{content:"직접 움직여 보세요";position:absolute;right:22px;top:-17px;background:#e8b44c;color:#1c1f26;font-weight:900;font-size:.78rem;letter-spacing:.04em;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(232,180,76,.4)}
+.sim-badge{display:inline-flex;align-items:center;gap:7px;background:#e8b44c;color:#1c1f26;font-weight:900;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border-radius:999px;margin-bottom:16px;box-shadow:0 3px 12px rgba(232,180,76,.45)}
+.sim-badge::before{content:"▶";font-size:.7rem}
+.sim-highlight .chart-title{font-size:1.12rem;font-weight:900;color:#f5cd6e;margin-bottom:16px}
+.sim-highlight .calc-row{background:rgba(127,178,232,.12);border:1px solid rgba(127,178,232,.45);border-radius:12px;padding:14px 16px;margin:12px 0 18px}
+.sim-highlight input[type="range"]{height:8px;accent-color:#e8b44c;cursor:pointer}
+.sim-highlight input[type="range"]::-webkit-slider-thumb{width:22px;height:22px;box-shadow:0 0 0 5px rgba(232,180,76,.25)}
+.sim-highlight .calc-row b{color:#f5cd6e;font-size:1.12rem}
+.sim-highlight:hover{box-shadow:0 0 0 7px rgba(232,180,76,.16),0 14px 42px rgba(232,180,76,.18)}
+.sim-section-label{display:flex;align-items:center;gap:12px;margin:34px 0 12px;padding:12px 18px;border-radius:12px;background:linear-gradient(90deg,rgba(232,180,76,.18),transparent);border-left:5px solid #e8b44c;color:#f5cd6e;font-size:1.05rem;font-weight:900}
+.sim-section-label small{color:var(--muted);font-size:.78rem;font-weight:600}
 .c-ink{fill:var(--text)} .c-mut{fill:var(--muted)} .c-dim{fill:var(--muted)} .c-red{fill:var(--red)}
 .l-axis{stroke:var(--line)} .l-red{stroke:var(--red)} .l-mut{stroke:var(--muted)}
 .c-bar{fill:var(--muted);opacity:.7} .c-barhi{fill:var(--red)}
@@ -337,8 +344,8 @@ tr.best td{background:rgba(232,180,76,.09)}
           </svg>
           <p class="chart-note">학습은 불균형 가중치(balanced)로, 평가는 정확도가 아니라 상위 k명 가입률(리프트)로 합니다.</p>
         </div>
-        <div class="chart sim-highlight">
-          <div class="sim-badge">직접 체험</div>
+        <div class="sim-highlight">
+          <div class="sim-badge">직접 체험 — 슬라이더를 움직여 보세요</div>
           <div class="chart-title">시뮬레이터 — 이건 운일까, 신호일까</div>
           <div class="calc-row">
             <span style="font-size:.9rem;color:var(--muted)">무작위로 상담할 명단 규모</span>
@@ -919,8 +926,8 @@ tr.best td{background:rgba(232,180,76,.09)}
           </svg>
           <p class="chart-note">가장 강하고 안정적인 신호는 특약 보유(+0.84, ±0.04). 연령×기혼 교차는 겉값이 가장 크지만 흔들림(±0.3~0.6)이 커서 그림에서 뺐습니다 — 서로 겹치는 특성은 계수가 불안정해집니다.</p>
         </div>
-        <div class="chart sim-highlight">
-          <div class="sim-badge">직접 체험</div>
+        <div class="sim-highlight">
+          <div class="sim-badge">직접 체험 — 체크박스를 눌러 보세요</div>
           <div class="chart-title">시뮬레이터 — 고객 신호를 체크하면 점수가 어떻게 되나</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin:4px 0 14px">
             <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.88rem;cursor:pointer"><input type="checkbox" data-coef="0.84" style="accent-color:var(--red)"> 특약 보유 <b style="color:var(--red)">+0.84</b></label>
@@ -986,8 +993,8 @@ tr.best td{background:rgba(232,180,76,.09)}
       </div>
       <div class="subsection">
         <h3 class="subsection-title">시뮬레이터 — 명단 규모(k)를 바꾸면 결과가 어떻게 달라지나</h3>
-        <div class="chart sim-highlight">
-          <div class="sim-badge">직접 체험</div>
+        <div class="sim-highlight">
+          <div class="sim-badge">직접 체험 — 슬라이더를 움직여 보세요</div>
           <div class="chart-title">슬라이더로 명단 규모를 정하면 아래 표가 실시간으로 바뀝니다</div>
           <div class="calc-row">
             <span style="font-size:.9rem;color:var(--muted)">명단 규모</span>
@@ -1122,8 +1129,8 @@ tr.best td{background:rgba(232,180,76,.09)}
           <div class="script-row"><span class="script-signal">보유수 2개 이상 · 4.1배</span><span class="script-arr">→</span><span class="script-first">첫 대화: "지금까지의 보험 이력 연장"</span><span class="script-x">✕ 상품 카탈로그 나열</span></div>
         </article>
       <p class="kicker" style="margin:24px 0 10px">경제성 시뮬레이터 — 증분 가입자 53명은 돈으로 얼마인가</p>
-      <div class="chart sim-highlight">
-        <div class="sim-badge">직접 체험</div>
+      <div class="sim-highlight">
+        <div class="sim-badge">직접 체험 — 슬라이더 3개를 움직여 보세요</div>
         <div class="chart-title">슬라이더 3개는 모두 가정값 — 이 운용의 경제성 규모를 잡아 보는 계산기</div>
         <div class="calc-row">
           <span style="font-size:.9rem;color:var(--muted)">전화 상담 1건 비용 (인건비·통신비 가정)</span>
