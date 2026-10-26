@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-
+# 분석 재현 환경 — requirements.txt (실측 버전 기준)
+# 설치: pip install -r requirements.txt
+# 데이터 위치는 README.md 참조 (전체 데이터 zip에서 그대로 읽음)
+
+pandas>=2.2
+numpy>=2.0
+scikit-learn>=1.6
+lightgbm>=4.5
+matplotlib>=3.10
