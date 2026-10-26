@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보장only 추가가입 예측 — 모델링 결과 보고서 (별도 버전 · 입문판)</title>
+<style>
+  :root{--bg:#eef1f5;--paper:#ffffff;--ink:#1c2430;--ink2:#5a6676;--line:#d7dde6;--accent:#2456a6;--accent-soft:#e5edf9;--ok:#1a7f4b;--ok-soft:#e3f2e9;--bad:#b03636;--bad-soft:#f7e7e7;--warn:#9a6b10;--warn-soft:#fdf6e7;--tile:#f4f6f9;--serif:"Batang","Apple SD Gothic Neo",serif;--sans:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif}
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#111823;--paper:#1a232e;--ink:#e8edf4;--ink2:#96a3b5;--line:#2b3846;--accent:#6aa5e8;--accent-soft:#1d2c40;--ok:#5ec98a;--ok-soft:#1a3327;--bad:#e08080;--bad-soft:#3c2323;--warn:#d9b15c;--warn-soft:#332a17;--tile:#202b37}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);word-break:keep-all;line-height:1.7}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 20px 60px}
+  header{padding:8px 4px 22px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:12.5px;color:var(--ink2);letter-spacing:.06em;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:clamp(26px,4.5vw,36px);line-height:1.25;margin:0 0 12px;font-weight:600}
+  .lead{font-size:14.5px;color:var(--ink2);max-width:780px;margin:0}
+  .metarow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+  .meta,.chip{font-size:12.5px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:3px 11px;color:var(--ink2)}
+  .chip.c-ok{color:var(--ok);border-color:var(--ok);background:var(--ok-soft);font-weight:700}
+  .banner{border:1.5px dashed var(--warn);background:var(--warn-soft);border-radius:10px;padding:11px 15px;font-size:13.5px;margin:16px 0 2px}
+  .banner b{color:var(--warn)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 8px}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .stat b{display:block;font-family:Consolas,monospace;font-size:26px;line-height:1.2}
+  .stat span{font-size:12.5px;color:var(--ink2)}
+  section{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin:20px 0}
+  .sec-label{font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:700;margin-bottom:6px}
+  h2{font-family:var(--serif);font-size:21px;margin:0 0 12px}
+  h3{font-size:15.5px;margin:24px 0 8px}
+  p{margin:8px 0;font-size:14px}
+  .mono{font-family:Consolas,monospace;font-size:.92em}
+  .tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+  .tbl th{font-size:12.5px;color:var(--ink2);text-align:left;border-bottom:2px solid var(--ink);padding:7px 8px;font-weight:600;white-space:nowrap}
+  .tbl td{border-bottom:1px solid var(--line);padding:8px 8px;vertical-align:top}
+  .tbl .r{text-align:right;font-family:Consolas,monospace;white-space:nowrap}
+  .tbl tr.hl td{background:var(--ok-soft)}
+  .tbl tr.dim td{color:var(--ink2)}
+  .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin:14px 0}
+  .lesson{border-top:1px solid var(--line);margin-top:20px;padding-top:12px;font-size:13.5px;color:var(--ink2)}
+  .lesson b{color:var(--ink)}
+  .qcard{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;background:var(--tile)}
+  .qcard .qno{font-family:Consolas,monospace;font-size:12px;color:var(--accent);font-weight:700}
+  .qcard .qt{font-size:14px;margin-top:4px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+  .step{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--tile)}
+  .step .no{font-family:Consolas,monospace;font-size:12px;color:var(--accent);font-weight:700}
+  .step .h{font-weight:700;font-size:13.5px;margin-top:3px}
+  .step .b{font-size:12.5px;color:var(--ink2);margin-top:5px}
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+  .card{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--tile)}
+  .card .h{font-weight:700;font-size:13.5px}
+  .card .b{font-size:12.5px;color:var(--ink2);margin-top:6px}
+  .weigh{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+  .wbox{border:1px solid var(--line);border-radius:12px;padding:12px 15px;font-size:13px}
+  .wbox .t{font-weight:700;font-size:13px}
+  .wbox .s{color:var(--ink2);margin-top:4px}
+  .wbox.big{border-color:var(--bad);background:var(--bad-soft)}
+  .ans{border-left:3px solid var(--ok);background:var(--ok-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;margin:10px 0}
+  .mcard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0;background:var(--tile)}
+  .mcard .mh{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:2px}
+  .mcard .mh b{font-size:15px}
+  .mcard .mh span{font-size:12.5px;color:var(--ink2)}
+  .mcard .act{font-family:Consolas,monospace;font-size:12.5px;color:var(--ink2);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin:8px 0 2px;display:inline-block}
+  .mcard figure{margin:10px 0 4px}
+  .mcard p{font-size:13.5px}
+  figure{margin:16px 0 6px}
+  svg{width:100%;max-width:720px;display:block;margin:0 auto}
+  figcaption{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:6px}
+  dl.terms dt{font-weight:700;font-size:13.5px;margin-top:12px}
+  dl.terms dd{margin:2px 0 0;font-size:13px;color:var(--ink2)}
+  footer{font-size:12.5px;color:var(--ink2);padding:18px 4px;border-top:1px solid var(--line)}
+  footer p{margin:5px 0}
+  @media print{body{background:#fff}.wrap{max-width:none;padding:0}section{border:none;padding:10px 0;page-break-inside:auto}.stat,.card,.step,.qcard{background:#f4f6f9!important}header{padding-top:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">ABA 1차 프로젝트 · 모델링 결과 보고서 · 별도 버전(입문판) · 2026-10-20</div>
+  <h1>이 모델은 무엇을 맞히고,<br>왜 이 지표로 판정했나</h1>
+  <div class="banner"><b>별도 버전 안내</b> — 이 문서는 기존 보고서(<span class="mono">artifacts/보장only_모델링_결과보고서.html</span> · 2026-10-16)와 <b>같은 결과를 다른 설명으로 다시 쓴 별도 버전</b>입니다. 수치와 판정은 동일하고, 전문 용어를 줄이고 수업자료 문체로 재구성했습니다. 어느 한쪽만 읽어도 됩니다.</div>
+  <p class="lead">문제 정의와 평가 지표를 고른 근거 → 모델링 과정(여섯 단계) → 모델별 성능 비교(그림과 해석 포함) → 한계와 개선 방향. 판결문이 아니라 설명문입니다 — 숫자가 왜 그렇게 되었는지를 처음 읽는 사람 기준으로 썼습니다.</p>
+  <div class="metarow">
+    <span class="meta">프레임 T=2024년 말 · 풀 38,932명 · 양성 1,137명(2.9%)</span>
+    <span class="meta">확정 모델 로지스틱 회귀 v3 — 피처 13종</span>
+    <span class="chip c-ok">판정 충족 — CI 하한 7.1% &gt; 판정선 5.8%</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>0.720<small>±0.010</small></b><span>확정 모델(로지스틱 v3) ROC-AUC<br>반복 20회 평균 — CI 0.700~0.740</span></div>
+    <div class="stat"><b>8.2<small>%</small></b><span>모델 상위 1,000명의 실제 가입률<br>기준선 2.9%의 2.8배 — CI 7.1~9.2%</span></div>
+    <div class="stat"><b>5.8<small>%</small></b><span>사전 합의 판정선(기준선의 2배)<br>모델보다 먼저 고정 — 2026-10-15 합의</span></div>
+  </div>
+</header>
+
+<section id="s0">
+  <div class="sec-label">읽기 전 질문 · 0</div>
+  <h2>이 보고서를 다 읽고 나면 답할 수 있는 세 가지</h2>
+  <p>지금은 답을 보지 마세요. 답은 마지막 절에 있습니다.</p>
+  <div class="qcard"><div class="qno">질문 1</div><div class="qt">데이터에 "추가 가입할 고객"이라는 정답 열이 없습니다. 그럼 정답은 어디서 만들었을까요?</div></div>
+  <div class="qcard"><div class="qno">질문 2</div><div class="qt">전 고객을 "미가입"이라고만 답해도 정확도 97.1%입니다. 그런데 이 답이 상담에 쓸모없는 이유는 무엇일까요?</div></div>
+  <div class="qcard"><div class="qno">질문 3</div><div class="qt">AUC 0.743짜리 모델이 있었는데, 0.720짜리를 최종 모델로 골랐습니다. 그 이유는 무엇일까요?</div></div>
+  <div class="qcard"><div class="qno">질문 4</div><div class="qt">피처를 계산할 때 2025년의 거래 금액은 쓰지 않았습니다. 왜일까요?</div></div>
+</section>
+
+<section id="s1">
+  <div class="sec-label">문제 정의 · 1</div>
+  <h2>질문을 세 번 바꿔 말하기</h2>
+  <div class="note">여러분이 보험사 상담 운영팀 담당이라면 — 보장성 보험만 가진 고객 38,932명이 있고, 전화 상담 인력은 한정돼 있습니다. 팀장님의 질문 하나: <b>"누구부터 전화할까?"</b></div>
+  <div class="steps">
+    <div class="step"><div class="no">01</div><div class="h">운영 질문</div><div class="b">"누구부터 상담할까?" — 필요한 것은 확률이 아니라, 우선순위가 매겨진 명단입니다.</div></div>
+    <div class="step"><div class="no">02</div><div class="h">데이터 질문</div><div class="b">"2024년 말까지의 보유 기록을 보고, 2025년에 실제로 새 상품을 가입했는가?" — 데이터가 담고 있는 시간을 그대로 씁니다.</div></div>
+    <div class="step"><div class="no">03</div><div class="h">모델의 과제</div><div class="b">고객 1명 = 한 행 · 정답 = 2025년 가입 여부 · 출력 = 가입 확률. 정해진 두 답 중 하나를 맞히는 이진 분류입니다.</div></div>
+  </div>
+  <h3>왜 이 정의인가 — 정답 열이 없어서 만들었습니다</h3>
+  <p>이 데이터는 스냅샷입니다. "이 고객이 추가 가입할 것이다"라는 열은 어디에도 없습니다. 대신 각 상품마다 <b>가입 연도</b>가 있습니다. 그래서 시간을 뒤집었습니다 — 2024년 말까지 보유한 고객으로 풀을 만들고, 그중 가입 연도가 2025년인 상품이 하나라도 있으면 정답 1, 없으면 0입니다. 예측을 먼저 하고 나중에 실제 값과 대조하는 구조라, 모델이 진짜를 맞혔는지 확인할 수 있습니다.</p>
+  <table class="tbl">
+    <tr><th style="width:120px">요소</th><th>정의</th></tr>
+    <tr><td><b>행 단위</b></td><td>2024년 말까지 보험 상품을 1개 이상 보유한 기존 고객 1명 = 1행</td></tr>
+    <tr><td><b>정답(계산식)</b></td><td>이 고객의 상품 행 중 가입 연도가 2025년인 것이 1개 이상이면 1, 없으면 0 — 1,137명(2.9%)</td></tr>
+    <tr><td><b>예측 시점</b></td><td>2024년 말까지 알 수 있는 값(고객 속성 + 보유 포트폴리오 + 가입 후 경과)으로 2025년 가입 여부를 맞힘</td></tr>
+    <tr><td><b>유형</b></td><td>이진 분류 — 출력은 가입 확률이고, 그 확률로 상담 우선순위를 매김</td></tr>
+  </table>
+  <h3>예측 시점을 2024년 말로 고른 근거</h3>
+  <table class="tbl">
+    <tr><th>예측 시점</th><th class="r">고객 풀</th><th class="r">1년 뒤 가입률</th><th>판단</th></tr>
+    <tr class="dim"><td>2022년 말</td><td class="r">7,117명</td><td class="r">5.7%</td><td>3년 전 코호트 — 오래돼 폐기</td></tr>
+    <tr class="dim"><td>2023년 말</td><td class="r">8,964명</td><td class="r">6.0%</td><td>구조는 같으나 오래됨 — 교차 검증용으로만 사용</td></tr>
+    <tr class="hl"><td><b>2024년 말</b></td><td class="r"><b>38,932명</b></td><td class="r"><b>2.9%</b></td><td><b>채택</b> — 표본 4.3배, 오늘의 고객(2024~25년 가입자)과 같은 코호트</td></tr>
+  </table>
+  <p>양성이 2.9%라는 사실을 기억해 두세요 — 38,932명 중 1,137명만 2025년에 실제로 가입했습니다. 이 "드묾"이 다음 절, 지표 선택의 출발점입니다.</p>
+  <div class="lesson"><b>한 줄 정리</b> — 정답 열이 없으면 시간을 뒤집어 만듭니다. 2025년 가입 연도가 그 정답입니다.</div>
+</section>
+
+<section id="s2">
+  <div class="sec-label">평가 지표 · 2</div>
+  <h2>정확도를 버리고, 명단의 농도로 판정한 이유</h2>
+  <h3>① 정확도의 함정 — 정답을 하나도 못 맞혀도 97.1점</h3>
+  <p>고객 38,932명 중 가입 1,137명(2.9%), 미가입 97.1%입니다. 그러니 <b>전원에게 "미가입"이라고만 답해도 정확도 97.1%</b>입니다. 그래서 이 답을 비교 대상 "더미"로 실험에 넣어 두었습니다(AUC 0.500 — 아무것도 배우지 않은 모델의 점수).</p>
+  <h3>② 어느 실수가 더 비싼가</h3>
+  <p>지표를 고르기 전에, 실수 두 가지를 저울에 올려 봅니다.</p>
+  <div class="weigh">
+    <div class="wbox"><div class="t">안 할 고객에게 전화한 실수</div><div class="s">통화 시간·제안 비용이 낭비됩니다 — 작은 손해</div></div>
+    <div class="wbox big"><div class="t">가입할 고객을 놓친 실수</div><div class="s">그 고객의 매출 자체를 잃습니다 — 큰 손해</div></div>
+  </div>
+  <p>상담 운영은 <b>놓치는 쪽이 비싸다</b>고 사전에 정했습니다. 그래서 지표는 "가입할 고객(양성)을 잘 잡는가"를 보는 쪽으로 설계했습니다.</p>
+  <h3>③ 상담팀이 받는 것은 확률이 아니라 명단</h3>
+  <p>모델의 출력은 0~100%의 확률이지만, 상담팀에게 주는 것은 <b>"이 1,000명부터 전화하세요"라는 명단</b>입니다. 그래서 판정 지표는 이것으로 고정했습니다.</p>
+  <p>• <b>정밀도(상위 1,000명)</b> : 모델이 가장 자신 있게 꼽은 1,000명 안에 진짜 가입자가 몇 % 있는가<br>
+  • <b>리프트(배수)</b> : 그것이 기준선(무작위로 골랐을 때 2.9%)의 몇 배인가</p>
+  <h3>④ AUC는 모델끼리 견줄 때 쓰는 보조 지표</h3>
+  <p>AUC는 줄세움의 품질입니다 — 양성 고객과 음성 고객을 무작위로 한 쌍 뽑았을 때, 모델이 양성 쪽에 더 높은 점수를 줄 확률. 0.720이면 100쌍 중 약 72쌍을 올바르게 줄 세웠다는 뜻입니다. 명단 크기를 아직 정하기 전에 모델끼리 비교할 때 유용하고, 이번 보고에서는 보조 지표로 씁니다.</p>
+  <h3>⑤ 판정선은 모델보다 먼저 고정했다</h3>
+  <div class="note"><b>사전 합의(2026-10-15)</b> — 상위 1,000명 실제 가입률 <b>≥ 5.8%</b>(기준선 2.9%의 2배)이면 도입 가치 있음으로 판정한다. 모델을 만들고 나서 지표를 고르면 내 모델에 유리한 지표를 고르게 됩니다. 그래서 기준과 지표는 모델보다 먼저 고정했습니다.</div>
+  <table class="tbl">
+    <tr><th>지표</th><th>묻는 것</th><th>이번 보고에서</th></tr>
+    <tr><td>정확도</td><td>전체 중 몇 %를 맞혔나</td><td>쓰지 않음 — 불균형(1 : 33)에서 무의미</td></tr>
+    <tr class="hl"><td><b>상위 1,000명 가입률(정밀도)</b></td><td>명단 안에 진짜 가입자가 몇 %인가</td><td><b>판정 지표</b> — 판정선 5.8%</td></tr>
+    <tr><td>리프트(배수)</td><td>기준선의 몇 배인가</td><td>운영 보고용 — 2.8배</td></tr>
+    <tr><td>AUC</td><td>전체 줄세움의 품질</td><td>모델 비교용(보조)</td></tr>
+  </table>
+  <div class="lesson"><b>한 줄 정리</b> — 지표를 고르는 것은 모델이 아니라, 어떤 실수가 비싼지입니다.</div>
+</section>
+
+<section id="s2b">
+  <div class="sec-label">모델링 과정 · 3</div>
+  <h2>모델을 만들기까지 — 여섯 단계</h2>
+  <p>모델 이름을 정하기 전에 할 일이 더 많습니다. 이 프로젝트의 과정을 한 장으로 보면 다음과 같습니다 — 왼쪽 위에서 오른쪽 아래로.</p>
+  <figure>
+  <svg viewBox="0 0 640 212" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="Malgun Gothic, sans-serif" font-size="12">
+      <rect x="16" y="16" width="182" height="64" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+      <text x="26" y="32" font-family="Consolas, monospace" font-size="11" fill="#2456a6" font-weight="bold">1</text>
+      <text x="107" y="44" text-anchor="middle" fill="#1c2430" font-weight="bold">원본 zip</text>
+      <text x="107" y="64" text-anchor="middle" fill="#5a6676">보험+증권 혼합</text>
+      <line x1="198" y1="48" x2="221" y2="48" stroke="#8a93a6"/><polygon points="229,48 219,44 219,52" fill="#8a93a6"/>
+      <rect x="229" y="16" width="182" height="64" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+      <text x="239" y="32" font-family="Consolas, monospace" font-size="11" fill="#2456a6" font-weight="bold">2</text>
+      <text x="320" y="44" text-anchor="middle" fill="#1c2430" font-weight="bold">보험 거래만</text>
+      <text x="320" y="64" text-anchor="middle" fill="#5a6676">77,305건</text>
+      <line x1="411" y1="48" x2="434" y2="48" stroke="#8a93a6"/><polygon points="442,48 432,44 432,52" fill="#8a93a6"/>
+      <rect x="442" y="16" width="182" height="64" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+      <text x="452" y="32" font-family="Consolas, monospace" font-size="11" fill="#2456a6" font-weight="bold">3</text>
+      <text x="533" y="44" text-anchor="middle" fill="#1c2430" font-weight="bold">고객 1행 재편성</text>
+      <text x="533" y="64" text-anchor="middle" fill="#5a6676">74,776명</text>
+      <path d="M 533 80 L 533 104 L 107 104 L 107 124" fill="none" stroke="#8a93a6"/><polygon points="107,132 103,122 111,122" fill="#8a93a6"/>
+      <rect x="16" y="132" width="182" height="64" rx="10" fill="#e3f2e9" stroke="#1a7f4b"/>
+      <text x="26" y="148" font-family="Consolas, monospace" font-size="11" fill="#1a7f4b" font-weight="bold">4</text>
+      <text x="107" y="160" text-anchor="middle" fill="#1c2430" font-weight="bold">T=2024 풀 38,932명</text>
+      <text x="107" y="180" text-anchor="middle" fill="#1a7f4b">정답 1,137명(2.9%)</text>
+      <line x1="198" y1="164" x2="221" y2="164" stroke="#8a93a6"/><polygon points="229,164 219,160 219,168" fill="#8a93a6"/>
+      <rect x="229" y="132" width="182" height="64" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+      <text x="239" y="148" font-family="Consolas, monospace" font-size="11" fill="#2456a6" font-weight="bold">5</text>
+      <text x="320" y="160" text-anchor="middle" fill="#1c2430" font-weight="bold">피처 13종 = 44열</text>
+      <text x="320" y="180" text-anchor="middle" fill="#5a6676">범주 8 + 수치 5 + 교차 5</text>
+      <line x1="411" y1="164" x2="434" y2="164" stroke="#8a93a6"/><polygon points="442,164 432,160 432,168" fill="#8a93a6"/>
+      <rect x="442" y="132" width="182" height="64" rx="10" fill="#2456a6"/>
+      <text x="452" y="148" font-family="Consolas, monospace" font-size="11" fill="#cddcf2" font-weight="bold">6</text>
+      <text x="533" y="160" text-anchor="middle" fill="#fff" font-weight="bold">학습·평가 20회 반복</text>
+      <text x="533" y="180" text-anchor="middle" fill="#cddcf2">→ 상위 1,000명 판정</text>
+    </g>
+  </svg>
+  <figcaption>모델링 과정 전체 흐름 — 1~4는 데이터 만들기, 5~6은 학습과 판정 준비입니다. 모든 모델이 이 같은 프레임을 공유합니다.</figcaption>
+  </figure>
+  <div class="steps">
+    <div class="step"><div class="no">01</div><div class="h">데이터 준비</div><div class="b">원본 zip은 보험·증권이 섞여 있습니다. 보험 거래만 골라(77,305건) 고객 단위로 재편성했습니다 — 고객 1명 = 1행, 74,776명.</div></div>
+    <div class="step"><div class="no">02</div><div class="h">풀과 정답</div><div class="b">2024년 말 보유 고객 38,932명으로 풀을 만들고, 2025년 가입 1,137명(2.9%)을 정답 1로 — 나머지는 0.</div></div>
+    <div class="step"><div class="no">03</div><div class="h">피처 13종(44열)</div><div class="b">아래 표의 힌트 목록. 파생값은 모두 2024년 이전 거래로만 계산했습니다 — 누수 방지(이 절 맨 아래).</div></div>
+    <div class="step"><div class="no">04</div><div class="h">전처리</div><div class="b">범주는 원-핫(0/1 여러 열로 쪼갬), 수치는 표준화(평균 0·크기 1로 맞춤). 가입자 1 : 미가입 33의 불균형이라 학습 때 가입자에 가중치를 줍니다(balanced).</div></div>
+    <div class="step"><div class="no">05</div><div class="h">분할·반복</div><div class="b">고객의 70%로 학습, 30%로 평가(층화). 분할 방식만 바꿔 20번 반복 — 한 번의 운 때문에 판단하지 않으려는 것입니다.</div></div>
+    <div class="step"><div class="no">06</div><div class="h">판정</div><div class="b">모델별로 상위 1,000명의 실제 가입률을 재서 판정선 5.8%와 비교. 트리 모델은 스케일링 없이 원값을 씁니다.</div></div>
+  </div>
+  <h3>피처 13종 — 모델에게 준 힌트 목록</h3>
+  <table class="tbl">
+    <tr><th style="width:170px">묶음</th><th>피처</th><th>뜻</th></tr>
+    <tr><td><b>범주 8</b> → 원-핫 34열</td><td>연령 · 성별 · 지역 · 소득 구간 · 직업군 · 위험등급 · 신용등급 · 결혼 상태</td><td>고객 속성 — "어떤 사람인가"</td></tr>
+    <tr><td><b>수치 5</b></td><td>tenure · log(거래금액 합) · log(상품금액 합) · 보유상품수 2개 이상 · 특약 보유</td><td>보유 행동 — "어떻게 사고 있는가". tenure는 첫 가입 후 경과 연수, log는 큰 금액을 눌러 주는 변형입니다</td></tr>
+    <tr><td><b>교차 5</b></td><td>연령 × 기혼 (예: "40대이면서 기혼")</td><td>속성끼리의 조합 — 나이 효과가 결혼 상태에 따라 달라지는지 봅니다</td></tr>
+  </table>
+  <div class="note"><b>누수 방지 — 미래 정보를 쓰면 부정행위가 됩니다</b> — 예측 시점은 2024년 말입니다. 2025년의 거래 금액을 피처에 넣으면 학습 점수만 올라가고, 실제 운영에서는 계산할 수 없는 점수가 됩니다. 그래서 파생값은 모두 2024년 이전 거래로만 만들었습니다.</div>
+  <div class="lesson"><b>한 줄 정리</b> — 모델을 갈아 끼우기 전에 정답·피처·분할을 먼저 고정합니다. 같은 조건에서만 비교가 공정해집니다.</div>
+</section>
+
+<section id="s3">
+  <div class="sec-label">모델 비교 · 4</div>
+  <h2>같은 데이터, 같은 분할, 20번씩 — 그리고 한 번 더</h2>
+  <p>비교의 공정성이 절반입니다. 고객 풀·피처 13종·70/30 분할을 모두 같게 두고, <b>분할 방식만 바꿔 20번 반복</b>(시드 0~19)했습니다. 표의 값은 20회 평균과 흔들림(±)입니다. 평가 세트는 고객의 30% — 약 11,680명, 그중 양성 약 341명.</p>
+  <table class="tbl">
+    <tr><th>모델</th><th>하는 일</th><th class="r">AUC<br>(반복 20회)</th><th class="r">상위 1,000명<br>실제 가입률</th><th>판정선 5.8% 대비</th></tr>
+    <tr class="dim"><td>더미(전원 미가입)</td><td>배우지 않고 전원 미가입 — 기준선</td><td class="r">0.500</td><td class="r">2.9%±0.4</td><td>미충족 (하한 2.2%)</td></tr>
+    <tr class="dim"><td>완전 성장 트리 숲</td><td>잎당 고객 1명까지 자란 나무 300그루 — 과적합(외운 것)의 실측 예시</td><td class="r">0.650±0.007 <span style="font-size:11px">(설정 탐색 5회)</span></td><td class="r">—</td><td>—</td></tr>
+    <tr class="hl"><td><b>로지스틱 회귀 v3 — 확정</b></td><td>특성 × 중요도(계수) 합산 → 확률</td><td class="r"><b>0.720±0.010</b></td><td class="r"><b>8.2%±0.5</b> (2.8배)</td><td><b>충족</b> (하한 7.15%)</td></tr>
+    <tr><td>LightGBM</td><td>나무를 계속 이어 붙여 남은 오차를 줄이는 부스팅</td><td class="r">0.728±0.014</td><td class="r">8.8%±0.8</td><td>충족 (하한 7.19%)</td></tr>
+    <tr><td>랜덤포레스트(기본 설정)</td><td>조금씩 다르게 자란 나무 300그루의 투표</td><td class="r">0.743±0.011</td><td class="r">9.8%±0.7</td><td>충족 (하한 8.37%)</td></tr>
+  </table>
+  <p style="font-size:12.5px;color:var(--ink2)">더미·로지스틱·LightGBM·랜덤포레스트(기본)는 같은 조건·같은 시드(0~19). 완전 성장 트리는 랜덤포레스트 설정 탐색(시드 42~46, 5회) 중 최악 조합. 판정선 충족 여부는 20회 평균의 95% 신뢰구간 하한 기준.</p>
+  <figure>
+  <svg viewBox="0 0 640 254" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="Malgun Gothic, sans-serif" font-size="12">
+      <line x1="234" y1="18" x2="234" y2="212" stroke="#8a93a6" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="234" y="230" text-anchor="middle" fill="#8a93a6" font-size="11">무작위 0.500</text>
+      <text x="160" y="48" text-anchor="end" fill="#5a6676">더미(전원 미가입)</text>
+      <rect x="234" y="32" width="64" height="24" fill="#8a93a6"/><text x="306" y="49" fill="#5a6676" font-weight="bold">0.500</text>
+      <text x="160" y="86" text-anchor="end" fill="#5a6676">완전 성장 트리(과적합)</text>
+      <rect x="234" y="70" width="257" height="24" fill="#c98a8a"/><text x="499" y="87" fill="#b03636" font-weight="bold">0.650</text>
+      <text x="160" y="124" text-anchor="end" fill="#1c2430" font-weight="bold">로지스틱 v3 (확정)</text>
+      <rect x="234" y="108" width="347" height="24" fill="#2456a6"/><text x="589" y="125" fill="#2456a6" font-weight="bold">0.720</text>
+      <text x="160" y="162" text-anchor="end" fill="#5a6676">LightGBM</text>
+      <rect x="234" y="146" width="357" height="24" fill="#7e93b8"/><text x="599" y="163" fill="#54637a" font-weight="bold">0.728</text>
+      <text x="160" y="200" text-anchor="end" fill="#5a6676">랜덤포레스트(기본)</text>
+      <rect x="234" y="184" width="377" height="24" fill="#7e93b8"/><text x="619" y="201" fill="#54637a" font-weight="bold">0.743</text>
+      <text x="234" y="250" text-anchor="middle" fill="#8a93a6" font-size="11">0.45</text>
+      <text x="620" y="250" text-anchor="end" fill="#8a93a6" font-size="11">가로축은 0.45부터 — 막대 차이를 보기 위해 잘랐습니다</text>
+    </g>
+  </svg>
+  <figcaption>ROC-AUC 비교 — 반복 20회 평균. 회색 점선(0.500)은 아무것도 배우지 않은 기준선.</figcaption>
+  </figure>
+  <figure>
+  <svg viewBox="0 0 640 178" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="Malgun Gothic, sans-serif" font-size="12">
+      <text x="150" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#2456a6">모델 상위 1,000명</text>
+      <rect x="90" y="30" width="120" height="123" fill="#2456a6"/>
+      <text x="150" y="100" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff">82명</text>
+      <text x="150" y="170" text-anchor="middle" font-size="11" fill="#5a6676">실제 가입자 82명 (8.2%)</text>
+      <text x="390" y="100" text-anchor="middle" font-size="12" fill="#5a6676">무작위 1,000명</text>
+      <rect x="330" y="110" width="120" height="43" fill="#8a93a6"/>
+      <text x="390" y="136" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">29명</text>
+      <text x="390" y="170" text-anchor="middle" font-size="11" fill="#5a6676">기준선 2.9%</text>
+      <line x1="215" y1="90" x2="323" y2="115" stroke="#8a93a6"/>
+      <polygon points="330,117 319,111 322,122" fill="#8a93a6"/>
+      <text x="268" y="86" text-anchor="middle" font-size="14" font-weight="bold" fill="#b03636">2.8배</text>
+    </g>
+  </svg>
+  <figcaption>판정 지점의 뜻 — 같은 1,000명이라도 누구를 고르느냐에 따라 잡히는 가입자가 82명 vs 29명.</figcaption>
+  </figure>
+  <figure>
+  <svg viewBox="0 0 640 186" xmlns="http://www.w3.org/2000/svg">
+    <g font-family="Malgun Gothic, sans-serif" font-size="12">
+      <line x1="392" y1="12" x2="392" y2="156" stroke="#b03636" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="392" y="8" text-anchor="middle" fill="#b03636" font-size="11" font-weight="bold">판정선 5.8%</text>
+      <text x="140" y="40" text-anchor="end" fill="#5a6676">더미(전원 미가입)</text>
+      <rect x="150" y="22" width="121" height="26" fill="#8a93a6"/><text x="279" y="40" fill="#5a6676" font-weight="bold">2.9%</text>
+      <text x="140" y="80" text-anchor="end" fill="#1c2430" font-weight="bold">로지스틱 v3 (확정)</text>
+      <rect x="150" y="62" width="343" height="26" fill="#2456a6"/><text x="501" y="80" fill="#2456a6" font-weight="bold">8.2%</text>
+      <text x="140" y="120" text-anchor="end" fill="#5a6676">LightGBM</text>
+      <rect x="150" y="102" width="368" height="26" fill="#7e93b8"/><text x="526" y="120" fill="#54637a" font-weight="bold">8.8%</text>
+      <text x="140" y="160" text-anchor="end" fill="#5a6676">랜덤포레스트(기본)</text>
+      <rect x="150" y="142" width="410" height="26" fill="#7e93b8"/><text x="568" y="160" fill="#54637a" font-weight="bold">9.8%</text>
+      <text x="150" y="182" text-anchor="middle" fill="#8a93a6" font-size="11">0%</text>
+      <text x="271" y="182" text-anchor="middle" fill="#8a93a6" font-size="11">기준선 2.9%</text>
+      <text x="392" y="182" text-anchor="middle" fill="#b03636" font-size="11">5.8%</text>
+    </g>
+  </svg>
+  <figcaption>모델별 상위 1,000명 실제 가입률(반복 20회 평균) — 점선은 판정선 5.8%(기준선의 2배). 완전 성장 트리는 설정 탐색 값이라 제외.</figcaption>
+  </figure>
+
+  <h3>모델 다섯 개, 각각 무슨 일을 하나 — 그림과 해석</h3>
+  <p>표는 점수입니다. 아래는 각 모델이 실제로 무슨 일을 하는지, 그리고 그 점수가 왜 그렇게 나왔는지입니다.</p>
+
+  <div class="mcard">
+    <div class="mh"><b>더미(전원 미가입)</b><span>역할 — 비교 기준이 되는 기준선</span></div>
+    <figure>
+    <svg viewBox="0 0 640 120" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="12">
+        <rect x="16" y="34" width="180" height="52" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+        <text x="106" y="64" text-anchor="middle" fill="#1c2430" font-weight="bold">고객 38,932명</text>
+        <line x1="196" y1="60" x2="219" y2="60" stroke="#8a93a6"/><polygon points="227,60 217,56 217,64" fill="#8a93a6"/>
+        <rect x="229" y="34" width="180" height="52" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+        <text x="319" y="56" text-anchor="middle" fill="#1c2430" font-weight="bold">더미 모델</text>
+        <text x="319" y="76" text-anchor="middle" fill="#5a6676">전원 "미가입"</text>
+        <line x1="409" y1="60" x2="432" y2="60" stroke="#8a93a6"/><polygon points="440,60 430,56 430,64" fill="#8a93a6"/>
+        <rect x="442" y="34" width="182" height="52" rx="10" fill="#f7e7e7" stroke="#b03636"/>
+        <text x="533" y="56" text-anchor="middle" fill="#b03636" font-weight="bold">상담 명단 0명</text>
+        <text x="533" y="76" text-anchor="middle" fill="#b03636">가입자 1,137명 전부 놓침</text>
+      </g>
+    </svg>
+    <figcaption>배우지 않은 모델 — 정확도는 97.1%지만 상담에 쓸 명단이 비어 있습니다.</figcaption>
+    </figure>
+    <div class="act">실측 — AUC 0.500 · 상위 1,000명 2.9%±0.4 (무작위와 동일) · 판정 미충족(하한 2.2%)</div>
+    <p>해석 — 미가입이 97.1%라서 "전원 미가입"만으로도 정확도 97.1%가 나옵니다. 이것이 정확도를 버린 이유 그 자체입니다. 다른 모델들은 모두 이 기준선 위에 있어야 하고, 실제로 그렇습니다.</p>
+  </div>
+
+  <div class="mcard">
+    <div class="mh"><b>완전 성장 트리 숲</b><span>역할 — 반면교사, 과적합(외워서 실패)의 실측 예시</span></div>
+    <figure>
+    <svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="12">
+        <line x1="80" y1="30" x2="50" y2="75" stroke="#8a93a6"/><line x1="80" y1="30" x2="110" y2="75" stroke="#8a93a6"/>
+        <line x1="50" y1="75" x2="28" y2="120" stroke="#c98a8a"/><line x1="50" y1="75" x2="66" y2="120" stroke="#c98a8a"/>
+        <line x1="110" y1="75" x2="92" y2="120" stroke="#c98a8a"/><line x1="110" y1="75" x2="132" y2="120" stroke="#c98a8a"/>
+        <circle cx="80" cy="30" r="7" fill="#54637a"/>
+        <circle cx="50" cy="75" r="6" fill="#54637a"/><circle cx="110" cy="75" r="6" fill="#54637a"/>
+        <circle cx="28" cy="120" r="4" fill="#b03636"/><circle cx="66" cy="120" r="4" fill="#b03636"/><circle cx="92" cy="120" r="4" fill="#b03636"/><circle cx="132" cy="120" r="4" fill="#b03636"/>
+        <text x="80" y="144" text-anchor="middle" fill="#5a6676" font-size="11">잎당 고객 1명까지 분기</text>
+        <line x1="290" y1="46" x2="290" y2="92" stroke="#b03636"/><polygon points="290,100 285,90 295,90" fill="#b03636"/>
+        <text x="460" y="52" text-anchor="middle" fill="#5a6676" font-size="12">설정 12조합 중 최악 — 과적합</text>
+        <text x="460" y="88" text-anchor="middle" fill="#b03636" font-size="21" font-weight="bold">AUC 0.650</text>
+        <text x="460" y="116" text-anchor="middle" fill="#5a6676" font-size="11.5">학습 세트의 우연까지 외워, 새 데이터에서 급락</text>
+      </g>
+    </svg>
+    <figcaption>트리를 끝까지 자르면(잎당 고객 1명) 학습 세트는 잘 맞지만 새 데이터 점수가 떨어집니다.</figcaption>
+    </figure>
+    <div class="act">실측 — AUC 0.650±0.007 (설정 탐색 5회) — 12조합 중 최악</div>
+    <p>해석 — "많이 배울수록 좋다"가 아님을 보여주는 반례입니다. 질문을 끝까지 반복해 잎에 고객을 한 명씩 담으면, 학습 세트의 우연까지 외우게 됩니다(과적합). 새 데이터에서 통하는지가 기준이라는 것을 이 모델이 대신 증명해 줍니다.</p>
+  </div>
+
+  <div class="mcard">
+    <div class="mh"><b>로지스틱 회귀 v3 — 확정</b><span>역할 — 계수로 설명되는 기본 모델</span></div>
+    <figure>
+    <svg viewBox="0 0 640 252" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="12.5">
+        <line x1="320" y1="12" x2="320" y2="236" stroke="#54637a" stroke-width="1.2"/>
+        <rect x="320" y="18" width="101" height="17" fill="#2f8f5b"/>
+        <text x="427" y="31" fill="#1a7f4b" font-weight="bold">특약 보유(rider)  +0.84</text>
+        <rect x="320" y="46" width="84" height="17" fill="#2f8f5b"/>
+        <text x="410" y="59" fill="#1a7f4b" font-weight="bold">20대  +0.70</text>
+        <rect x="320" y="74" width="73" height="17" fill="#2f8f5b"/>
+        <text x="399" y="87" fill="#1a7f4b" font-weight="bold">지역 경기도  +0.61</text>
+        <rect x="320" y="102" width="58" height="17" fill="#2f8f5b"/>
+        <text x="384" y="115" fill="#1a7f4b" font-weight="bold">위험등급 A  +0.48</text>
+        <rect x="265" y="130" width="55" height="17" fill="#c98a8a"/>
+        <text x="259" y="143" text-anchor="end" fill="#b03636" font-weight="bold">소득 8000만원 미만  −0.46</text>
+        <rect x="242" y="158" width="78" height="17" fill="#c98a8a"/>
+        <text x="236" y="171" text-anchor="end" fill="#b03636" font-weight="bold">위험등급 D  −0.65</text>
+        <rect x="201" y="186" width="119" height="17" fill="#c98a8a"/>
+        <text x="195" y="199" text-anchor="end" fill="#b03636" font-weight="bold">지역 대구  −0.99</text>
+        <rect x="150" y="214" width="170" height="17" fill="#c98a8a"/>
+        <text x="144" y="227" text-anchor="end" fill="#b03636" font-weight="bold">60대  −1.42</text>
+        <text x="150" y="250" text-anchor="middle" fill="#8a93a6" font-size="11">← 미가입 방향</text>
+        <text x="490" y="250" text-anchor="middle" fill="#8a93a6" font-size="11">가입 방향 →</text>
+      </g>
+    </svg>
+    <figcaption>계수(표준화, 반복 20회 평균) — 양수는 가입 방향. 연령×기혼 교차 항은 겉값이 가장 크지만 흔들림(±0.3~0.6)이 커서 그림에서 제외했습니다 — 서로 겹치는 특성은 계수가 불안정해집니다.</figcaption>
+    </figure>
+    <div class="act">실측 — AUC 0.720±0.010 · 상위 1,000명 8.2%±0.5 (기준선의 2.8배) · 판정 충족(하한 7.15%)</div>
+    <p>해석 — 특성마다 중요도(계수)를 정해 합산하므로 "왜 이 고객이 위인가"에 답할 수 있습니다. 가장 강하고 안정적인 행동 신호는 특약 보유(+0.84, 흔들림 ±0.04)이고, 지역·등급·연령이 그 뒤를 따릅니다. 차이가 우연 범위인 트리 모델 대신, 설명이 되는 이 모델을 확정했습니다.</p>
+  </div>
+
+  <div class="mcard">
+    <div class="mh"><b>LightGBM</b><span>역할 — 나무를 이어 붙여 남은 오차를 줄이는 부스팅</span></div>
+    <figure>
+    <svg viewBox="0 0 640 112" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="12">
+        <rect x="16" y="32" width="110" height="46" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+        <text x="71" y="60" text-anchor="middle" fill="#1c2430" font-weight="bold">트리 1</text>
+        <line x1="126" y1="55" x2="179" y2="55" stroke="#8a93a6"/><polygon points="187,55 177,51 177,59" fill="#8a93a6"/>
+        <text x="157" y="24" text-anchor="middle" fill="#8a93a6" font-size="11">남은 오차</text>
+        <rect x="190" y="32" width="110" height="46" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+        <text x="245" y="60" text-anchor="middle" fill="#1c2430" font-weight="bold">트리 2</text>
+        <line x1="300" y1="55" x2="353" y2="55" stroke="#8a93a6"/><polygon points="361,55 351,51 351,59" fill="#8a93a6"/>
+        <text x="331" y="24" text-anchor="middle" fill="#8a93a6" font-size="11">남은 오차</text>
+        <rect x="364" y="32" width="110" height="46" rx="10" fill="#f4f6f9" stroke="#d7dde6"/>
+        <text x="419" y="60" text-anchor="middle" fill="#1c2430" font-weight="bold">트리 3 …</text>
+        <text x="500" y="60" text-anchor="middle" fill="#8a93a6" font-size="16">→</text>
+        <rect x="524" y="32" width="100" height="46" rx="10" fill="#2456a6"/>
+        <text x="574" y="60" text-anchor="middle" fill="#fff" font-weight="bold">합산 = 확률</text>
+        <text x="320" y="102" text-anchor="middle" fill="#5a6676" font-size="11.5">작은 나무를 계속 이어 붙여, 아직 못 맞힌 오차를 다음 나무가 학습합니다</text>
+      </g>
+    </svg>
+    <figcaption>부스팅 — 이전 나무가 남긴 오차를 다음 나무가 이어서 맞힙니다.</figcaption>
+    </figure>
+    <div class="act">실측 — AUC 0.728±0.014 · 상위 1,000명 8.8%±0.8 · 판정 충족(하한 7.19%)</div>
+    <p>해석 — 숫자만 보면 로지스틱보다 조금 높지만, 그 차이(+0.65%p±0.93)는 우연 범위입니다. 판정선은 충족하지만 나무가 수백 개 이어져 계수처럼 설명하기 어렵습니다 — 상담 현장에 "왜"를 전달할 수 없어 최종 후보에서 제외한 이유입니다.</p>
+  </div>
+
+  <div class="mcard">
+    <div class="mh"><b>랜덤포레스트(기본 설정)</b><span>역할 — 나무 300그루의 투표, 성능 상한의 참고선</span></div>
+    <figure>
+    <svg viewBox="0 0 640 228" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Malgun Gothic, sans-serif" font-size="12">
+        <line x1="60" y1="22" x2="38" y2="44" stroke="#8a93a6"/><line x1="60" y1="22" x2="82" y2="44" stroke="#8a93a6"/>
+        <line x1="38" y1="44" x2="27" y2="66" stroke="#8a93a6"/><line x1="38" y1="44" x2="49" y2="66" stroke="#8a93a6"/>
+        <line x1="82" y1="44" x2="71" y2="66" stroke="#8a93a6"/><line x1="82" y1="44" x2="93" y2="66" stroke="#8a93a6"/>
+        <circle cx="60" cy="22" r="5" fill="#54637a"/><circle cx="38" cy="44" r="4" fill="#54637a"/><circle cx="82" cy="44" r="4" fill="#54637a"/>
+        <circle cx="27" cy="66" r="3" fill="#8a93a6"/><circle cx="49" cy="66" r="3" fill="#8a93a6"/><circle cx="71" cy="66" r="3" fill="#8a93a6"/><circle cx="93" cy="66" r="3" fill="#8a93a6"/>
+        <line x1="170" y1="22" x2="148" y2="44" stroke="#8a93a6"/><line x1="170" y1="22" x2="192" y2="44" stroke="#8a93a6"/>
+        <line x1="148" y1="44" x2="137" y2="66" stroke="#8a93a6"/><line x1="148" y1="44" x2="159" y2="66" stroke="#8a93a6"/>
+        <line x1="192" y1="44" x2="181" y2="66" stroke="#8a93a6"/><line x1="192" y1="44" x2="203" y2="66" stroke="#8a93a6"/>
+        <circle cx="170" cy="22" r="5" fill="#54637a"/><circle cx="148" cy="44" r="4" fill="#54637a"/><circle cx="192" cy="44" r="4" fill="#54637a"/>
+        <circle cx="137" cy="66" r="3" fill="#8a93a6"/><circle cx="159" cy="66" r="3" fill="#8a93a6"/><circle cx="181" cy="66" r="3" fill="#8a93a6"/><circle cx="203" cy="66" r="3" fill="#8a93a6"/>
+        <line x1="280" y1="22" x2="258" y2="44" stroke="#8a93a6"/><line x1="280" y1="22" x2="302" y2="44" stroke="#8a93a6"/>
+        <line x1="258" y1="44" x2="247" y2="66" stroke="#8a93a6"/><line x1="258" y1="44" x2="269" y2="66" stroke="#8a93a6"/>
+        <line x1="302" y1="44" x2="291" y2="66" stroke="#8a93a6"/><line x1="302" y1="44" x2="313" y2="66" stroke="#8a93a6"/>
+        <circle cx="280" cy="22" r="5" fill="#54637a"/><circle cx="258" cy="44" r="4" fill="#54637a"/><circle cx="302" cy="44" r="4" fill="#54637a"/>
+        <circle cx="247" cy="66" r="3" fill="#8a93a6"/><circle cx="269" cy="66" r="3" fill="#8a93a6"/><circle cx="291" cy="66" r="3" fill="#8a93a6"/><circle cx="313" cy="66" r="3" fill="#8a93a6"/>
+        <text x="170" y="88" text-anchor="middle" fill="#5a6676" font-size="11">…이런 나무 300그루</text>
+        <line x1="356" y1="44" x2="379" y2="44" stroke="#8a93a6"/><polygon points="387,44 377,40 377,48" fill="#8a93a6"/>
+        <rect x="389" y="22" width="170" height="44" rx="10" fill="#2456a6"/>
+        <text x="474" y="40" text-anchor="middle" fill="#fff" font-weight="bold">다수결 투표</text>
+        <text x="474" y="58" text-anchor="middle" fill="#cddcf2">→ 가입 확률</text>
+        <text x="20" y="112" fill="#1c2430" font-size="12" font-weight="bold">중요도 TOP5 — 20회 평균</text>
+        <text x="195" y="133" text-anchor="end" fill="#5a6676" font-size="11.5">특약 보유(rider)</text>
+        <rect x="205" y="122" width="357" height="15" fill="#2456a6"/><text x="568" y="134" fill="#2456a6" font-size="11.5" font-weight="bold">0.23</text>
+        <text x="195" y="153" text-anchor="end" fill="#5a6676" font-size="11.5">거래금액 합(log)</text>
+        <rect x="205" y="142" width="239" height="15" fill="#7e93b8"/><text x="450" y="154" fill="#54637a" font-size="11.5" font-weight="bold">0.15</text>
+        <text x="195" y="173" text-anchor="end" fill="#5a6676" font-size="11.5">상품금액 합(log)</text>
+        <rect x="205" y="162" width="111" height="15" fill="#7e93b8"/><text x="322" y="174" fill="#54637a" font-size="11.5" font-weight="bold">0.07</text>
+        <text x="195" y="193" text-anchor="end" fill="#5a6676" font-size="11.5">미혼</text>
+        <rect x="205" y="182" width="90" height="15" fill="#7e93b8"/><text x="301" y="194" fill="#54637a" font-size="11.5" font-weight="bold">0.06</text>
+        <text x="195" y="213" text-anchor="end" fill="#5a6676" font-size="11.5">보유수 2개 이상</text>
+        <rect x="205" y="202" width="72" height="15" fill="#7e93b8"/><text x="283" y="214" fill="#54637a" font-size="11.5" font-weight="bold">0.05</text>
+      </g>
+    </svg>
+    <figcaption>중요도는 "어느 특성을 많이 썼는가"의 실측 — 1위 특약(0.23)은 로지스틱 계수 1위와 방향이 같습니다.</figcaption>
+    </figure>
+    <div class="act">실측 — AUC 0.743±0.011 · 상위 1,000명 9.8%±0.7 · 판정 충족(하한 8.37%)</div>
+    <p>해석 — 표의 최고 점수입니다. 그러나 설정 12조합을 탐색했을 때 이 점수를 넘는 조합이 없었고(기본 설정이 우연히 잘 맞은 것), 최고 조합과 로지스틱의 페어 비교 차이도 우연 범위(+0.10%p±0.60)였습니다. 대신 중요도 1위가 특약으로 로지스틱과 방향이 같아, "트리도 같은 신호를 본다"는 교차 확인으로 남겨 둡니다.</p>
+  </div>
+
+  <h3>규칙 하나와의 정직한 비교</h3>
+  <p>모델 없이 쓸 수 있는 규칙 하나를 같이 재 봤습니다 — <b>"보유상품수 2개 이상"</b>. 199명, 가입률 11.6%(재검증 11.4% — 소수라 반복마다 0.2%p 정도 흔들립니다). 모델 상위 199명도 11.6% — <b>소수 규모에서는 단순 규칙도 강력합니다</b>.</p>
+  <p>차이는 규모에서 납니다. 규칙은 199명에서 끝나지만, 모델은 1,000명 규모에서 8.2%·2,000명 규모에서 6.7%를 유지합니다 — 실험 기준으로 보면 평가 세트의 가입자 341명 중 24~37%를 잡아낸 셈입니다(재현율의 관점). 그래서 운용은 병행합니다 — 규칙 집단(199명)을 최우선 티어의 선두로, 모델 순위를 그 바깥 순위로.</p>
+  <h3>"RF가 더 높던데요" — 그래서 한 번 더 실험한 기록</h3>
+  <p>표에서 가장 높은 것은 랜덤포레스트 기본 설정입니다(0.743, 상위 1,000명 9.8% — 로지스틱보다 +1.6%p, 유의). 그럼 RF로 바꿔야 할까요? 이 질문에 답하려고 설정 실험을 한 번 더 돌렸습니다(<span class="mono">step3_rf_confirm.py</span> · 2026-10-16 · <span class="mono">_rf_log.txt</span>).</p>
+  <div class="steps">
+    <div class="step"><div class="no">1단계</div><div class="h">설정 12가지 탐색</div><div class="b">나무 모양(잎 크기·깊이·피처 비율) 12조합 × 분할 5번. AUC 범위 0.650~0.724 — <b>기본 설정(0.743)을 넘는 조합은 하나도 없었습니다</b>. 기본값의 높은 점수는 설정이 우연히 잘 맞은 효과가 큽니다.</div></div>
+    <div class="step"><div class="no">2단계</div><div class="h">최고 조합 정면 비교</div><div class="b">최고 조합(잎노드 32 · 깊이 무제한 · 피처 sqrt)으로 20번 반복 — 로지스틱도 매번 같은 분할로 학습해 페어 비교. RF 0.725±0.008 vs 로지스틱 0.718±0.010.</div></div>
+    <div class="step"><div class="no">판정</div><div class="h">차이는 우연 범위</div><div class="b">상위 1,000명 차이 <b>+0.10%p±0.60</b> — 20쌍 중 13쌍만 RF가 앞서고, 이긴 폭이 흔들림보다 작습니다. AUC +0.007(승 17/20)도 경향성 수준.</div></div>
+  </div>
+  <p>"20번 중 13번 이긴다"고 들면 이기는 모델처럼 느껴지지만, 이긴 폭(+0.10%p)이 흔들림(±0.60%p)보다 작으면 차이라고 말할 수 없습니다. 이것이 <b>유의하지 않다</b>(우연과 구분되지 않음)의 실제 모습입니다. 덧붙여, 완전 성장 트리가 AUC 0.65대로 떨어진 것은 과적합의 정량 예시입니다 — 트리를 끝까지 자르면 학습 세트의 우연까지 외우게 됩니다.</p>
+  <h3>그래서 왜 로지스틱 v3인가 — 세 가지</h3>
+  <div class="cards3">
+    <div class="card"><div class="h">① 차이가 우연 범위</div><div class="b">같은 분할 페어 비교에서 RF의 우위가 유의하지 않았습니다. 모델을 바꿀 숫자적 근거가 없습니다.</div></div>
+    <div class="card"><div class="h">② 설명이 됩니다</div><div class="b">계수로 "왜 이 고객이 위인가"에 답할 수 있습니다(예: 특약 보유 +0.84). RF의 중요도 1위도 특약(0.23)으로 방향이 일치합니다.</div></div>
+    <div class="card"><div class="h">③ 운용안이 유지됩니다</div><div class="b">티어 A/B/C의 예상 가입률(9.7/8.2/6.7%)에 변동이 없어, 이미 합의된 운용안을 그대로 씁니다.</div></div>
+  </div>
+  <h3>확률이 실제 빈도와 맞는가</h3>
+  <p>모델이 내놓는 확률을 5등급으로 나눠 실제 가입률과 대조했습니다 — 낮은 등급 2.30% → 높은 등급 3.66%까지 순서대로 올라갑니다(보정 곡선 검증 · 2026-10-15). 순서가 뒤집히지 않았다는 것은, 이 확률을 티어를 나누는 데 그대로 써도 된다는 뜻입니다.</p>
+  <h3>모델을 쓰는 자리 — 티어 3단</h3>
+  <table class="tbl">
+    <tr><th>티어</th><th class="r">규모</th><th class="r">예상 가입률</th><th>운용</th></tr>
+    <tr><td><b>A — 최우선</b></td><td class="r">~500명</td><td class="r"><b>9.7%</b></td><td>전화 상담 + 맞춤 제안. 규칙 집단(보유수 2개 이상 199명)을 선두 배치</td></tr>
+    <tr><td><b>B — 2순위</b></td><td class="r">누적 ~1,000명</td><td class="r"><b>8.2%</b></td><td>A에 이어 밀접 접촉 — 실제 가입자 약 82명 예상(무작위는 약 29명)</td></tr>
+    <tr><td><b>C — 3순위</b></td><td class="r">누적 ~2,000명</td><td class="r"><b>6.7%</b></td><td>자동 채널(문자·앱 푸시) — 실제 가입자 약 134명 예상(무작위는 약 58명)</td></tr>
+    <tr class="dim"><td>제외</td><td class="r">나머지</td><td class="r">2% 미만</td><td>이번 캠페인 제외, 다음 지평에서 재평가</td></tr>
+  </table>
+  <div class="note">상담원 교육용으로는 이렇게 말하면 됩니다 — <b>"이 티어 고객은 약 10명 중 1명이 가입한 이력이 있습니다."</b> 확률 숫자보다 빈도의 말이 현장에서 잘 전달됩니다(보정 곡선 검증을 통과했으므로 빈도의 말이 허용됩니다).</div>
+  <div class="lesson"><b>한 줄 정리</b> — 성능이 조금 더 높은 모델이 있어도, 그 차이가 우연이면 바꾸지 않습니다.</div>
+</section>
+
+<section id="s4">
+  <div class="sec-label">한계와 개선 · 5</div>
+  <h2>숨기지 않는 여섯 가지, 그리고 다음 실험 세 개</h2>
+  <table class="tbl">
+    <tr><th style="width:30%">한계</th><th style="width:35%">왜 문제인가</th><th>그래서 어떻게 하나</th></tr>
+    <tr><td><b>1. 속성 열은 2025년 스냅샷</b></td><td>소득·신용 값이 예측 시점보다 1년 뒤의 것 — 계수에 미래 정보가 조금 섞였을 수 있음</td><td>영향을 확인한 뒤 속성을 뺀 버전과 비교(미실행 후보)</td></tr>
+    <tr><td><b>2. 지역 격차의 원인 불명</b></td><td>대구 0.8% vs 경기 3.8% — 채널·지점 데이터가 없어 "성향 차이"라고 단정할 수 없음</td><td>서술은 관측 사실만, 채널 데이터 확보 시 검증</td></tr>
+    <tr><td><b>3. 정답이 "무엇이든 신규 가입"</b></td><td>같은 계열 보강과 담보 확장을 구분하지 못함</td><td>계열 전환 매핑으로 정답을 다시 정의(다음 실험 2)</td></tr>
+    <tr><td><b>4. 2024년 코호트를 오늘의 고객에 적용(외삽)</b></td><td>최신 고객에서는 성능이 다를 수 있음</td><td>다음 스냅샷에서 재학습·재검증</td></tr>
+    <tr><td><b>5. 특약 보유의 "왜"는 가설 수준</b></td><td>상담이 깊어져서인지(메커니즘) 확인 불가 — 채널 열이 없음</td><td>인과 표현을 피하고 행동 신호로만 사용</td></tr>
+    <tr><td><b>6. 콜 타이밍(시즌성) 검증 불가</b></td><td>데이터에 월 단위가 없음(연도만 존재)</td><td>상담 기록을 쌓은 뒤 월별 분포로 검증</td></tr>
+  </table>
+  <h3>다음 실험 세 개</h3>
+  <div class="cards3">
+    <div class="card"><div class="h">① 채널·접점 데이터 확보</div><div class="b">특약의 "왜"를 검증하고 지역 격차의 원인을 분해합니다. 예측 성능 상승도 기대됩니다.</div></div>
+    <div class="card"><div class="h">② 정답을 다시 정의</div><div class="b">"담보 확장"과 "같은 계열 보강"을 구분하는 라벨로 — 원래의 비즈니스 질문에 더 가까워집니다.</div></div>
+    <div class="card"><div class="h">③ 2025년 말 스냅샷</div><div class="b">T=2025 프레임으로 재학습해, 오늘의 고객에 대한 외삽이 맞는지 검증합니다.</div></div>
+  </div>
+  <div class="lesson"><b>한 줄 정리</b> — 한계는 숨기는 목록이 아니라, 다음 실험의 목록입니다.</div>
+</section>
+
+<section id="s5">
+  <div class="sec-label">답 · 6</div>
+  <h2>읽기 전 질문의 답</h2>
+  <div class="ans"><b>질문 1 — 정답은 어디서 만들었나?</b><br>각 상품의 가입 연도를 뒤집어 사용했습니다. 2024년 말까지 보유한 고객 중 가입 연도가 2025년인 상품이 하나라도 있으면 정답 1 — 그 고객은 2025년에 실제로 새 상품을 샀기 때문입니다. 정답 1,137명(2.9%).</div>
+  <div class="ans"><b>질문 2 — 97.1%짜리 답이 쓸모없는 이유는?</b><br>가입할 1,137명을 하나도 못 잡습니다. 정확도는 높지만 상담 명단이 비어 있는 답입니다. 그래서 판정을 "모델이 꼽은 상위 1,000명 안에 진짜 가입자가 몇 명인가"(8.2% — 판정선 5.8% 충족)로 옮겼습니다.</div>
+  <div class="ans"><b>질문 3 — 0.743 대신 0.720을 고른 이유는?</b><br>같은 조건 페어 비교에서 차이가 우연 범위였기 때문입니다(상위 1,000명 +0.10%p±0.60 — 유의하지 않음). 그리고 로지스틱은 계수로 설명이 가능해 상담 현장의 "왜 이 고객인가"에 답할 수 있습니다. 차이가 우연이면, 설명이 되는 쪽을 고릅니다.</div>
+  <div class="ans"><b>질문 4 — 2025년 거래 금액을 피처에 안 쓴 이유는?</b><br>예측 시점(2024년 말)에 아직 없는 정보이기 때문입니다. 미래 값을 쓰면 학습 점수만 올라가고, 실제 운영에서는 계산할 수 없는 점수가 됩니다(누수). 그래서 파생값은 모두 2024년 이전 거래로만 만들었습니다.</div>
+</section>
+
+<section id="s6">
+  <div class="sec-label">부록 · 이 보고서에서 쓰는 말</div>
+  <h2>용어 여덟 개</h2>
+  <dl class="terms">
+    <dt>양성</dt><dd>1로 맞혀야 하는 것. 여기서는 2025년에 실제로 가입한 고객.</dd>
+    <dt>기준선</dt><dd>모델 없이 내놓는 답의 점수. "전원 미가입" — 정확도 97.1%, 상위 1,000명 가입률 2.9%.</dd>
+    <dt>정밀도</dt><dd>"가입한다"고 꼽은 곳에 진짜 가입자가 몇 %인가. 상위 k명으로 자르면 "명단의 농도".</dd>
+    <dt>리프트</dt><dd>기준선의 몇 배인가. 8.2%는 2.9%의 2.8배.</dd>
+    <dt>AUC</dt><dd>줄세움의 품질. 양성·음성 한 쌍을 무작위로 뽑았을 때 양성이 위에 오는 확률 — 0.720 = 100쌍 중 72쌍.</dd>
+    <dt>반복 분할(20회)</dt><dd>같은 실험을 분할 방식만 바꿔 20번 해서 평균±흔들림으로 보고하는 방식. 한 번의 운 때문에 판단하지 않으려는 것.</dd>
+    <dt>유의하다</dt><dd>차이가 우연이라고 말할 수 없을 만큼 크다는 뜻. 유의하지 않으면 "차이 없음으로 본다".</dd>
+    <dt>과적합</dt><dd>학습 세트를 외워서 새 데이터에서 점수가 떨어진 상태. 완전 성장 트리(0.650)가 실측 예시.</dd>
+  </dl>
+  <div class="note" style="border-left-color:var(--warn)"><b>몰라도 되는 말</b> — 위의 말을 전부 몰라도 이 보고서의 결론은 한 줄로 이해됩니다: <b>"모델이 꼽은 상위 1,000명에게 상담하면, 무작위로 1,000명을 고르는 것보다 실제 가입자가 2.8배 모입니다."</b></div>
+</section>
+
+<footer>
+  <p><b>버전</b> — 본 문서는 별도 버전(입문판)입니다. 기존판: <span class="mono">artifacts/보장only_모델링_결과보고서.html</span>(2026-10-16, 기관 리포트 톤) — 수치·판정은 동일하고 문체와 구성이 다릅니다.</p>
+  <p>재현: <span class="mono">scripts/step3_model_v3.py</span>(확정 모델) · <span class="mono">scripts/step3_model_compare.py</span>(모델 비교 — 2026-10-20 재실행으로 수치 재현 확인) · <span class="mono">scripts/step3_rf_confirm.py</span>(<span class="mono">_rf_log.txt</span>, RF 확정 실험) · <span class="mono">scripts/step3_model_verify.py</span>(재검증 PASS, 2026-10-18) — 반복 20회, 동일 분할. 계수·중요도 요약은 같은 프레임에서 2026-10-20 재계산한 실측값입니다.</p>
+  <p>근거 문서: <span class="mono">1_2단계_확정본.md</span>(가설·피처) · <span class="mono">4단계_리포트.md</span>(인사이트·운용안·한계·다음 실험) — 판정 기준(상위 1,000명 ≥ 5.8%)은 모델링 도입 전 사전 합의(2026-10-15).</p>
+  <p>데이터 출처: [데이터] 보험상품가입자의 보험유지 특성 분석(보험계약 등) — Training/02.라벨링데이터/TL_2.소비자.zip (보험 거래만 사용)</p>
+</footer>
+</div>
+<script>
+  const root = document.documentElement;
+  const setTheme = t => { root.dataset.theme = t; try { localStorage.setItem('report-theme', t); } catch(e) {} };
+  try { const saved = localStorage.getItem('report-theme'); if (saved) setTheme(saved); } catch(e) {}
+</script>
+</body>
+</html>

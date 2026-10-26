@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>보장only 추가가입 예측 리포트</title>
+<style>
+:root{
+  --ink:#1c2430; --ink2:#5a6675; --paper:#fdfcfb; --ground:#f2efe9; --line:#e3ddd3;
+  --accent:#0e5f56; --accent-soft:#e4efec; --ok:#0e7a4d; --ok-soft:#e2f1e8;
+  --bad:#a0372e; --bad-soft:#f6e7e4; --warn:#9a6b1f; --warn-soft:#f5eddb;
+  --code:#2b3440; --code-ink:#dfe7ea;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ink:#e8e4dc; --ink2:#a89f92; --paper:#22201c; --ground:#181613; --line:#3a352d;
+  --accent:#5cc2b2; --accent-soft:#1d2f2b; --ok:#5ec98f; --ok-soft:#1d2c23;
+  --bad:#e08a80; --bad-soft:#33201d; --warn:#d9b264; --warn-soft:#2e2617;
+  --code:#181a1e; --code-ink:#d7dde2;
+}}
+:root[data-theme="dark"]{
+  --ink:#e8e4dc; --ink2:#a89f92; --paper:#22201c; --ground:#181613; --line:#3a352d;
+  --accent:#5cc2b2; --accent-soft:#1d2f2b; --ok:#5ec98f; --ok-soft:#1d2c23;
+  --bad:#e08a80; --bad-soft:#33201d; --warn:#d9b264; --warn-soft:#2e2617;
+  --code:#181a1e; --code-ink:#d7dde2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Pretendard","Malgun Gothic",ui-sans-serif,system-ui,sans-serif;
+  font-size:15.5px; line-height:1.65; padding:0 0 80px;
+}
+.wrap{max-width:860px; margin:0 auto; padding:0 24px}
+h1,h2,h3{line-height:1.35; text-wrap:balance}
+h1{font-size:34px; margin:0 0 14px; letter-spacing:-0.02em}
+h2{font-size:24px; margin:64px 0 6px; padding-top:18px; border-top:2px solid var(--line); letter-spacing:-0.01em}
+h2 .no{color:var(--accent); font-variant-numeric:tabular-nums; font-weight:800; margin-right:10px}
+h3{font-size:17.5px; margin:34px 0 10px}
+p{margin:0 0 14px}
+.eyebrow{color:var(--accent); font-size:12.5px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:0 0 10px}
+.lead{font-size:17.5px; color:var(--ink2); margin:0 0 26px; max-width:640px}
+.meta{display:flex; gap:10px; flex-wrap:wrap; margin:0 0 34px}
+.meta span{border:1px solid var(--line); border-radius:999px; padding:4px 12px; font-size:12.5px; color:var(--ink2); background:var(--paper)}
+table{width:100%; border-collapse:collapse; font-size:13.8px; margin:10px 0 18px}
+th{text-align:left; font-weight:700; color:var(--ink2); border-bottom:2px solid var(--line); padding:8px 10px; font-size:12.8px}
+td{border-bottom:1px solid var(--line); padding:8px 10px; vertical-align:top; overflow-wrap:anywhere}
+tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right; font-variant-numeric:tabular-nums; font-family:Consolas,Menlo,monospace}
+.chip{display:inline-block; border-radius:999px; padding:1px 10px 2px; font-size:12px; font-weight:700; white-space:nowrap}
+.c-ok{background:var(--ok-soft); color:var(--ok)}
+.c-bad{background:var(--bad-soft); color:var(--bad)}
+.c-warn{background:var(--warn-soft); color:var(--warn)}
+.callout{border-left:3px solid var(--accent); background:var(--accent-soft); border-radius:0 10px 10px 0; padding:14px 18px; margin:16px 0; font-size:14.5px}
+.callout b{color:var(--accent)}
+.verdict{background:var(--ok-soft); border:1px solid var(--ok); color:var(--ok); border-radius:12px; padding:16px 20px; font-size:15.5px; font-weight:600; margin:20px 0}
+.cards3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0}
+.cards3>div{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 16px; font-size:13.3px; line-height:1.55}
+.cards3 .h{font-weight:800; font-size:13px; margin-bottom:8px}
+.cards2{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0}
+.cards2>div{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 16px; font-size:13.3px; line-height:1.55}
+.insight{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:20px 0}
+.insight .tag{color:var(--accent); font-weight:800; font-size:12px; letter-spacing:.1em; text-transform:uppercase}
+.insight h3{margin:6px 0 10px}
+.kv{display:grid; grid-template-columns:120px 1fr; gap:4px 14px; font-size:13.3px; margin:12px 0}
+.kv .k{color:var(--ink2)}
+code,.mono{font-family:Consolas,Menlo,monospace; font-size:.92em; background:var(--code); color:var(--code-ink); border-radius:5px; padding:1px 6px}
+figcaption{font-size:12.5px; color:var(--ink2); margin:4px 0 0}
+ol.summary{padding-left:0; margin:0; list-style:none; counter-reset:s}
+ol.summary li{counter-increment:s; position:relative; padding:0 0 18px 44px; font-size:15px}
+ol.summary li::before{content:counter(s); position:absolute; left:0; top:1px; width:30px; height:30px; border-radius:50%;
+  background:var(--accent-soft); color:var(--accent); font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center}
+.foot{margin-top:70px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink2); font-size:12.5px}
+@media print{
+  @page{size:A4; margin:16mm}
+  body{background:#fff; font-size:10.5pt; padding:0}
+  .wrap{max-width:none; padding:0}
+  h2{margin-top:22pt; padding-top:10pt}
+  .insight{break-inside:avoid; border:1px solid #ddd; background:#fff}
+  .cards3,.cards2{break-inside:avoid}
+  .verdict{background:#eef6f0}
+  table{font-size:9pt}
+  .meta{display:none}
+}
+@media (max-width:640px){ .cards3,.cards2{grid-template-columns:1fr} .kv{grid-template-columns:1fr} h1{font-size:27px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="eyebrow">보험 데이터 분석 · 4단계 리포트</p>
+<h1>보장only 고객의 추가 가입을 예측한다</h1>
+<p class="lead">라벨 없는 스냅샷 데이터에서 "시간"으로 정답을 만들고, 가설을 실제 행동 데이터로 검증해 반박된 것은 버리고 복제된 것만 남겼습니다. 기초 모델은 상위 1,000명에서 기준선의 2.8배 농도를 달성했습니다.</p>
+<div class="meta">
+  <span>데이터 · TL_2.소비자.zip</span><span>모델 · 로지스틱 회귀 v3</span><span>작성일 · 2026-10-15</span><span>판정 · 충족</span>
+</div>
+<ol class="summary">
+  <li><b>문제를 데이터에 맞게 다시 정의했습니다.</b> "추가 가입할 고객"을 알려 주는 열이 없는 스냅샷 데이터에서, 각 상품의 가입 연도로 <b>2024년 말 기존 고객의 2025년 실제 가입 여부</b>를 타겟으로 만들어 예측-검증 구조를 세웠습니다 — 풀 38,932명, 양성 1,137명(2.9%).</li>
+  <li><b>가설을 실제 행동 위에서 검증해, 상식적 기대가 전부 뒤집혔습니다.</b> 대용라벨로 세운 가설 4개가 전부 반박됐고(고소득·고신용 우위는 역방향), 두 프레임에 복제된 신호만 남겼습니다 — 반복 구매(4.1배)·특약 보유(모델 기여 1위)·연령×결혼·소득 역U·지역·신용 하단.</li>
+  <li><b>기초 모델이 판정 기준을 충족했습니다.</b> 로지스틱 회귀(피처 13개)의 상위 1,000명 실제 가입률은 <b>8.2%±0.5</b> — 기준선 2.9%의 2.8배이며 신뢰구간 하한(7.1%)이 판정선(5.8%)을 넘습니다. 상담 운용안은 티어 3단으로 제시합니다.</li>
+</ol>
+</div>
+</body>
+</html>
