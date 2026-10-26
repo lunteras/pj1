@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>당뇨 격차, 평균 vs 중앙값</title>
+<style>
+  :root {
+    --bg: #F5F7F4;
+    --surface: #FFFFFF;
+    --ink: #182420;
+    --muted: #5F6E68;
+    --line: #D8E0DA;
+    --grid: #E7EDE8;
+    --bar-no: #548A7E;
+    --bar-dm: #C05E12;
+    --warn-bg: #FDF3E8;
+    --warn-ink: #8A4A10;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1715;
+      --surface: #18211E;
+      --ink: #E6ECE8;
+      --muted: #97A6A0;
+      --line: #2B3733;
+      --grid: #22302B;
+      --bar-no: #6FA396;
+      --bar-dm: #E08A3C;
+      --warn-bg: #2A2014;
+      --warn-ink: #E7B98A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1715;
+    --surface: #18211E;
+    --ink: #E6ECE8;
+    --muted: #97A6A0;
+    --line: #2B3733;
+    --grid: #22302B;
+    --bar-no: #6FA396;
+    --bar-dm: #E08A3C;
+    --warn-bg: #2A2014;
+    --warn-ink: #E7B98A;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", ui-sans-serif, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    word-break: keep-all;
+    padding: 40px 20px 64px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: Batang, "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
+    font-size: 30px;
+    line-height: 1.35;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .lead { font-size: 16px; margin: 0 0 8px; max-width: 70ch; }
+  .lead strong { color: var(--ink); }
+  .lead .dm { color: var(--bar-dm); font-weight: 700; }
+  .lead .no { color: var(--bar-no); font-weight: 700; }
+
+  h2 {
+    font-size: 19px;
+    margin: 44px 0 6px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  h2 + .sub { margin-top: 0; }
+  .sub { color: var(--muted); font-size: 13.5px; margin: 0 0 18px; }
+
+  /* 결론 타일 */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .tile .t-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .tile .t-nums { font-family: Consolas, "Courier New", monospace; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .tile .t-verdict { font-size: 12.5px; font-weight: 700; margin-top: 8px; }
+  .t-verdict.ok { color: var(--bar-no); }
+  .t-verdict.warn { color: var(--warn-ink); background: var(--warn-bg); display: inline-block; padding: 1px 8px; border-radius: 999px; margin-top: 6px; }
+  @media (max-width: 640px) { .tiles { grid-template-columns: 1fr; } }
+
+  /* 차트 카드 */
+  figure.chart {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 18px 10px;
+    margin: 0 0 16px;
+  }
+  .chart-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 4px; }
+  .chart-title { font-size: 15px; font-weight: 700; }
+  .chart-verdict { font-size: 12px; font-weight: 700; }
+  .chart-verdict.ok { color: var(--bar-no); }
+  .chart-verdict.warn { color: var(--warn-ink); }
+  .spec {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin: 2px 0 8px;
+  }
+  .spec b.no-c { color: var(--bar-no); }
+  .spec b.dm-c { color: var(--bar-dm); }
+  svg { display: block; width: 100%; height: auto; max-width: 100%; }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 18px;
+    font-size: 12px; color: var(--muted);
+    margin: 2px 0 8px;
+  }
+  .legend .sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; vertical-align: -1px; margin-right: 5px; }
+  .legend .ln { display: inline-block; width: 20px; vertical-align: 3px; margin-right: 5px; }
+
+  /* 표 */
+  .table-scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
+  td.num { font-family: Consolas, "Courier New", monospace; font-variant-numeric: tabular-nums; text-align: right; }
+  th.num { text-align: right; }
+  tr.gaprow td { background: var(--warn-bg); }
+  .gname-no { color: var(--bar-no); font-weight: 700; }
+  .gname-dm { color: var(--bar-dm); font-weight: 700; }
+
+  ul.points { padding-left: 0; list-style: none; margin: 0; }
+  ul.points li { padding-left: 20px; position: relative; margin-bottom: 10px; max-width: 75ch; }
+  ul.points li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 8px; height: 8px; border-radius: 2px; background: var(--bar-no); }
+  ul.points li.warnpt::before { background: var(--bar-dm); }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">BRFSS 2015 · 성인 253,680명 · 당뇨 유병률 13.9%</div>
+    <h1>당뇨 격차, 평균과 중앙값이<br>달라서 생긴 걸까?</h1>
+    <p class="lead">
+      <strong>아니요 — 격차는 평균·중앙값 불일치가 아니라, 두 그룹의 실제 분포가 다르기 때문입니다.</strong>
+      나이와 BMI는 두 그룹 모두 평균≈중앙값인 대칭 분포인데도, 당뇨군의 평균이 뚜렷하게 이동해 있습니다
+      (나이 <span class="no">7.8 → 9.4</span>, BMI <span class="no">27.8 → 31.9</span>).
+      다만 ‘지난달 아픈 일수’는 유일하게 왜곡이 심해 평균이 중앙값을 크게 초과합니다
+      (<span class="dm">3.6일 vs 0일</span>) — 이 변수만은 평균만 읽으면 위험도가 과장됩니다.
+    </p>
+  </header>
+
+  <h2>한눈 결론</h2>
+  <p class="sub">변수별로 ‘평균이 중앙값을 얼마나 어긋나는지’와, 그래서 격차의 원인인지를 판정했습니다.</p>
+  <div class="tiles">
+    <div class="tile">
+      <div class="t-name">나이 (13단계)</div>
+      <div class="t-nums">평균 7.8 / 9.4 · 중앙값 8 / 10</div>
+      <div class="t-verdict ok">평균 ≈ 중앙값 — 격차 원인 아님</div>
+    </div>
+    <div class="tile">
+      <div class="t-name">BMI (체질량지수)</div>
+      <div class="t-nums">평균 27.8 / 31.9 · 중앙값 27 / 31</div>
+      <div class="t-verdict ok">평균 ≈ 중앙값 — 격차 원인 아님</div>
+    </div>
+    <div class="tile">
+      <div class="t-name">아픈 일수 (지난달, 0–30)</div>
+      <div class="t-nums">평균 3.6 / 8.0 · 중앙값 0 / 1</div>
+      <div class="t-verdict warn">평균 ≫ 중앙값 — 왜곡 주의</div>
+    </div>
+  </div>
+
+  <h2>그룹별 분포를 그려서 비교</h2>
+  <p class="sub">막대는 각 그룹 <em>안에서의 비율(%)</em>입니다 — 두 그룹 인원수가 다르므로(218,334명 vs 35,346명) 절대 인원이 아닌 비율로 맞춰 비교합니다. 세로선은 각 그룹의 평균(실선)과 중앙값(점선)입니다.</p>
+
+  <div class="legend">
+    <span><span class="sw" style="background: var(--bar-no)"></span>당뇨 없음</span>
+    <span><span class="sw" style="background: var(--bar-dm)"></span>당뇨 있음</span>
+    <span><svg class="ln" width="20" height="8" aria-hidden="true"><line x1="0" y1="4" x2="20" y2="4" stroke="currentColor" stroke-width="2"/></svg>평균(실선)</span>
+    <span><svg class="ln" width="20" height="8" aria-hidden="true"><line x1="0" y1="4" x2="20" y2="4" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>중앙값(점선)</span>
+  </div>
+
+  <figure class="chart">
+    <div class="chart-head">
+      <span class="chart-title">그림 1 · 연령대별 분포</span>
+      <span class="chart-verdict ok">두 그룹 모두 평균≈중앙값 → 그룹 이동이 실제</span>
+    </div>
+    <div class="spec">당뇨 없음 <b class="no-c">평균 7.8 · 중앙값 8</b> ┃ 당뇨 있음 <b class="dm-c">평균 9.4 · 중앙값 10</b> ┃ 평균 차이 0.58 SD</div>
+    <svg id="chart-age" viewBox="0 0 660 300" role="img" aria-label="연령대별 당뇨군과 비당뇨군의 분포 히스토그램"></svg>
+  </figure>
+
+  <figure class="chart">
+    <div class="chart-head">
+      <span class="chart-title">그림 2 · BMI 분포</span>
+      <span class="chart-verdict ok">대칭 분포 + 평균 이동 +4.1 → 그룹 차이 실재</span>
+    </div>
+    <div class="spec">당뇨 없음 <b class="no-c">평균 27.8 · 중앙값 27</b> ┃ 당뇨 있음 <b class="dm-c">평균 31.9 · 중앙값 31</b> ┃ 평균 차이 0.61 SD</div>
+    <svg id="chart-bmi" viewBox="0 0 660 300" role="img" aria-label="BMI별 당뇨군과 비당뇨군의 분포 히스토그램"></svg>
+  </figure>
+
+  <figure class="chart">
+    <div class="chart-head">
+      <span class="chart-title">그림 3 · 지난달 아픈 일수 (0–30일)</span>
+      <span class="chart-verdict warn">유일하게 평균≫중앙값 — 우측 왜곡 심함</span>
+    </div>
+    <div class="spec">당뇨 없음 <b class="no-c">평균 3.6 · 중앙값 0</b> ┃ 당뇨 있음 <b class="dm-c">평균 8.0 · 중앙값 1</b> ┃ 절반 이상은 ‘아픈 날 0일’</div>
+    <svg id="chart-phys" viewBox="0 0 660 300" role="img" aria-label="지난달 신체 불편 일수 분포 히스토그램"></svg>
+  </figure>
+
+  <h2>숫자 비교표</h2>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>변수</th><th>그룹</th><th class="num">평균</th><th class="num">중앙값</th><th class="num">평균 − 중앙값</th><th>해석</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="2">나이 (1–13단계)</td><td class="gname-no">당뇨 없음</td><td class="num">7.81</td><td class="num">8</td><td class="num">−0.19</td><td rowspan="2">대칭 분포 — 평균·중앙값 모두 그룹 이동을 정확히 반영</td></tr>
+        <tr><td class="gname-dm">당뇨 있음</td><td class="num">9.38</td><td class="num">10</td><td class="num">−0.62</td></tr>
+        <tr><td rowspan="2">BMI</td><td class="gname-no">당뇨 없음</td><td class="num">27.81</td><td class="num">27</td><td class="num">+0.81</td><td rowspan="2">대칭 분포 — 그룹 평균 4.1 차이는 실제 이동</td></tr>
+        <tr><td class="gname-dm">당뇨 있음</td><td class="num">31.94</td><td class="num">31</td><td class="num">+0.94</td></tr>
+        <tr class="gaprow"><td rowspan="2">아픈 일수 (0–30)</td><td class="gname-no">당뇨 없음</td><td class="num">3.64</td><td class="num">0</td><td class="num">+3.64</td><td rowspan="2">우측 왜곡 — 평균만 쓰면 위험도 과장. 중앙값(0·1일) 병기 권장</td></tr>
+        <tr class="gaprow"><td class="gname-dm">당뇨 있음</td><td class="num">7.95</td><td class="num">1</td><td class="num">+6.95</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>담당자가 알아둘 것</h2>
+  <ul class="points">
+    <li><strong>유병률 격차(6% vs 24%)는 통계 표현의 문제가 아니라 모집단의 차이입니다.</strong> 참고로 당뇨 여부는 0/1 변수라 ‘평균 = 유병률’이고 중앙값은 두 그룹 모두 0 — 애초에 중앙값 비교가 성립하지 않습니다.</li>
+    <li><strong>유일한 주의 변수는 ‘아픈 일수’입니다.</strong> 대부분 0일이지만 소수가 30일을 찍어 평균이 끌어올려진 구조 — 보고서에서 이 변수의 대푯값을 쓸 땐 “중앙값 0일, 평균 3.6일”처럼 둘을 함께 쓰세요.</li>
+    <li class="warnpt"><strong>반대로 겹침은 큽니다.</strong> 그룹 평균 차이가 0.45–0.61 SD에 불과해, 나이·BMI로 “이 사람은 당뇨”라고 개인 단위 판정은 불가능합니다. 그래서 컷오프 선별이 아니라 <strong>여러 피쳐를 조합한 모델 기반 우선순위 선정</strong>이 필요한 이유입니다.</li>
+  </ul>
+
+  <footer>
+    출처: diabetes_binary_health_indicators_BRFSS2015.csv (BRFSS 2015, 253,680명 · 당뇨군 35,346명 / 비당뇨군 218,334명).
+    히스토그램의 세로선 위치와 막대 높이는 원본 데이터에서 직접 집계한 값이며, 비율은 그룹 내 백분율로 환산했습니다.
+  </footer>
+</div>
+
+<script>
+  window.addEventListener('message', e => {
+    const t = e.data && e.data.elicecodeTheme;
+    if (t === 'system') document.documentElement.removeAttribute('data-theme');
+    else if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  });
+
+  var DATA = {
+    age: {
+      labels: ['18-24','25-29','30-34','35-39','40-44','45-49','50-54','55-59','60-64','65-69','70-74','75-79','80+'],
+      xEvery: 2,
+      min: 1, valueBins: true,
+      no: { n: 218334, hist: [5622,7458,10809,13197,15106,18077,23226,26569,27511,25636,18392,12577,14154], mean: 7.81, median: 8 },
+      dm: { n: 35346, hist: [78,140,314,626,1051,1742,3088,4263,5733,6558,5141,3403,3209], mean: 9.38, median: 10 }
+    },
+    bmi: {
+      labels: ['10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50-54','55-59','60-64','65-69','70-74','75-79','80-84','85-89','90-94','95-99'],
+      xEvery: 2,
+      min: 10, binW: 5, valueBins: false,
+      no: { n: 218334, hist: [182,12695,70801,79613,35050,12397,4471,1653,605,233,89,37,156,114,113,81,39,5], mean: 27.81, median: 27 },
+      dm: { n: 35346, hist: [18,527,5003,11563,9403,4949,2189,991,382,150,66,29,22,13,20,12,6,3], mean: 31.94, median: 31 }
+    },
+    phys: {
+      labels: (function(){ var a=[]; for (var i=0;i<=30;i++) a.push(String(i)); return a; })(),
+      xEvery: 5,
+      min: 0, valueBins: true,
+      no: { n: 218334, hist: [143312,10200,12736,7206,3779,6308,1048,3795,650,143,4305,48,449,52,2114,3621,78,69,117,19,2356,524,47,40,57,942,47,78,379,141,13674], mean: 3.64, median: 0 },
+      dm: { n: 35346, hist: [16740,1188,2028,1289,763,1314,282,743,159,36,1290,12,129,16,473,1295,34,27,35,3,917,139,23,16,15,394,22,21,143,74,5726], mean: 7.95, median: 1 }
+    }
+  };
+
+  function css(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function drawChart(id, cfg) {
+    var svg = document.getElementById(id);
+    if (!svg) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var W = 660, H = 300, L = 46, R = 10, T = 44, B = 34;
+    var pw = W - L - R, ph = H - T - B;
+    var n = cfg.labels.length;
+    var binw = pw / n;
+
+    var pct = function(g) { return g.hist.map(function(v){ return v / g.n * 100; }); };
+    var pNo = pct(cfg.no), pDm = pct(cfg.dm);
+    var maxPct = Math.max.apply(null, pNo.concat(pDm));
+    var yMax = Math.ceil(maxPct / 5) * 5;
+    var step = [5,10,20,25].filter(function(s){ return yMax % s === 0 && yMax / s <= 7; })[0] || 10;
+
+    function el(tag, attrs) {
+      var e = document.createElementNS(NS, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+    function xOf(v) {
+      if (cfg.valueBins) return L + (v - cfg.min + 0.5) * binw;
+      return L + (v - cfg.min) / cfg.binW * binw;
+    }
+    function yOf(v) { return T + ph - (v / yMax) * ph; }
+
+    // 격자 + y축 눈금
+    for (var tv = 0; tv <= yMax; tv += step) {
+      var y = yOf(tv);
+      svg.appendChild(el('line', { x1: L, y1: y, x2: L + pw, y2: y, stroke: tv === 0 ? css('--line') : css('--grid'), 'stroke-width': 1 }));
+      var lab = el('text', { x: L - 8, y: y + 4, 'text-anchor': 'end', 'font-size': 11, fill: css('--muted') });
+      lab.textContent = tv + '%';
+      svg.appendChild(lab);
+    }
+
+    // 막대 (두 계열)
+    var colors = [css('--bar-no'), css('--bar-dm')];
+    [pNo, pDm].forEach(function(series, si) {
+      series.forEach(function(v, i) {
+        if (v <= 0) return;
+        var x = L + i * binw + (si === 0 ? 1 : binw / 2 + 0.5);
+        var w = binw / 2 - 1.5;
+        var h = (v / yMax) * ph;
+        svg.appendChild(el('rect', { x: x, y: T + ph - h, width: w, height: h, fill: colors[si], rx: 1 }));
+      });
+    });
+
+    // x축 라벨
+    for (var i = 0; i < n; i += cfg.xEvery) {
+      var tx = L + i * binw + binw / 2;
+      var xl = el('text', { x: tx, y: T + ph + 16, 'text-anchor': 'middle', 'font-size': 10.5, fill: css('--muted') });
+      xl.textContent = cfg.labels[i];
+      svg.appendChild(xl);
+    }
+
+    // 평균(실선)/중앙값(점선) 표시
+    [cfg.no, cfg.dm].forEach(function(g, gi) {
+      var c = colors[gi];
+      [[g.mean, 'mean'], [g.median, 'median']].forEach(function(pair) {
+        var v = pair[0], kind = pair[1];
+        var x = xOf(v);
+        svg.appendChild(el('line', {
+          x1: x, y1: T, x2: x, y2: T + ph,
+          stroke: c, 'stroke-width': kind === 'mean' ? 2 : 1.4,
+          'stroke-dasharray': kind === 'mean' ? 'none' : '4 3', opacity: 0.95
+        }));
+        var t = el('text', {
+          x: x, y: kind === 'mean' ? T - 20 : T - 7,
+          'text-anchor': 'middle', 'font-size': 10.5, fill: c, 'font-weight': 700
+        });
+        t.textContent = v.toFixed(kind === 'mean' ? 1 : 0);
+        svg.appendChild(t);
+      });
+    });
+
+    // 상단 설명
+    var cap = el('text', { x: L, y: 12, 'font-size': 10.5, fill: css('--muted') });
+    cap.textContent = '윗줄 숫자 = 평균, 아랫줄 숫자 = 중앙값 (왼쪽 색: 당뇨 없음, 오른쪽 색: 당뇨 있음)';
+    svg.appendChild(cap);
+  }
+
+  try {
+    var renderAll = function() {
+      drawChart('chart-age', DATA.age);
+      drawChart('chart-bmi', DATA.bmi);
+      drawChart('chart-phys', DATA.phys);
+    };
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.elicecodeTheme) {
+        ['chart-age','chart-bmi','chart-phys'].forEach(function(id) {
+          var s = document.getElementById(id); if (s) s.innerHTML = '';
+        });
+        requestAnimationFrame(renderAll);
+      }
+    });
+    renderAll();
+  } catch (err) { /* 차트 실패 시에도 본문 숫자는 그대로 읽힘 */ }
+</script>
+</body>
+</html>

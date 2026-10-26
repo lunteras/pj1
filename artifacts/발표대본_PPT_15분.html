@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPT 발표 대본 — 쉬운 말 버전 (12분 50초)</title>
+<style>
+:root{
+  --ink:#f3f4f6;--ink2:#a9b1d0;--paper:#242833;--ground:#1c1f26;--line:#383e4d;
+  --accent:#7fb2e8;--accent-soft:#243450;--ok:#5ec98a;--ok-soft:#1e3a2c;
+  --bad:#e08080;--warn:#d9b15c;--chip:#2b303d;
+  --sans:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.85;word-break:keep-all}
+.wrap{max-width:880px;margin:0 auto;padding:48px 24px 90px}
+header.hero{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:34px 38px;margin-bottom:24px}
+.eyebrow{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:30px;line-height:1.3;margin:8px 0 10px;letter-spacing:-.5px}
+.lead{color:var(--ink2);font-size:15px;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
+.chip{font-size:12.5px;padding:4px 12px;border-radius:20px;background:var(--chip);border:1px solid var(--line);color:var(--ink2)}
+.chip.c-ok{background:var(--ok-soft);color:var(--ok);border-color:transparent;font-weight:700}
+section.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 34px;margin:0 0 22px}
+h2{font-size:20px;margin:0 0 6px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;font-family:Consolas,monospace;font-size:12.5px;font-weight:700;color:var(--accent);border:1.5px solid var(--accent);border-radius:8px;padding:2px 10px}
+h2 .cum{font-family:Consolas,monospace;font-size:12px;color:var(--ink2);font-weight:400;margin-left:auto}
+.goal{font-size:13.5px;color:var(--ink2);margin:6px 0 14px;padding-left:2px}
+.goal b{color:var(--accent)}
+.script{background:#1e222b;border:1px solid var(--line);border-radius:0 12px 12px 0;border-left:4px solid var(--accent);padding:16px 20px;margin:12px 0;font-size:15.4px;line-height:2.1}
+.script p{margin:9px 0}
+.cue{background:var(--chip);border-radius:10px;padding:9px 15px;margin:10px 0;font-size:13px;color:var(--ink2)}
+.cue b{color:var(--ink)}
+.anchor{border-left:3px solid var(--ok);background:var(--ok-soft);border-radius:0 10px 10px 0;padding:9px 15px;margin:10px 0;font-size:14px}
+.anchor b{color:var(--ok)}
+.trans{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:9px 15px;margin:10px 0;font-size:13.5px;color:var(--ink2)}
+.trans b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.6px}
+th{background:var(--chip);text-align:left;padding:8px 12px;border-bottom:2px solid var(--line);font-size:12.6px;white-space:nowrap;color:var(--ink2)}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.mono{font-family:Consolas,monospace;font-size:.92em}
+.r{text-align:right}
+.note{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:12px 18px;margin:14px 0;font-size:13.6px}
+.note b{color:var(--accent)}
+.rehearsal{position:sticky;top:0;z-index:50;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.rehearsal .clock{font-family:Consolas,monospace;font-size:22px;font-weight:700;color:var(--accent);min-width:64px}
+.rehearsal button{border:1px solid var(--accent);background:var(--accent);color:#1c1f26;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer}
+.rehearsal button.ghost{background:var(--paper);color:var(--accent)}
+.rehearsal .log{font-size:12.5px;color:var(--ink2);flex:1;min-width:180px}
+.rehearsal .log b{color:var(--ink)}
+footer{color:var(--ink2);font-size:12.5px;border-top:1px solid var(--line);margin-top:28px;padding-top:16px;line-height:1.7}
+footer a{color:var(--accent)}
+@media print{
+  :root{--ink:#20242c;--ink2:#59616e;--paper:#ffffff;--ground:#f1f2ee;--line:#dfe2da;--accent:#24557f;--accent-soft:#e6eef5;--ok:#1c7a4e;--ok-soft:#e2f1e8;--bad:#a0372e;--chip:#eef0ea}
+  .rehearsal{display:none}
+  section.card{border:none;page-break-inside:avoid}
+  .script{background:#fffdf6;border-color:#e8e2cd}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">ABA 1차 프로젝트 · PPT 발표 대본 · 쉬운 말 버전 · 12분</div>
+  <h1>PPT 발표 대본 — 쉬운 말 버전<br>16슬라이드 · 총 12분 50초</h1>
+  <p class="lead">전문 용어를 빼고, <b>화면의 그래프를 가리키며 하는 말</b>만 남겼습니다. 각 슬라이드에 <b>한 줄 앵커</b>(절대 잊지 말 문장)가 있고, 총 12분으로 줄여 <b>남은 약 2분은 질의·시연 여유</b>입니다. 슬라이드가 어려우면 앵커 문장만 말해도 발표가 됩니다.</p>
+  <div class="chips">
+    <span class="chip c-ok">총 12:50</span>
+    <span class="chip">슬라이드마다 한 줄 앵커</span>
+    <span class="chip">전문 용어 제거 — 쉬운 말만</span>
+    <span class="chip">리허설 타이머 내장</span>
+  </div>
+</header>
+
+<div class="rehearsal" id="rt">
+  <span class="clock" id="rt-elapsed">0:00</span>
+  <button id="rt-btn">리허설 시작</button>
+  <button id="rt-mark" class="ghost">슬라이드 통과 기록</button>
+  <button id="rt-reset" class="ghost">초기화</button>
+  <span class="log" id="rt-log">목표 <b>12:50</b> — 슬라이드마다 기록하면 실측 vs 목표가 표시됩니다.</span>
+</div>
+
+<section class="card">
+  <h2>시간분배표 — 16슬라이드 · 총 12:50</h2>
+  <table>
+    <tr><th style="width:40px">#</th><th>슬라이드</th><th class="r" style="width:60px">시간</th><th class="r" style="width:70px">누적</th><th>한 줄 앵커</th></tr>
+    <tr><td>1</td><td>표지</td><td class="r mono">0:15</td><td class="r mono">0:15</td><td>2.9% → 8.2%로 올렸다</td></tr>
+    <tr><td>2</td><td>발표 구성</td><td class="r mono">0:20</td><td class="r mono">0:35</td><td>가운데 3단계가 핵심</td></tr>
+    <tr><td>3</td><td>문제 정의</td><td class="r mono">1:05</td><td class="r mono">1:40</td><td>정답이 없어서 만들었다 — 합격선 5.8%</td></tr>
+    <tr><td>4</td><td>데이터 소개</td><td class="r mono">0:55</td><td class="r mono">2:35</td><td>385,019줄 → 38,932명</td></tr>
+    <tr><td>5</td><td>EDA — 가설 여정</td><td class="r mono">1:15</td><td class="r mono">3:50</td><td>두 해 연속 나온 것만 믿었다</td></tr>
+    <tr><td>6</td><td>EDA — 신호 그래프</td><td class="r mono">1:15</td><td class="r mono">5:05</td><td>신호는 겹칠 때 세 배</td></tr>
+    <tr><td>7</td><td>모델 경주</td><td class="r mono">1:30</td><td class="r mono">6:35</td><td>같은 1,000명 — 29명 대신 82명</td></tr>
+    <tr><td>8</td><td>왜 로지스틱인가</td><td class="r mono">1:10</td><td class="r mono">7:45</td><td>점수 차이는 운 — 이유를 말하는 모델</td></tr>
+    <tr><td>9</td><td>믿음 확인</td><td class="r mono">1:00</td><td class="r mono">8:45</td><td>계단 일치 · 빼봐서 확인 · 재실행 검증</td></tr>
+    <tr><td>10</td><td>인사이트</td><td class="r mono">1:00</td><td class="r mono">9:45</td><td>2개 이상 · 특약 · 기혼 중년 · 중간 소득</td></tr>
+    <tr><td>11</td><td>상담 계획</td><td class="r mono">1:10</td><td class="r mono">10:55</td><td>500명 전화 → 1,000명 확장 → 2,000명 문자</td></tr>
+    <tr><td>12</td><td>앞으로의 운영</td><td class="r mono">0:45</td><td class="r mono">11:40</td><td>절반만 전화해 효과를 증명한다</td></tr>
+    <tr><td>13</td><td>솔직한 한계</td><td class="r mono">0:25</td><td class="r mono">12:05</td><td>예측 성공 ≠ 매출 증명</td></tr>
+    <tr><td>14</td><td>결론</td><td class="r mono">0:35</td><td class="r mono">12:40</td><td>0.720 · 8.2% · 82명</td></tr>
+    <tr><td>15</td><td>데이터 출처</td><td class="r mono">0:05</td><td class="r mono">12:45</td><td>출처 · 재실행 검증 통과</td></tr><tr><td>16</td><td>마무리</td><td class="r mono">0:05</td><td class="r mono">12:50</td><td>감사합니다</td></tr>
+  </table>
+  <div class="note"><b>발표 요령</b> · 순서대로 다 외울 필요 없습니다. <b>각 슬라이드의 초록 앵커 문장만 말해도 발표가 완성</b>됩니다. 시간이 남으면 8번(모델) 설명을 덧붙이고, 부족하면 4번과 12번을 한 줄씩만 말하고 넘기세요.</div>
+</section>
+
+<!-- S1 -->
+<section class="card">
+  <h2><span class="badge">0:15</span>슬라이드 1 — 표지 <span class="cum">0:00 – 0:15</span></h2>
+  <div class="cue"><b>화면</b> · 숫자 3개를 손으로 짚는다</div>
+  <div class="script">
+    <p>안녕하십니까. 오늘은 '보험 고객 중 누구에게 먼저 전화할까'를 데이터로 푼 이야기입니다. 화면의 숫자 3개만 기억하시면 됩니다 — 2.9%, 8.2%, 0.720. 이야기는 이 숫자를 만들기까지의 과정입니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "2.9%를 8.2%로 올렸다."</div>
+  <div class="trans"><b>전환</b> · "먼저 흐름부터 보여드리겠습니다."</div>
+</section>
+
+<!-- S2 -->
+<section class="card">
+  <h2><span class="badge">0:20</span>슬라이드 2 — 발표 구성 <span class="cum">0:15 – 0:35</span></h2>
+  <div class="cue"><b>화면</b> · 9개 원형 — 가운데 호박색 3개를 짚는다</div>
+  <div class="script">
+    <p>흐름은 간단합니다. 문제를 정하고, 데이터를 정리하고, 신호를 찾고, 모델로 확인하고, 상담 계획으로 바꿉니다. 가운데 호박색 3단계가 핵심이라 시간을 가장 많이 씁니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "가운데 3단계가 핵심입니다."</div>
+  <div class="trans"><b>전환</b> · "1단계, 문제 정의부터."</div>
+</section>
+
+<!-- S3 -->
+<section class="card">
+  <h2><span class="badge">1:05</span>슬라이드 3 — 문제 정의 <span class="cum">0:35 – 1:40</span></h2>
+  <div class="cue"><b>화면</b> · 흐름 박스 3개 → 2.9% 카드 → 5.8% 카드 → 하단 칩 3개</div>
+  <div class="script">
+    <p>출발점은 보험 권유 전화입니다. 고객 38,932명에게 다 전화할 수는 없으니, 누구를 먼저 만날지 정해야 합니다. 그런데 첫 박스처럼 데이터에는 '다시 가입한다'는 정답이 없습니다.</p>
+    <p>그래서 두 번째 박스 — 우리가 정답을 만들었습니다. 2024년 말 고객 중 2025년에 실제로 새 상품을 가입한 1,137명입니다. 그리고 세 번째 박스 — 성공 기준도 미리 정했습니다. 모델이 고른 1,000명 중 5.8% 이상이면 성공.</p>
+    <p>왼쪽 2.9%가 함정입니다. 100명 중 3명뿐이라, 전부 '안 가입'이라고 답해도 정답률 97.1%가 나옵니다. 그래서 채점 방법을 바꿨습니다. 하단 칩 3개가 이 분석이 주는 효과입니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "정답이 없어서 만들었고, 합격선은 5.8%."</div>
+  <div class="trans"><b>전환</b> · "정답을 만들려면 데이터부터 정리했습니다."</div>
+</section>
+
+<!-- S4 -->
+<section class="card">
+  <h2><span class="badge">1:00</span>슬라이드 4 — 데이터 소개 <span class="cum">1:40 – 2:35</span></h2>
+  <div class="cue"><b>화면</b> · 깔때기 4박스 좌→우 → 칩 3개 → 하단 한 줄</div>
+  <div class="script">
+    <p>데이터는 깔때기처럼 줄였습니다. 385,019줄에서 보험 거래만 골랐고, 고객별로 한 줄씩 정리해 38,932명을 만들었습니다.</p>
+    <p>정리하며 3가지를 결정했습니다. 빈칸은 없지만 '기타'가 있어서 — 지우면 고객이 사라지니 남겼습니다. 이상한 큰 숫자도 다 버리지 않았습니다 — 버리면 곧 보게 될 핵심 고객이 사라집니다. 그리고 상품별 가입 연도가 있어서 정답을 만들 수 있었습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "385,019줄을 38,932명으로 정리했다."</div>
+  <div class="trans"><b>전환</b> · "이 데이터에서 신호를 찾았습니다 — EDA입니다."</div>
+</section>
+
+<!-- S5 -->
+<section class="card">
+  <h2><span class="badge">1:15</span>슬라이드 5 — EDA 가설 여정 <span class="cum">2:35 – 3:50</span></h2>
+  <div class="cue"><b>화면</b> · 4박스 흐름 (✕ ✕ ✓) → 호박색 밴드 → "뒤집힌 것" 한 줄</div>
+  <div class="script">
+    <p>처음 예상은 전부 틀렸습니다. '돈 많이 버는 고객이 잘 가입한다' — 아니었습니다. 소득은 중간 구간이 가장 잘 가입했고, 오래된 고객보다 최근 가입자가 잘 가입했습니다.</p>
+    <p>그래서 규칙 하나를 정했습니다 — 호박색 밴드입니다. <b>2023년에도, 2024년에도 똑같이 나타나는 신호만 믿는다</b>. 한 번만 나온 건 운일 수 있으니까요. 덕분에 운 같은 신호가 걸러졌습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "두 해 연속 나온 것만 믿었다."</div>
+  <div class="trans"><b>전환</b> · "그 규칙을 통과한 신호가 그래프에 6개입니다."</div>
+</section>
+
+<!-- S6 -->
+<section class="card">
+  <h2><span class="badge">1:15</span>슬라이드 6 — EDA 신호 그래프 <span class="cum">3:50 – 5:05</span></h2>
+  <div class="cue"><b>화면</b> · 막대 그래프 — 진한 막대 vs 연한 막대를 카테고리별로 짚는다</div>
+  <div class="script">
+    <p>그래프의 진한 막대가 신호 고객, 연한 막대가 나머지 고객입니다. 제일 큰 차이는 맨 아래 '상품 2개 이상 보유' 고객 — 11.6%로 4.1배입니다. 특약이 붙은 고객은 5.3배, 지역은 경기가 대구보다 4.8배입니다.</p>
+    <p>그런데 신호 하나만으로는 차이가 크지 않습니다. <b>신호가 겹치는 고객이 훨씬 잘 가입합니다</b> — 상품 2개에, 특약 있고, 기혼 중년인 고객이요. 그래서 여러 신호를 한 번에 보는 모델이 필요했습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "신호 하나는 약하고, 겹치면 세 배 이상."</div>
+  <div class="trans"><b>전환</b> · "그 신호들을 모델로 확인했습니다 — 경주입니다."</div>
+</section>
+
+<!-- S7 -->
+<section class="card">
+  <h2><span class="badge">1:30</span>슬라이드 7 — 모델 경주 <span class="cum">5:05 – 6:35</span></h2>
+  <div class="cue"><b>화면</b> · 컬럼 차트 좌→우 → 오른쪽 비교 다이어그램 (82명 vs 29명)</div>
+  <div class="script">
+    <p>4가지 방법을 같은 시험으로 비교했습니다. 아무것도 안 하면 2.9%. 우리 모델은 8.2% — 합격선 5.8%를 넘었습니다. 다른 방법들은 조금 더 높지만, 차이가 운 범위라 설명이 되는 쪽을 골랐습니다(다음 슬라이드).</p>
+    <p>오른쪽이 오늘의 결론입니다. 같은 1,000명 — 모델이 고르면 <b>82명</b>, 아무나 고르면 <b>29명</b>. 높이 차가 곧 2.8배, 53명 차이입니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "같은 1,000명 — 29명 대신 82명."</div>
+  <div class="trans"><b>전환</b> · "점수만 보면 다른 방법이 더 높은데, 왜 이 모델인가."</div>
+</section>
+
+<!-- S8 -->
+<section class="card">
+  <h2><span class="badge">1:10</span>슬라이드 8 — 왜 로지스틱인가 <span class="cum">6:35 – 7:45</span></h2>
+  <div class="cue"><b>화면</b> · 왼쪽 점수 비교 5행 → 오른쪽 이유 카드 3개 → 하단 녹색 밴드</div>
+  <div class="script">
+    <p>경주 결과가 근접했습니다 — 8.2%, 8.8%, 9.8%. 점수만 보면 다른 방법이 조금 더 높은데, 여기서 3가지를 확인했습니다.</p>
+    <p>첫째, <b>차이가 운 범위</b>입니다 — 같은 조건으로 20번 겨룰 때 13승 7패, 평균 차이는 0.1%포인트 남짓입니다. 동전 던지면 뒤집히는 크기입니다. 둘째, <b>랜덤포레스트는 설정에 흔들립니다</b> — 12가지로 튜닝하니 오히려 8.3%로 떨어졌고, 과하게 자란 트리는 급락합니다. 셋째, <b>로지스틱은 이유를 말합니다</b> — 특약이 1등이라고 계수로 답합니다. 랜덤포레스트도 특약을 1등으로 뽑았습니다. 그래서 확정했습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "점수 차이는 운 — 이유를 말하는 모델을 골랐다."</div>
+  <div class="trans"><b>전환</b> · "그리고 믿음도 확인했습니다 — 세 가지입니다."</div>
+</section>
+
+<!-- S9 -->
+<section class="card">
+  <h2><span class="badge">1:00</span>슬라이드 9 — 믿음 확인 <span class="cum">7:45 – 8:45</span></h2>
+  <div class="cue"><b>화면</b> · 왼쪽 중요도 그래프 → 오른쪽 계단 그래프 → 확인 칩 3개</div>
+  <div class="script">
+    <p>믿음 확인 3가지입니다. 왼쪽 그래프는 모델이 중요하다고 본 항목 — 특약이 1등입니다. 오른쪽 계단은 모델이 매긴 등급과 실제 결과가 순서대로 일치합니다. 그리고 특약을 빼보니 성적이 8.15%에서 7.24%로 떨어졌습니다 — 빼봐야 아는 진짜 중요도입니다. 같은 결과가 재실행에서도 나왔습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "계단 일치 · 빼봐서 확인 · 재실행 검증."</div>
+  <div class="trans"><b>전환</b> · "이 모델이 가리킨 고객의 얼굴입니다."</div>
+</section>
+
+<!-- S10 -->
+<section class="card">
+  <h2><span class="badge">1:00</span>슬라이드 10 — 인사이트 <span class="cum">8:45 – 9:45</span></h2>
+  <div class="cue"><b>화면</b> · 한 문장 카드 → 배수 칩 3개 → 하단 순위 한 줄</div>
+  <div class="script">
+    <p>잘 가입한 고객은 '상품 2개 이상, 특약 있음, 기혼 중년, 소득 중간'입니다. 고소득·고신용·오래된 고객이 아니었습니다. 화면의 배수 3개가 근거입니다 — 4.1배, 6.9배, 4.8배. 그리고 영향 크기는 특약이 1등, 보유 수가 2등 — 고객 등급이 아니라 행동이 갈랐습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "2개 이상 + 특약 + 기혼 중년 + 중간 소득."</div>
+  <div class="trans"><b>전환</b> · "이 순서로 상담 계획을 만들었습니다."</div>
+</section>
+
+<!-- S11 -->
+<section class="card">
+  <h2><span class="badge">1:10</span>슬라이드 11 — 상담 계획 <span class="cum">9:45 – 10:55</span></h2>
+  <div class="cue"><b>화면</b> · 티어 카드 3개 좌→우 → 예외 한 줄 → 제안 한 줄</div>
+  <div class="script">
+    <p>상위 500명은 9.7% — 전문 상담사가 전화합니다. 1,000명까지 확장하면 8.2% — 여기가 합격 지점입니다. 2,000명은 6.7% — 문자와 알림으로 접촉합니다. 예외도 있습니다. 20대 기혼은 오히려 덜 가입해 뒤로 밀고, 신용이 낮은 고객은 가장 뒤로 둡니다. 제안은 새 상품이 아니라 <b>지금 계열을 더 채우는 방향</b>부터입니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "500명 전화 → 1,000명 확장 → 2,000명 문자."</div>
+  <div class="trans"><b>전환</b> · "이 계획이 매달 돌아가는 방식입니다."</div>
+</section>
+
+<!-- S11 -->
+<section class="card">
+  <h2><span class="badge">0:45</span>슬라이드 12 — 앞으로의 운영 <span class="cum">10:55 – 11:40</span></h2>
+  <div class="cue"><b>화면</b> · 4박스 흐름 → A/B 3박스 → KPI 칩 3개</div>
+  <div class="script">
+    <p>매달 1일에 순위를 다시 계산하고, 상담하고, 결과를 기록합니다. 그리고 중요한 실험 — 상위 1,000명 중 <b>절반만 전화</b>하고 나머지는 놔두면, 전화한 쪽과 안 한 쪽의 차이로 전화의 진짜 효과를 알 수 있습니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "매달 갱신하고, 절반만 전화해 효과를 증명한다."</div>
+  <div class="trans"><b>전환</b> · "솔직한 한계도 말씀드립니다."</div>
+</section>
+
+<!-- S12 -->
+<section class="card">
+  <h2><span class="badge">0:25</span>슬라이드 13 — 솔직한 한계 <span class="cum">11:40 – 12:05</span></h2>
+  <div class="cue"><b>화면</b> · 문장을 그대로 읽고 → 6칩은 훑기만</div>
+  <div class="script">
+    <p>솔직한 한계입니다. 오늘 결과는 '예측은 맞았다'까지이고, 전화가 실제 매출을 올렸는지는 다음 실험의 몫입니다. 속성 데이터가 2025년 것이고, 지역 차이의 이유도 아직 모릅니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "예측 성공 ≠ 매출 증명 — 다음 실험이 답한다."</div>
+  <div class="trans"><b>전환</b> · "그래도 결론은 유효합니다 — 정리합니다."</div>
+</section>
+
+<!-- S13 -->
+<section class="card">
+  <h2><span class="badge">0:35</span>슬라이드 14 — 결론 <span class="cum">12:05 – 12:40</span></h2>
+  <div class="cue"><b>화면</b> · 한 문장 → 숫자 카드 3개 좌→우 → 닫는 문장</div>
+  <div class="script">
+    <p>정리하면 한 문장입니다 — <b>신호가 겹치는 고객을 먼저 만난다</b>. 숫자는 3개 — 0.720, 8.2%(2.8배), 82명(+53명). 한계를 인정한 위에서도, 미리 합의한 기준 안에서는 이 결론이 유효합니다. 다음 달 1일, 명단이 갱신됩니다.</p>
+  </div>
+  <div class="anchor"><b>한 줄 앵커</b> · "0.720 · 8.2% · 82명."</div>
+  <div class="trans"><b>전환</b> · "출처와 재현성만 짚고 마무리합니다."</div>
+</section>
+
+<!-- S14 -->
+<section class="card">
+  <h2><span class="badge">0:05</span>슬라이드 15 — 데이터 출처 <span class="cum">12:40 – 12:45</span></h2>
+  <div class="cue"><b>화면</b> · 출처 카드 짚기</div>
+  <div class="script">
+    <p>사용한 데이터는 공공데이터 '보험상품가입자의 보험유지 특성 분석'이고, 모든 숫자는 재실행 검증까지 통과했습니다.</p>
+  </div>
+</section>
+
+<!-- S15 -->
+<section class="card">
+  <h2><span class="badge">0:05</span>슬라이드 16 — 마무리 <span class="cum">12:45 – 12:50</span></h2>
+  <div class="cue"><b>화면</b> · 감사 화면</div>
+  <div class="script">
+    <p>감사합니다. 질문 환영합니다.</p>
+  </div>
+</section>
+
+<!-- 부록 -->
+<section class="card">
+  <h2>부록 — 리허설 요령</h2>
+  <table>
+    <tr><th style="width:130px">항목</th><th>내용</th></tr>
+    <tr><td>발표 최소 기준</td><td>외울 필요 없습니다 — <b>각 슬라이드의 초록 앵커 한 문장만 말해도 발표가 완성</b>됩니다. 앵커만 이어서 말하면 약 3분입니다.</td></tr>
+    <tr><td>숫자 암기 3개</td><td><b>2.9% → 8.2% · 82명 대 29명 · 0.720</b> — 이것만 기억하세요.</td></tr>
+    <tr><td>모르면 솔직하게</td><td>"정확한 수치는 리포트에 있고, 핵심은 이 그래프입니다" — 앵커로 되돌아오면 됩니다.</td></tr>
+    <tr><td>시간 배분</td><td>총 12분 — 남은 약 2분은 질의·시연 여유. 부족하면 4번(데이터)과 13번(한계)을 한 줄씩만.</td></tr>
+    <tr><td>인쇄</td><td>인쇄 시 라이트 테마 자동 전환 · 타이머 숨김</td></tr>
+  </table>
+</section>
+
+<footer>
+  <p>근거 문서 — <a href="프로젝트1_최종발표자료.pptx">프로젝트1_최종발표자료.pptx</a>(본 대본의 화면) · <a href="프로젝트1_최종발표자료.html">제출 리포트(HTML)</a> · <a href="프로젝트1_EDA 리포트.html">EDA 리포트</a> · <a href="프로젝트1_모델링_결과보고서.html">모델링 결과보고서</a> · <a href="프로젝트1_인사이트_리포트.html">인사이트 보고서</a></p>
+  <p>데이터 출처: [데이터] 보험상품가입자의 보험유지 특성 분석(보험계약 등) — Training/02.라벨링데이터/TL_2.소비자.zip (보험 거래만 사용) · PPT 발표 대본(쉬운 말 버전) · 2026</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var TARGET=[15,20,65,55,75,75,90,70,60,60,70,45,25,35,5,5];
+  var NAMES=["표지","발표 구성","문제 정의","데이터 소개","EDA 여정","EDA 신호","모델 경주","왜 로지스틱","믿음 확인","인사이트","상담 계획","앞으로의 운영","솔직한 한계","결론","데이터 출처","마무리"];
+  var t0=null,tick=null,idx=0,acc=0,prev=0;
+  var el=document.getElementById("rt-elapsed"),log=document.getElementById("rt-log"),
+      btn=document.getElementById("rt-btn"),mark=document.getElementById("rt-mark"),reset=document.getElementById("rt-reset");
+  function fmt(s){s=Math.round(s);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+  function now(){return acc+(t0!==null?(Date.now()-t0)/1000:0);}
+  btn.addEventListener("click",function(){
+    if(t0===null){t0=Date.now();btn.textContent="일시정지";
+      tick=setInterval(function(){el.textContent=fmt(now());},200);}
+    else{acc=now();t0=null;clearInterval(tick);btn.textContent="재개";}
+  });
+  mark.addEventListener("click",function(){
+    if(idx>=TARGET.length){log.innerHTML="<b>전 슬라이드 완주</b> — 초기화 후 다시 연습하세요.";return;}
+    var cur=now(),spent=cur-prev,tgt=TARGET[idx],d=Math.round(spent-tgt);
+    log.innerHTML+=" [S"+(idx+1)+" "+NAMES[idx]+"] <b>"+fmt(spent)+"</b> / "+fmt(tgt)+" ("+(d>=0?"+":"−")+Math.abs(d)+"초)";
+    prev=cur;idx+=1;
+    if(idx===TARGET.length){log.innerHTML+="<br><b>합계 "+fmt(cur)+"</b> / 목표 12:50 — 여유 3분은 질의·시연에 사용하세요.";}
+  });
+  reset.addEventListener("click",function(){
+    clearInterval(tick);t0=null;tick=null;idx=0;acc=0;prev=0;
+    el.textContent="0:00";btn.textContent="리허설 시작";
+    log.innerHTML="목표 <b>12:50</b> — 슬라이드마다 기록하면 실측 vs 목표가 표시됩니다.";
+  });
+})();
+</script>
+</body>
+</html>

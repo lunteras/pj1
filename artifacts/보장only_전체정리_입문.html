@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보장only 추가가입 예측 — 전체 정리 (입문용)</title>
+<style>
+:root{
+  --ground:#E9EEF2; --paper:#FBFCFD; --ink:#14263C; --ink2:#54637A; --line:#D5DEE6;
+  --accent:#166B5D; --accent-soft:#DFF0EC; --seal:#8C2F1B; --seal-soft:#F4E4DE;
+  --ok:#1F7A3D; --warn:#9A6B10; --warn-soft:#F6EDDA; --tile:#F2F5F8;
+  --serif:Batang,"NanumMyeongjo","Apple SD Gothic Neo",serif;
+  --sans:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ground:#0F1822; --paper:#18242F; --ink:#E8EEF4; --ink2:#9AAABD; --line:#2C3D4E;
+  --accent:#4FC3AC; --accent-soft:#1C3A36; --seal:#E08A72; --seal-soft:#42231C;
+  --ok:#63C88B; --warn:#D9A94E; --warn-soft:#3D3218; --tile:#1E2C39;
+}}
+:root[data-theme="dark"]{
+  --ground:#0F1822; --paper:#18242F; --ink:#E8EEF4; --ink2:#9AAABD; --line:#2C3D4E;
+  --accent:#4FC3AC; --accent-soft:#1C3A36; --seal:#E08A72; --seal-soft:#42231C;
+  --ok:#63C88B; --warn:#D9A94E; --warn-soft:#3D3218; --tile:#1E2C39;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);word-break:keep-all;line-height:1.65}
+.wrap{max-width:880px;margin:0 auto;padding:28px 20px 60px}
+.mast{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:34px 38px;margin-bottom:26px}
+.eyebrow{font-size:12.5px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin-bottom:10px}
+h1{font-family:var(--serif);font-size:34px;line-height:1.3;margin:0 0 12px}
+.lead{color:var(--ink2);font-size:15px;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.chip{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12.5px;color:var(--ink2);background:var(--paper)}
+.chip.c-ok{border-color:var(--ok);color:var(--ok);font-weight:700}
+.chip.c-seal{border-color:var(--seal);color:var(--seal);font-weight:700}
+.chip.c-warn{border-color:var(--warn);color:var(--warn);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px}
+.stat{background:var(--tile);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat b small{font-size:14px;font-weight:700;color:var(--ink2)}
+.stat span{font-size:12px;color:var(--ink2);line-height:1.45;display:block;margin-top:4px}
+section{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:30px 38px;margin:26px 0}
+h2{font-family:var(--serif);font-size:22px;margin:0 0 6px;display:flex;align-items:baseline;gap:10px}
+h2 .no{font-size:15px;color:var(--accent);font-family:var(--mono);font-variant-numeric:tabular-nums}
+h3{font-size:16px;margin:22px 0 8px}
+p{margin:8px 0;font-size:14.5px}
+.muted{color:var(--ink2);font-size:13.5px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{color:var(--ink2);font-weight:700;font-size:12.5px}
+td b{font-weight:700}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+.note{background:var(--tile);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13.5px;margin:14px 0}
+.note.warn{border-left-color:var(--warn)}
+.note.seal{border-left-color:var(--seal)}
+.story{display:grid;gap:14px;margin:14px 0}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.step .no{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;margin-top:2px}
+.step .tx b{display:block;font-size:15px;margin-bottom:2px}
+.step .tx{font-size:14px;color:var(--ink)}
+.verdict{border:1.5px solid var(--ok);background:var(--accent-soft);border-radius:10px;padding:14px 18px;font-weight:700;color:var(--ok);margin:16px 0}
+.verdict.seal{border-color:var(--seal);background:var(--seal-soft);color:var(--seal)}
+svg text{font-family:var(--sans)}
+svg .ax{fill:var(--ink2);font-size:11px}
+svg .val{fill:var(--ink);font-size:12px;font-weight:700}
+.figcap{font-size:12.5px;color:var(--ink2);margin-top:8px}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink2);font-size:12.5px}
+.mono{font-family:Consolas,monospace;font-size:.92em}
+.tier{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.tcard{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--tile)}
+.tcard .tag{display:inline-block;font-size:12px;font-weight:800;border-radius:999px;padding:2px 10px;margin-bottom:8px}
+.tcard.a .tag{background:var(--accent-soft);color:var(--accent)}
+.tcard.b .tag{background:var(--warn-soft);color:var(--warn)}
+.tcard.c .tag{background:var(--tile);color:var(--ink2)}
+.tcard b.big{font-size:24px;display:block;font-variant-numeric:tabular-nums}
+.tcard p{font-size:13px;color:var(--ink2);margin:6px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow">ABA 1차 프로젝트 · 보험 데이터 · 전체 정리 (입문용) · 2026-10-16</div>
+  <h1>"보장성 보험만 든 고객 중,<br>추가로 가입할 고객은 누구인가"</h1>
+  <p class="lead">이 문서는 지금까지 수행한 1~4단계 분석 전체를 처음 보는 분도 읽을 수 있게 이야기 순서로 정리한 것입니다. 전문 리포트(EDA·모델링·인사이트)는 마지막 파일 지도에서 찾을 수 있습니다.</p>
+  <div class="chips">
+    <span class="chip c-ok">판정 충족</span><span class="chip">데이터: TL_2.소비자(보험)</span><span class="chip">예측 시점 2024년 말</span><span class="chip">가설 검증 4회차</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>38,932<small>명</small></b><span>예측 대상 풀<br>(2024년 말 기존 고객)</span></div>
+    <div class="stat"><b>8.2<small>%</small></b><span>모델 상위 1,000명의 실제 가입률<br>(기준선 2.9%의 2.8배)</span></div>
+    <div class="stat"><b>13<small>개</small></b><span>최종 확정 피처<br>(가설 4회차에서 살아남은 신호)</span></div>
+  </div>
+</header>
+
+<section id="s1">
+  <h2><span class="no">01</span>출발점 — 판매자의 고민</h2>
+  <p>보험 회사에는 <b>보장성 보험만 가입한 고객이 56,190명</b> 있습니다. 이 사람들에게 전부 "추가 가입" 제안 전화를 걸면 시간·인력이 낭비됩니다. 그래서 분석의 목표는 이렇게 정해졌습니다:</p>
+  <div class="note"><b>질문</b> — "가장 먼저 상담해야 할 고객을, 데이터로 가려낼 수 있는가?"</div>
+  <p>하지만 여기서 큰 장벽이 있었습니다. 데이터에 <b>"추가로 가입했는지"를 알려주는 정답 열이 없다는 것</b>입니다. 학습시킬 정답이 없으면 예측 모델을 만들 수 없습니다. 다음 단계는 이 정답을 직접 만드는 과정입니다.</p>
+</section>
+
+<section id="s2">
+  <h2><span class="no">02</span>데이터 한눈에 보기</h2>
+  <p>분석에 쓴 데이터는 보험 거래 기록 1건입니다. 핵심 구조와 함정은 다음과 같습니다.</p>
+  <table>
+    <tr><th style="width:190px">항목</th><th>내용</th></tr>
+    <tr><td><b>규모</b></td><td>총 385,019행 중 보험 거래 77,305건 → 고객 <b>74,776명</b>(보험·증권 고객 겹침 0명)</td></tr>
+    <tr><td><b>1행의 의미</b></td><td>고객이 <b>보유한 상품 1건</b>(주보험+특약 묶음) — 고객 96.9%는 1행. 고객 단위 분석 시 중복 제거 필요</td></tr>
+    <tr><td><b>결측</b></td><td>NaN 0건 — 대신 '기타'·'-' 같은 대체값이 있음(직업 10.3% 등)</td></tr>
+    <tr><td><b>열 함정 4개</b></td><td><span class="mono">product_period</span>는 기간이 아니라 <b>만기 연도</b>(9999=만기 없음) · <span class="mono">investment_propensity</span>는 보험 고객에서 100% '-' · <span class="mono">customer_seq</span>는 순번 아님 · 담보 구성은 행으로 재구성해도 83.4%만 일치하는 별도 속성</td></tr>
+  </table>
+  <p class="muted">함정은 실제 데이터를 열어 검증하면서 발견했고, 각각 처리 방침(미사용·제외 등)이 확정돼 있습니다.</p>
+</section>
+
+<section id="s3">
+  <h2><span class="no">03</span>정답(라벨)을 만드는 법 — 시간으로 해결</h2>
+  <p>정답이 없어도, 데이터 안에 <b>시간</b>이 있습니다. 모든 상품 행에 가입 연도가 있어서 이렇게 문제를 바꿨습니다:</p>
+  <div class="story">
+    <div class="step"><div class="no">1</div><div class="tx"><b>2024년 말 시점으로 고객을 선다</b><span class="muted" style="display:block">그때 이미 상품을 보유한 기존 고객 38,932명 = 예측 대상(1명=1행)</span></div></div>
+    <div class="step"><div class="no">2</div><div class="tx"><b>미래는 이미 데이터에 있다</b><span class="muted" style="display:block">스냅샷이 2025년까지의 결과를 담고 있어, "2025년에 새 상품을 샀는가"가 실제 정답(양성 1,137명 = 2.9%)으로 관측됨</span></div></div>
+    <div class="step"><div class="no">3</div><div class="tx"><b>2024년 말까지 아는 값으로 2025년 가입을 맞히고, 실제와 대조한다</b><span class="muted" style="display:block">이렇게 "예측 → 검증" 구조가 완성. 처음 시도한 '담보 확장자 프로필' 대용라벨(정답 대용품)은 폐기됐습니다</span></div></div>
+  </div>
+  <div class="note warn"><b>왜 대용라벨을 폐기했나</b> — "다중 담보를 보유한 고객"의 프로필로 가설을 세웠더니, 실제 가입 행동과 <b>방향이 어긋났습니다</b>(아래 04절). 라벨은 "실제 행동"이어야 한다가 이 프로젝트의 가장 큰 교훈입니다.</div>
+</section>
+
+<section id="s4">
+  <h2><span class="no">04</span>가설 검증 — 틀린 가설을 버리는 과정 (4회차)</h2>
+  <p>가설은 처음부터 옳지 않았습니다. 오히려 <b>반복된 반박</b>이 분석의 신뢰를 만들었습니다.</p>
+  <table>
+    <tr><th style="width:210px">회차</th><th>한 일</th><th style="width:110px">결과</th></tr>
+    <tr><td><b>1~2회차</b></td><td>대용라벨("다중 담보 보유")로 가설·EDA·기준선 진행 → 예측 구조가 없음을 확인</td><td><span class="chip c-seal">폐기</span></td></tr>
+    <tr><td><b>3회차</b></td><td>구 가설 4개(40~50대&고소득 프로필 · 신용 상위 1.5배 · 오래된 고객 우위 · 갱신형 보유자는 덜 가입)를 실제 타겟으로 재검증</td><td><span class="chip c-seal">전부 반박</span></td></tr>
+    <tr><td><b>4회차</b></td><td>새 가설 6개(A 반복 구매 · B 결혼×연령 · C 소득 역U 메커니즘 · D 지역 그림자 · E 특약 보유 · F 보유수×납입액 교차)</td><td><span class="chip c-ok">지지 3</span> <span class="chip c-seal">반박 2·철회 1</span></td></tr>
+  </table>
+  <div class="note seal"><b>방향이 뒤집힌 것 4개</b> — ①고소득·40~50대: 오히려 낮음 ②신용 점수 계단: 상위 구간 무차별 ③오래된 고객: 역방향 ④갱신형: 소멸. 공통 교훈 — <b>"좋아 보이는 프로필"이 아니라 "상황·행동·상품 구성"이 갈렸습니다.</b></div>
+  <div class="note"><b>신뢰의 규칙</b> — 신호는 두 프레임(2023년 말·2024년 말)에서 <b>모두 재현될 때만</b> 채택. 이 규칙이 갱신형·경과기간 같은 가짜 신호를 걸러냈습니다.</div>
+</section>
+
+<section id="s5">
+  <h2><span class="no">05</span>발견한 신호 7개 — 누가 추가로 가입하는가</h2>
+  <table>
+    <tr><th>신호</th><th>수치 (2024년 말 프레임)</th><th style="width:200px">의미</th></tr>
+    <tr><td><b>이미 2개 이상 보유</b></td><td class="num"><b>11.6%</b> vs 2.8% (4.1배, n=680)</td><td>반복 구매 성향 — 가장 강한 신호</td></tr>
+    <tr><td><b>특약 포함 상품 보유</b></td><td class="num">3.7% vs 0.7% · 모델 기여 1위</td><td>관계 깊이의 표시(M-케어 없는 고객 안에서도 6.9배)</td></tr>
+    <tr><td><b>기혼 × 40대 이상</b></td><td class="num">50대 기혼 3.9% vs 미혼 0.7%</td><td>가계 결정권자 상황(20대는 역전)</td></tr>
+    <tr><td><b>여성</b></td><td class="num">3.3% vs 남성 2.5%</td><td>두 프레임 복제</td></tr>
+    <tr><td><b>소득 역U</b></td><td class="num">5000만원미만 정점 3.4%</td><td>고소득은 이미 충분히 보유</td></tr>
+    <tr><td><b>지역</b></td><td class="num">경기 3.8% vs 대구 0.8%·대전 0.9%·인천 1.6%</td><td>원인 불명(채널 그림자 가능) — 성향 단정 금지</td></tr>
+    <tr><td><b>신용 300점대</b></td><td class="num">1.6% (상위 구간은 무차별)</td><td>하단만 걸러내는 억제 신호</td></tr>
+  </table>
+  <div class="figcap">그래프 — 소득 구간별 가입률(역U, 정점 녹색) / 지역별 가입률(저지역 레드) / 점선 = 전체 기준선 2.9%</div>
+  <svg viewBox="0 0 700 250" style="width:100%;max-width:640px;margin:8px 0 4px">
+    <g class="ax"><text x="46" y="194" text-anchor="end">0%</text><text x="46" y="154" text-anchor="end">2%</text><text x="46" y="114" text-anchor="end">4%</text></g>
+    <line x1="52" y1="190" x2="660" y2="190" stroke="var(--line)"/>
+    <line x1="52" y1="150" x2="660" y2="150" stroke="var(--line)" stroke-dasharray="3 4"/>
+    <line x1="52" y1="110" x2="660" y2="110" stroke="var(--line)" stroke-dasharray="3 4"/>
+    <rect x="90" y="126" width="34" height="64" fill="var(--accent)"/>
+    <rect x="230" y="122" width="34" height="68" fill="var(--ok)"/>
+    <rect x="370" y="138" width="34" height="52" fill="var(--accent)" opacity="0.55"/>
+    <rect x="510" y="128" width="34" height="62" fill="var(--accent)"/>
+    <g class="val"><text x="107" y="120" text-anchor="middle">3.2</text><text x="247" y="116" text-anchor="middle">3.4</text><text x="387" y="132" text-anchor="middle">2.6</text><text x="527" y="122" text-anchor="middle">3.1</text></g>
+    <g class="ax" text-anchor="middle"><text x="107" y="208">3000미만</text><text x="247" y="208">5000미만</text><text x="387" y="208">8000미만</text><text x="527" y="208">10000이상</text></g>
+    <text x="247" y="238" class="ax" text-anchor="middle">소득 구간별 가입률(%) — 정점 5000미만 (만원 기준)</text>
+  </svg>
+  <svg viewBox="0 0 700 250" style="width:100%;max-width:640px;margin:4px 0">
+    <line x1="52" y1="16" x2="52" y2="228" stroke="var(--line)"/>
+    <rect x="52" y="20" width="380" height="26" fill="var(--accent)"/>
+    <rect x="52" y="64" width="330" height="26" fill="var(--accent)"/>
+    <rect x="52" y="108" width="160" height="26" fill="var(--seal)"/>
+    <rect x="52" y="152" width="95" height="26" fill="var(--seal)"/>
+    <rect x="52" y="196" width="84" height="26" fill="var(--seal)"/>
+    <g class="val"><text x="440" y="38">3.8</text><text x="390" y="82">3.3</text><text x="220" y="126">1.6</text><text x="155" y="170">0.9</text><text x="144" y="214">0.8</text></g>
+    <g class="rlbl"><text x="46" y="38" text-anchor="end" class="ax">경기도</text><text x="46" y="82" text-anchor="end" class="ax">부산</text><text x="46" y="126" text-anchor="end" class="ax">인천</text><text x="46" y="170" text-anchor="end" class="ax">대전</text><text x="46" y="214" text-anchor="end" class="ax">대구</text></g>
+    <line x1="342" y1="16" x2="342" y2="228" stroke="var(--ink2)" stroke-dasharray="4 4"/>
+    <text x="348" y="30" class="ax">기준선 2.9%</text>
+  </svg>
+</section>
+
+<section id="s6">
+  <h2><span class="no">06</span>모델 성적표 — 판정 기준을 넘었는가</h2>
+  <p>확정 피처 13개(속성 8종 원-핫 + 경과연수·납입액·상품금액 로그·보유수2이상 + 연령×결혼 교차·특약 보유)로 로지스틱 회귀를 학습하고, <b>같은 분할을 20번 반복</b>해 신뢰구간까지 봤습니다.</p>
+  <svg viewBox="0 0 700 260" style="width:100%;max-width:640px;margin:8px 0">
+    <g class="ax"><text x="46" y="214" text-anchor="end">0%</text><text x="46" y="164" text-anchor="end">4%</text><text x="46" y="114" text-anchor="end">8%</text><text x="46" y="64" text-anchor="end">12%</text></g>
+    <line x1="52" y1="210" x2="660" y2="210" stroke="var(--line)"/>
+    <line x1="52" y1="160" x2="660" y2="160" stroke="var(--line)" stroke-dasharray="3 4"/>
+    <line x1="52" y1="110" x2="660" y2="110" stroke="var(--line)" stroke-dasharray="3 4"/>
+    <line x1="52" y1="60" x2="660" y2="60" stroke="var(--line)" stroke-dasharray="3 4"/>
+    <rect x="90" y="89" width="90" height="121" fill="var(--accent)"/>
+    <rect x="250" y="108" width="90" height="102" fill="var(--accent)"/>
+    <rect x="410" y="126" width="90" height="84" fill="var(--accent)" opacity="0.7"/>
+    <rect x="570" y="174" width="60" height="36" fill="var(--ink2)" opacity="0.5"/>
+    <g class="val"><text x="135" y="83" text-anchor="middle">9.7</text><text x="295" y="102" text-anchor="middle">8.2</text><text x="455" y="120" text-anchor="middle">6.7</text><text x="600" y="168" text-anchor="middle">2.9</text></g>
+    <g class="ax" text-anchor="middle"><text x="135" y="228">상위 500명</text><text x="295" y="228">상위 1,000명</text><text x="455" y="228">상위 2,000명</text><text x="600" y="228">전체 기준선</text></g>
+    <line x1="52" y1="137.5" x2="660" y2="137.5" stroke="var(--ok)" stroke-dasharray="6 4"/>
+    <text x="654" y="132" class="ax" text-anchor="end">판정선 5.8%</text>
+  </svg>
+  <div class="figcap">그래프 — 모델이 뽑은 상위 k명의 실제 가입률(%). 녹색 점선 = 사전 합의 판정선 5.8%(기준선 2배)</div>
+  <table>
+    <tr><th>지표</th><th>값</th><th style="width:250px">의미</th></tr>
+    <tr><td><b>ROC-AUC</b></td><td class="num"><b>0.720 ± 0.010</b> (반복 20회)</td><td>판별 능력 — 같은 분할 20회에서도 안정</td></tr>
+    <tr><td><b>상위 1,000명 가입률</b></td><td class="num"><b>8.2% ± 0.5</b> (CI 7.1~9.2)</td><td>기준선 2.9%의 2.8배 — 실제 가입자의 24%가 이 안에</td></tr>
+    <tr><td><b>판정</b></td><td class="num"><b>충족</b></td><td>CI 하한 7.1% &gt; 판정선 5.8%</td></tr>
+    <tr><td>참고 · 다른 모델</td><td class="num">랜덤포레스트 0.743(+1.6%p 유의) · LightGBM 0.728 · 더미 0.500</td><td>확정 모델은 설명 가능성의 로지스틱 — RF는 "성능 상한 참고선"</td></tr>
+    <tr><td>참고 · 규칙 비교</td><td class="num">보유수2+ 규칙 11.6% = 모델 동규모 11.6%</td><td>소수 규모에서는 규칙도 강함 — 모델의 가치는 규모 확장에서 농도 유지</td></tr>
+  </table>
+  <div class="note"><b>후속 검증</b> — 모델 확률과 실제 빈도가 단조 일치(보정 곡선 Q1 2.3% → Q5 3.7%), 티어 경계 절벽 없음(500경계만 국소 경사), '기타' 집단 편향 없음(±1%p 이내) — 판정 이후 3건의 강화 확인을 통과했습니다.</div>
+</section>
+
+<section id="s7">
+  <h2><span class="no">07</span>누구에게 상담하나 — 운용안 (실무 배포용)</h2>
+  <div class="tier">
+    <div class="tcard a"><span class="tag">티어 A · 최우선</span><b class="big">상위 500명</b><p>가입률 <b>9.7%</b> (기준선 3.3배) — 숙련 상담사 배치, 모델 스코어 상위. 경계 ±100명에서 약 1%p 변동 있음</p></div>
+    <div class="tcard b"><span class="tag">티어 B · 1차 배포</span><b class="big">상위 1,000명</b><p>가입률 <b>8.2%</b> (2.8배) — 전체 가입자의 <b>24%</b>를 이 안에서 포착</p></div>
+    <div class="tcard c"><span class="tag">티어 C · 전체 배포</span><b class="big">상위 2,000명</b><p>가입률 <b>6.7%</b> (2.3배) — 전체 가입자의 <b>37%</b> 포착. 규모 우선이면 여기부터</p></div>
+  </div>
+  <h3>배제·후순위 조건 (예외 3개)</h3>
+  <table>
+    <tr><th style="width:190px">조건</th><th>근거 수치</th></tr>
+    <tr><td><b>20대 기혼은 후순위</b></td><td>연령 보정 시 40대 이상에서만 기혼 우위 — 20대는 역전(기혼 1.0 vs 미혼 2.2%)</td></tr>
+    <tr><td><b>대구·대전·인천은 후순위</b></td><td>가입률 0.8~1.6% vs 경기 3.8% — 고객 구성 차이가 아닌, 원인 불명(채널 그림자 가능)</td></tr>
+    <tr><td><b>신용 300점대는 최후순위</b></td><td>가입률 1.6% — 신용 점수에서 유일하게 크게 다른 하단 구간</td></tr>
+  </table>
+  <h3>무엇을 제안할 것인가</h3>
+  <p>2025년 신규 가입의 90%가 <b>M-케어 건강보험 계열</b>이고, M-케어 보유자의 다음 가입 87%가 같은 계열입니다 — <b>제안 상품은 "같은 계열 보강"(간편고지형·치매간병 등)부터</b>. 티어에 들었다고 변액·연금 전환을 권하지 않습니다.</p>
+  <div class="note warn"><b>하지 말라 3개</b> — ①고소득·고신용 우선 금지(실제 타겟에서 역방향) ②지역을 고객 성향으로 설명 금지 ③모델 확률을 "미래 보장"으로 말 금지 — "비슷한 고객의 과거 가입 비율"로 안내</div>
+  <div class="verdict">한 줄 운용안 — 매월 모델 스코어로 티어 배정 → 예외 필터 → 티어 A부터 상담 · 제안은 같은 계열 보강 · 성과는 월간 대조</div>
+</section>
+
+<section id="s8">
+  <h2><span class="no">08</span>정직한 한계와 다음 실험</h2>
+  <table>
+    <tr><th style="width:210px">한계</th><th>내용</th></tr>
+    <tr><td>속성 열의 시점 밀림</td><td>나이·소득·신용은 2025년 스냅샷 값 — 예측 시점보다 1년 뒤</td></tr>
+    <tr><td>시간 단위가 연도</td><td>"다음 분기" 수준 예측 불가 — 지평 최소 1년</td></tr>
+    <tr><td>타겟의 폭</td><td>"무엇이든 신규 가입" — 담보 확장과 보강을 구분 못함</td></tr>
+    <tr><td>지역 신호 원인 불명</td><td>채널·지점 환경 그림자 가능성 — 성향 단정 금지</td></tr>
+    <tr><td>특약 효과의 메커니즘</td><td>"왜"는 확인 불가 — 채널 열 부재. 예측 피처로서의 가치만 확인</td></tr>
+    <tr><td>transaction_amt 정의</td><td>월 납입액 추정 표기 — 정의 확보 시 재해석</td></tr>
+  </table>
+  <table>
+    <tr><th style="width:210px">다음</th><th>내용</th></tr>
+    <tr><td>미실행 검증 2개</td><td>풀링 모델(두 프레임 합성 — 지평이 달라 설계 주의) · RF 하이퍼파라미터 확정(배포 시에만)</td></tr>
+    <tr><td>대기 2개</td><td>transaction_amt 정의 · 시즌성(월 데이터 부재 — 상담 기록 축적 후)</td></tr>
+    <tr><td>다음 실험 3개</td><td>①채널·접점 데이터 확보(메커니즘 검증) ②담보 확장 라벨 재정의 ③최신 코호트 모니터링</td></tr>
+  </table>
+</section>
+
+<section id="s9">
+  <h2><span class="no">09</span>파일 지도 — 더 읽고 싶으면</h2>
+  <table>
+    <tr><th style="width:280px">자료</th><th>용도</th></tr>
+    <tr><td><span class="mono">1_2단계_확정본.md</span></td><td>문제 정의·EDA·가설·피처의 근거 전문</td></tr>
+    <tr><td><span class="mono">3단계_모델링_결과보고서.md</span> / <span class="mono">보장only_모델링_결과보고서.html</span></td><td>평가 지표 근거·4모델 비교·한계 개선</td></tr>
+    <tr><td><span class="mono">4단계_리포트.md</span> / <span class="mono">보장only_추가가입_예측_리포트.html</span></td><td>인사이트 6개·운용안 전문(실무 배포용)</td></tr>
+    <tr><td><span class="mono">보장only_EDA_리포트.html / .pdf</span></td><td>데이터·전처리·결측·이상치 근거·분포·관계</td></tr>
+    <tr><td><span class="mono">보장only_추가가입_예측_1to3단계.html / .pptx</span></td><td>발표판 슬라이드 13장(양쪽 넘버링 일치)</td></tr>
+    <tr><td><span class="mono">프로젝트_전체현황_한장.html</span></td><td>임원용 한 장 요약</td></tr>
+    <tr><td><span class="mono">scripts/</span> 26개 · <span class="mono">output/</span> 그림</td><td>재현 스크립트(README·requirements.txt 포함)와 차트 원본</td></tr>
+  </table>
+  <div class="foot">작성: 2026-10-16 · 모든 수치는 재현 스크립트 실측값 · 판정 기준(상위 1,000명 ≥ 5.8%)은 모델링 전 사전 합의</div>
+</section>
+</div>
+<script>
+const root=document.documentElement;
+const setTheme=t=>{root.dataset.theme=t;try{localStorage.setItem('intro-theme',t)}catch(e){}};
+try{const s=localStorage.getItem('intro-theme');if(s)setTheme(s)}catch(e){}
+document.addEventListener('click',e=>{if(e.target.id==='themeBtn')setTheme(root.dataset.theme==='dark'?'light':'dark')});
+</script>
+</body>
+</html>

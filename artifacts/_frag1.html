@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>보장only 추가가입 예측 — EDA 리포트 상세판</title>
+<style>
+:root{--ground:#E9EEF2;--paper:#FBFCFD;--ink:#14263C;--ink2:#54637A;--line:#D5DEE6;--accent:#166B5D;--accent-soft:#DFF0EC;--seal:#8C2F1B;--seal-soft:#F4E4DE;--warn:#9A6B10;--warn-soft:#F6EDDA;--tile:#F2F5F8;--serif:Batang,"NanumMyeongjo","Apple SD Gothic Neo",serif;--sans:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;--mono:Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#0F1822;--paper:#18242F;--ink:#E8EEF4;--ink2:#9AAABD;--line:#2C3D4E;--accent:#4FC3AC;--accent-soft:#1C3A36;--seal:#E08A72;--seal-soft:#42231C;--warn:#D9A94E;--warn-soft:#3D3218;--tile:#1E2C39}}
+:root[data-theme="dark"]{--ground:#0F1822;--paper:#18242F;--ink:#E8EEF4;--ink2:#9AAABD;--line:#2C3D4E;--accent:#4FC3AC;--accent-soft:#1C3A36;--seal:#E08A72;--seal-soft:#42231C;--warn:#D9A94E;--warn-soft:#3D3218;--tile:#1E2C39}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);word-break:keep-all;margin:0}
+.wrap{max-width:900px;margin:0 auto;padding:36px 18px 60px}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--ink2);font-weight:700}
+h1{font-family:var(--serif);font-size:32px;line-height:1.25;margin:8px 0 6px}
+.lead{font-size:14.5px;color:var(--ink2);line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.chip{font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--paper)}
+.c-ok{color:var(--ok,#1F7A3D);border-color:var(--ok,#1F7A3D)} .c-ok{border-color:var(--accent)}
+h2{font-family:var(--serif);font-size:22px;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+h3{font-family:var(--serif);font-size:16px;margin:22px 0 6px}
+p,li{font-size:14px;line-height:1.75}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0 14px}
+th{font-size:12px;color:var(--ink2);text-align:left;padding:6px 8px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.mono{font-family:var(--mono);font-size:12.5px}
+.note{background:var(--accent-soft);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0;line-height:1.7}
+.warn{background:var(--warn-soft);border-left:3px solid var(--warn);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0;line-height:1.7}
+figure{margin:18px 0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
+figure img{width:100%;display:block;border-radius:6px}
+figcaption{font-size:12px;color:var(--ink2);margin-top:8px}
+.figexp{margin-top:10px;font-size:13.5px;line-height:1.75}
+.figexp b{color:var(--accent)}
+footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--ink2);line-height:1.8}
+</style></head><body><div class="wrap">
+<div class="eyebrow">ABA 1차 프로젝트 · EDA 리포트 상세판 · 2026-10-18</div>
+<h1>데이터를 이해하기까지의<br>전 과정과 근거</h1>
+<p class="lead">기존 EDA 리포트(7절)의 상세 해석판입니다. 모든 그림 아래에 <b>① 그림이 보여주는 것 ② 읽는 법 ③ 이 그림이 바꾼 결정</b>을 붙였습니다. 필수 3요소(데이터 개요와 전처리 / 결측·이상치 처리 근거 / 분포와 관계 시각화)를 각 절에서 다룹니다.</p>
+<div class="chips"><span class="chip c-ok">재검증 PASS (2026-10-18)</span><span class="chip">풀 38,932명</span><span class="chip">양성 1,137명 (2.9%)</span><span class="chip">그림 9장 상세 해석</span></div>
+<h2><span>1.</span> 데이터 개요</h2>
+<table>
+<tr><th style="width:160px">항목</th><th>사실 (실측)</th></tr>
+<tr><td>원본</td><td><span class="mono">TL_2.소비자.zip</span> — 보험·증권 거래 혼합, 385,019행 × 22열, UTF-8-sig. 데이터 출처: [데이터] 보험상품가입자의 보험유지 특성 분석(보험계약 등) — Training/02.라벨링데이터</td></tr>
+<tr><td>이 분석의 무대</td><td>보험 거래만: 77,305행 → <b>고객 74,776명</b>. 예측 프레임 풀은 2024년 말 기준 기존 고객 <b>38,932명</b></td></tr>
+<tr><td>행의 단위</td><td><b>1행 = 고객이 보유한 상품 1건</b>(주보험+특약 묶음). 고객당 1행이 72,437명(96.9%) — 고객 단위 분석 시 중복 제거</td></tr>
+<tr><td>식별·키</td><td>유일키 = <span class="mono">customer_id + product_name</span>. <span class="mono">customer_seq</span>는 순번이 아님(중복 2,529건)</td></tr>
+<tr><td>성격</td><td>스냅샷(한 시점 사진) — 가입 연도 88.3%가 2024~2025. "누가 나중에 가입했나"를 타겟으로 삼으려면 시간 축을 직접 설계해야 함(2절 6단계)</td></tr>
+</table>
+<h2><span>2.</span> 전처리 과정 (7단계)</h2>
+<table>
+<tr><th style="width:44px">단계</th><th>처리</th><th>이유 (근거)</th></tr>
+<tr><td>1</td><td>보험 거래만 추출</td><td>증권 고객과 겹침 0명 — investment_propensity(투자성향)를 보험 고객에선 쓸 수 없어 열 제외</td></tr>
+<tr><td>2</td><td>고객 단위 편성</td><td>행마다 복제된 속성을 고객당 1행으로 — 속성이 고객 내 고정임을 검증</td></tr>
+<tr><td>3</td><td>시간 분할 타겟 설계</td><td>"2024년 말까지 보유 고객이 2025년 새 상품을 샀는가" — 스냅샷에서 유일한 검증 가능한 정답</td></tr>
+<tr><td>4</td><td>파생 피처 5개</td><td>경과연수·납입액 로그·상품금액 로그·보유수2이상·특약보유 — 모두 T 이전 값만 사용(누수 방지)</td></tr>
+<tr><td>5</td><td>교차 피처</td><td>연령×기혼 — 가설 B(50대 기혼 3.9% vs 미혼 0.7%)의 검증 결과 반영</td></tr>
+<tr><td>6</td><td>원-핫 인코딩</td><td>범주 8개 — 소득 역U·신용 하단 억제 같은 비선형을 선형 모델에서 살리려고</td></tr>
+<tr><td>7</td><td>표준화</td><td>수치 피처 — 로지스틱 수렴 안정화</td></tr>
+</table>
+<div class="note">최종 피처 13개(범주 8 + 수치·행동 5). 제외 이력: 투자성향(100% '-')·병력(신호 불안정)·갱신형(재현 실패)·보유수×납입액 교차항(소거 실험 기여 0).</div>

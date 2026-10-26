@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>상담 콕피트 ��� 시안 A</title>
+<style>
+:root{
+  --bg:#131C40; --panel:#1A2452; --panel2:#202C63; --line:#333F79;
+  --ink:#EDF1FF; --ink2:#A3AEDB; --dim:#7783B8;
+  --accent:#F0B24C; --ok:#4CC38A; --oksoft:rgba(76,195,138,.13);
+  --bad:#F06A6A; --badsoft:rgba(240,106,106,.13);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  padding:22px clamp(16px,3vw,40px) 30px;font-size:14px;line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto}
+/* ===== topbar ===== */
+.topbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+h1{font-size:21px;margin:2px 0 0;font-weight:700}
+.pass{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ok);color:var(--ok);background:var(--oksoft);border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:700}
+.pass i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.def{color:var(--ink2);margin:10px 0 18px;font-size:14.5px}
+.def b{color:var(--ink)}
+/* ===== KPI tiles ===== */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tile .lb{font-size:11.5px;letter-spacing:.06em;color:var(--dim);margin-bottom:6px}
+.tile .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tile .v small{font-size:14px;font-weight:600;color:var(--ink2);margin-left:2px}
+.tile .sub{font-size:12px;color:var(--ink2);margin-top:4px}
+.tile.hot{border-color:var(--ok)}
+.tile.hot .v{color:var(--ok)}
+/* ===== main grid ===== */
+.main{display:grid;grid-template-columns:1.45fr 1fr;gap:14px;margin-top:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.panel h3{margin:0 0 2px;font-size:14px}
+.panel .cap{font-size:12px;color:var(--dim);margin:0 0 10px}
+svg{display:block;width:100%;height:auto}
+/* ===== tier list ===== */
+.tier{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:var(--panel2)}
+.tier .rk{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:14px}
+.tier .nm b{display:block;font-size:13.5px}
+.tier .nm span{font-size:11.5px;color:var(--dim)}
+.tier .rate{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.tier .rate small{display:block;font-size:11px;font-weight:400;color:var(--dim)}
+/* ===== insight chips ===== */
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.chip .t{font-size:11.5px;color:var(--dim);margin-bottom:3px}
+.chip .v{font-size:14.5px;font-weight:700}
+.chip .s{font-size:11.5px;color:var(--ink2);margin-top:2px}
+/* ===== footer ===== */
+.foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;font-size:11.5px;color:var(--dim)}
+@media(max-width:900px){.tiles{grid-template-columns:repeat(2,1fr)}.main{grid-template-columns:1fr}.chips{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.tiles{grid-template-columns:1fr}.chips{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){.tile,.chip,.tier{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">ABA 최종발표 · 프로젝트 대시보드 · 시안 A</div>
+      <h1>보장only 추가가입 예측 — 상담 우선순위 콕피트</h1>
+    </div>
+    <div class="pass"><i></i>판정선 통과 · 사전 합의 기준(5.8%)</div>
+  </div>
+
+  <p class="def">보장성 보험만 보유한 고객 <b>38,932명</b> 중 <b>1년 내 추가 가입 고객</b>을 예측해, <b>상담 우선순위 명단</b>으로 전환한 프로젝트 · 분할 20회 반복 실측</p>
+
+  <!-- KPI -->
+  <div class="tiles">
+    <div class="tile"><div class="lb">분석 풀 — 2024년 말 보장only 고객</div><div class="v">38,932<small>명</small></div><div class="sub">보험 거래 77,305건 → 고객 74,776명 → 풀 38,932명</div></div>
+    <div class="tile"><div class="lb">기준선 — 아무 조건 없이 전화할 때</div><div class="v">2.9<small>%</small></div><div class="sub">2025년 실제 가입 1,137명 · 미가입 97.1%</div></div>
+    <div class="tile"><div class="lb">확정 모델 — 로지스틱 회귀 v3</div><div class="v">0.720<small>±0.010</small></div><div class="sub">AUC · 반복 20회 평균±흔들림</div></div>
+    <div class="tile hot"><div class="lb">상위 1,000명 실제 가입률</div><div class="v">8.2<small>%±0.5</small></div><div class="sub">기준선의 2.8배 · 판정선 5.8% 통과(CI 하한 7.1%)</div></div>
+  </div>
+
+  <div class="main">
+    <div class="panel">
+      <h3>명단 농도 — 상위 k의 실제 가입률</h3>
+      <p class="cap">세로축: 상위 k명 안의 실제 가입률(%) · 점선 = 사전 합의 판정선 5.8% · 반복 20회 평균</p>
+      <svg viewBox="0 0 560 300" role="img" aria-label="상위 k별 실제 가입률 막대그래프">
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="30" y1="168" x2="530" y2="168"/><line x1="30" y1="64" x2="530" y2="64"/><line x1="30" y1="272" x2="530" y2="272" stroke="var(--dim)"/>
+        </g>
+        <g font-family="Malgun Gothic,sans-serif" font-size="11.5" fill="var(--dim)">
+          <text x="26" y="172" text-anchor="end">4%</text><text x="26" y="68" text-anchor="end">8%</text>
+        </g>
+        <g>
+          <rect x="42" y="197" width="72" height="75" rx="4" fill="var(--dim)" opacity=".55"/>
+          <rect x="172" y="98" width="72" height="174" rx="4" fill="var(--ok)" opacity=".62"/>
+          <rect x="302" y="59" width="72" height="213" rx="4" fill="var(--ok)"/>
+          <rect x="432" y="20" width="72" height="252" rx="4" fill="var(--ok)" opacity=".82"/>
+        </g>
+        <line x1="30" y1="121" x2="530" y2="121" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="6 5"/>
+        <g font-family="Malgun Gothic,sans-serif" text-anchor="middle">
+          <text x="78" y="189" font-size="13" font-weight="700" fill="var(--ink2)">2.9%</text>
+          <text x="208" y="90" font-size="13" font-weight="700" fill="var(--ink)">6.7%</text>
+          <text x="338" y="51" font-size="14" font-weight="800" fill="var(--ok)">8.2%</text>
+          <text x="468" y="12" font-size="13" font-weight="700" fill="var(--ink)">9.7%</text>
+          <text x="338" y="252" font-size="10.5" fill="#0F2418">가입자 약 82명</text>
+          <g font-size="11.5" fill="var(--dim)">
+            <text x="78" y="290">기준선(무작위)</text><text x="208" y="290">상위 2,000명</text>
+            <text x="338" y="290" fill="var(--ink)" font-weight="700">상위 1,000명</text><text x="468" y="290">상위 500명</text>
+          </g>
+        </g>
+        <text x="530" y="112" text-anchor="end" font-size="11.5" font-weight="700" fill="var(--bad)">판정선 5.8%</text>
+      </svg>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:14px">
+        <h3>상담 운용안 — 티어 3단</h3>
+        <p class="cap">모델 순위 상위 순 배정 · 예외 규칙(20대 기혼·저지역 후순위, 신용 300점대 최후순위) 적용</p>
+        <div class="tier"><div class="rk" style="background:var(--accent);color:#20283F">A</div><div class="nm"><b>최우선 · ~500명</b><span>전화 상담 — 숙련 상담사 · "약 10명 중 1명이 가입한 이력"</span></div><div class="rate">9.7%<small>기준선 3.3배</small></div></div>
+        <div class="tier"><div class="rk" style="background:var(--ok);color:#0F2418">B</div><div class="nm"><b>1차 확장 · ~1,000명</b><span>밀접 접촉 — 가입자 약 82명 예상(무작위 29명)</span></div><div class="rate">8.2%<small>2.8배</small></div></div>
+        <div class="tier"><div class="rk" style="background:var(--ink2);color:#141B3C">C</div><div class="nm"><b>2차 확장 · ~2,000명</b><span>문자·앱 푸시 — 여력 있을 때 확장</span></div><div class="rate">6.7%<small>2.3배</small></div></div>
+        <div class="tier"><div class="rk" style="border:1px solid var(--line);color:var(--dim)">–</div><div class="nm"><b>제외 · 나머지</b><span>예상 가입률 2% 미만 — 이번 캠페인 제외, 다음 지평에 재평가</span></div><div class="rate">&lt;2%<small>&nbsp;</small></div></div>
+      </div>
+      <div class="panel">
+        <h3>모델 비교 — 같은 조건, 반복 20회</h3>
+        <p class="cap">AUC · 가로축은 0.40부터(차이 비교용 절단)</p>
+        <svg viewBox="0 0 460 210" role="img" aria-label="모델별 AUC 비교 막대그래프">
+          <line x1="112" y1="8" x2="112" y2="182" stroke="var(--line)"/>
+          <g font-family="Malgun Gothic,sans-serif" font-size="11.5" fill="var(--ink2)" text-anchor="end">
+            <text x="104" y="32">더미(전원 미가입)</text>
+            <text x="104" y="66">완전 성장 트리(과적합)</text>
+            <text x="104" y="100" fill="var(--accent)" font-weight="700">로지스틱 v3 · 확정</text>
+            <text x="104" y="134">LightGBM</text>
+            <text x="104" y="168">랜덤포레스트(기본)</text>
+          </g>
+          <rect x="112" y="18" width="74" height="20" rx="4" fill="var(--dim)" opacity=".5"/>
+          <rect x="112" y="52" width="184" height="20" rx="4" fill="var(--bad)" opacity=".55"/>
+          <rect x="112" y="86" width="236" height="20" rx="4" fill="var(--accent)"/>
+          <rect x="112" y="120" width="242" height="20" rx="4" fill="var(--ink2)" opacity=".75"/>
+          <rect x="112" y="154" width="253" height="20" rx="4" fill="var(--ink2)" opacity=".75"/>
+          <g font-family="Malgun Gothic,sans-serif" font-size="11.5" font-variant-numeric="tabular-nums">
+            <text x="192" y="32" fill="var(--dim)">0.500</text>
+            <text x="302" y="66" fill="var(--bad)">0.650</text>
+            <text x="354" y="100" fill="var(--accent)" font-weight="700">0.720</text>
+            <text x="360" y="134" fill="var(--ink2)">0.728</text>
+            <text x="371" y="168" fill="var(--ink2)">0.743</text>
+          </g>
+          <text x="112" y="202" font-size="10.5" fill="var(--dim)">트리 계열과의 차이는 페어 비교에서 유의하지 않음(+0.10%p±0.60) — 설명이 되는 로지스틱 확정</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="chips">
+    <div class="chip"><div class="t">인사이트 1 · 반복 구매 — 보유 상품 2개 이상</div><div class="v">11.6% · 기준선 4.1배</div><div class="s">연령 조각 전체 우위 · 두 시점 프레임 복제</div></div>
+    <div class="chip"><div class="t">인사이트 2 · 특약 포함 상품 보유</div><div class="v">3.7% · 표면 5.3배</div><div class="s">순수 보장형 2.2배 · 모델 기여 1위(계수 +0.84)</div></div>
+    <div class="chip"><div class="t">인사이트 3 · 기혼×중년 교차</div><div class="v">50대 기혼 3.9% vs 미혼 0.7%</div><div class="s">단, 20대는 역전(1.0% vs 2.2%) — 교차로만 읽기</div></div>
+    <div class="chip"><div class="t">인사이트 4 · 소득은 역U</div><div class="v">정점 5000만원미만 3.4%</div><div class="s">"고소득 우선" 가설 폐기 · 역U 두 프레임 복제</div></div>
+    <div class="chip"><div class="t">인사이트 5 · 지역 격차</div><div class="v">경기 3.8% vs 대구 0.8%</div><div class="s">원인 불명(채널 열 없음) — 자원 배분 참고용</div></div>
+    <div class="chip"><div class="t">인사이트 6 · 신용 300점대</div><div class="v">1.6% vs 상위 2.6~3.1%</div><div class="s">하단 걸러내기 전용 — 상위 구간은 무차별</div></div>
+  </div>
+
+  <div class="foot">
+    <span>데이터: 보험상품가입자의 보험유지 특성 분석(보험계약 등) — TL_2.소비자.zip 중 보험 거래만 (고객 74,776명)</span>
+    <span>시안 A — 운영 콕피트 콘셉트 · 발표 pptx(#1E2761) 톤 계승</span>
+  </div>
+
+</div>
+<script>
+window.addEventListener('message',e=>{const t=e.data&&e.data.elicecodeTheme;
+ if(t==='system')document.documentElement.removeAttribute('data-theme');
+ else if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);});
+</script>
+</body>
+</html>

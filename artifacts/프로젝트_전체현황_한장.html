@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프로젝트 전체 현황 — 한 장 요약</title>
+<style>
+:root{
+  --bg:#f6f7fa; --paper:#ffffff; --ink:#20242c; --sub:#5b6472; --line:#e3e6ec;
+  --accent:#2b4c8c; --accent-soft:#eef2fa; --ok:#217a54; --ok-soft:#e8f5ef;
+  --bad:#b23a48; --bad-soft:#faecef; --warn:#9a6b1f; --warn-soft:#faf3e3;
+  --serif:"Batang","Noto Serif KR",serif; --sans:"Malgun Gothic","Noto Sans KR",sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#15181e; --paper:#1e222a; --ink:#e8eaf0; --sub:#9aa3b2; --line:#333945;
+  --accent:#7fa3e8; --accent-soft:#232c40; --ok:#5bc48e; --ok-soft:#1d3329;
+  --bad:#e0808d; --bad-soft:#3a2126; --warn:#d9a855; --warn-soft:#3a2f1c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;padding:28px 16px}
+.sheet{max-width:980px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:36px 42px 30px}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--sub);text-transform:uppercase;margin-bottom:8px}
+h1{font-family:var(--serif);font-size:26px;line-height:1.35;margin-bottom:6px}
+.meta{font-size:13px;color:var(--sub);margin-bottom:22px}
+.headline{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-bottom:26px}
+.headline .main{background:var(--accent-soft);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.headline .main .t{font-size:14px;color:var(--sub);margin-bottom:4px}
+.headline .main .b{font-family:var(--serif);font-size:18px;line-height:1.5}
+.headline .main .b b{color:var(--accent)}
+.headline .side{display:flex;flex-direction:column;gap:10px}
+.headline .side .s{border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:13.5px}
+.headline .side .s b{font-family:var(--serif)}
+h2{font-size:15px;margin:26px 0 10px;display:flex;align-items:center;gap:8px;font-family:var(--serif)}
+h2 .n{display:inline-flex;width:22px;height:22px;border-radius:6px;background:var(--accent);color:#fff;font-size:12.5px;align-items:center;justify-content:center;font-family:var(--sans);flex:none}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px}
+th{background:var(--accent-soft);text-align:left;padding:7px 10px;border:1px solid var(--line);font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+td.mono{font-family:Consolas,monospace;font-size:12px;color:var(--sub);white-space:nowrap}
+.chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;border:1px solid var(--line);background:var(--paper);white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent;font-weight:600}
+.chip.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent;font-weight:600}
+.chip.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent;font-weight:600}
+.chip.dim{color:var(--sub)}
+.note{background:var(--warn-soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;margin:10px 0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card .h{font-size:13px;font-weight:700;margin-bottom:6px}
+.card .b{font-size:12.8px;color:var(--sub)}
+.card .b b{color:var(--ink)}
+.foot{margin-top:22px;padding-top:12px;border-top:1px dashed var(--line);font-size:12px;color:var(--sub)}
+#themeBtn{position:fixed;top:14px;right:16px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font-size:12px}
+@media print{ #themeBtn{display:none} body{padding:0;background:#fff} .sheet{border:none;max-width:none} }
+</style>
+</head>
+<body>
+<button id="themeBtn">테마 전환</button>
+<div class="sheet">
+  <div class="eyebrow">ABA 1차 프로젝트 · 금융 데이터 · 2026-10-08 ~ 10-16</div>
+  <h1>보장only 고객 추가가입 예측 — 전체 현황 한 장</h1>
+  <div class="meta">1~4단계 완료 · 산출물 6종 · 재현 스크립트 22개</div>
+
+  <div class="headline">
+    <div class="main">
+      <div class="t">한 문장 결론</div>
+      <div class="b">정답 라벨이 없는 스냅샷에서 <b>"2025년 실제 가입 여부"</b>라는 검증 가능한 타겟을 만들어 기초 모델을 세웠고, <b>상위 1,000명 집중 상담 시 가입률 8.2% = 기준선 2.9%의 2.8배</b> — 사전 합의 판정선(5.8%)을 CI 하한(7.1%)까지 넘어 <b>도입 가치 확인</b>.</div>
+    </div>
+    <div class="side">
+      <div class="s"><b>예측 프레임</b> — T=2024년 말 · 풀 38,932명 · 양성 1,137명(2.9%)</div>
+      <div class="s"><b>모델</b> — 로지스틱 v3 · 피처 13개 · AUC 0.720±0.01 (반복 20회)</div>
+      <div class="s"><b>가장 강한 신호</b> — 특약 보유(기여 1위) · 보유수 2개 이상(11.6%, 4.1배)</div>
+    </div>
+  </div>
+
+  <h2><span class="n">1</span>단계별 확정 내용</h2>
+  <table>
+    <tr><th style="width:110px">단계</th><th>확정한 것</th><th style="width:250px">핵심 결과</th></tr>
+    <tr><td><b>1. 데이터 이해</b></td><td>보험 고객 74,776명(거래 77,305건) · 1행=상품 1건 · 열 함정 4개(product_period=만기연도·investment_propensity 100% '-' 등)</td><td>문제 정의: 시간 분할 예측(T 이후 실제 가입)</td></tr>
+    <tr><td><b>2. EDA</b></td><td>결측 NaN 0건(대체값만) · 불균형 1:33.2 · 공선성 3쌍 · 신호는 두 프레임(T23/T24) 복제 시에만 채택</td><td>강건 신호 6 · 소멸 신호 2(갱신형·경과기간) · 무관 2(병력·성별 단독)</td></tr>
+    <tr><td><b>3. 기초 모델링</b></td><td>로지스틱(설명용) + balanced 가중치 + 고객 단위 분할 + 반복 20회</td><td>AUC 0.720 · 상위 1,000명 8.2% · <span class="chip ok">판정 충족</span></td></tr>
+    <tr><td><b>4. 인사이트·리포트</b></td><td>인사이트 6개 + 상담 운용안(티어 3단·예외 3개·월 배치 절차) + 한계 6 · 다음 실험 3</td><td>후속 검증 3건(보정·다음상품·시즌성) 완료 반영</td></tr>
+  </table>
+
+  <h2><span class="n">2</span>가설 여정 — 4회차 요약</h2>
+  <table>
+    <tr><th style="width:130px">회차</th><th>가설</th><th style="width:200px">판정</th></tr>
+    <tr><td>1회차 · 구 라벨</td><td>40~50대&고소득 프로필이 확장 잘한다 (대용라벨 기준)</td><td><span class="chip bad">폐기</span> — 예측 구조 없음 + 실제 타겟에서 역방향</td></tr>
+    <tr><td>2회차 · 재앙커링</td><td>프로필·신용·경과기간·갱신형 4개를 실제 타겟으로 재검증</td><td><span class="chip bad">전부 반박</span> — "등급이 아니라 상황·행동"으로 축 전환</td></tr>
+    <tr><td>3회차 · 새 축 A~D</td><td>반복구매(A)·결혼×연령(B)·소득역U 원인(C)·지역 그림자(D)</td><td><span class="chip ok">A·B 지지</span> <span class="chip bad">C·D 반박</span></td></tr>
+    <tr><td>4회차 · 새 축 E·F + 강도</td><td>특약 보유(E)·보유수×납입액 교차(F) + 소거 실험</td><td><span class="chip ok">E 지지·강화</span>(기여 1위) <span class="chip bad">F 철회</span>(기여 0)</td></tr>
+  </table>
+
+  <h2><span class="n">3</span>상담 운용안 요지 (6절 요약)</h2>
+  <div class="grid2">
+    <div class="card"><div class="h">티어 3단 (모델 상위)</div><div class="b">
+      · <b>A — 500명</b> · 가입률 9.7% (3.3배) · 숙련 상담사·최우선<br>
+      · <b>B — 1,000명</b> · 8.2% (2.8배) · 전체 가입자의 24% 포착<br>
+      · <b>C — 2,000명</b> · 6.7% (2.3배) · 37% 포착<br>
+      예외: 20대 기혼 후순위 · 대구·대전·인천 후순위 · 신용 300점대 최후순위
+    </div></div>
+    <div class="card"><div class="h">대상의 얼굴 + 제안 상품</div><div class="b">
+      특약 보유 → 보유수 2개 이상 → 기혼×40대 → 여성 → 소득 5000미만 → 고율 지역 (단일 조건 아닌 조합)<br>
+      신규 가입 90%가 M-케어 계열 보강 → <b>제안 상품도 같은 계열부터</b> (변액·연금 권유 금지)<br>
+      확률은 "유사 고객의 과거 가입 비율"로 안내
+    </div></div>
+  </div>
+  <div class="note"><b>하지 말라</b> — 고소득·고신용 우선 금지(역방향 확인) · 지역 격차를 성향으로 설명 금지(채널 그림자 가능성) · "확률 97% 정확"식 표현 금지(불균형 1:33.2)</div>
+
+  <h2><span class="n">4</span>산출물 지도</h2>
+  <table>
+    <tr><th style="width:240px">종류</th><th>파일</th><th style="width:120px">상태</th></tr>
+    <tr><td>1~2단계 확정 문서</td><td class="mono">ABA_1st_proj_시작파일\1_2단계_확정본.md</td><td>최신 (4회차 반영)</td></tr>
+    <tr><td>3단계 모델 스크립트</td><td class="mono">scripts\step3_model_v3.py</td><td>v3 공식 (v2는 과정 기록)</td></tr>
+    <tr><td>4단계 리포트</td><td class="mono">ABA_1st_proj_시작파일\4단계_리포트.md</td><td>완성</td></tr>
+    <tr><td>EDA 전용 리포트</td><td class="mono">artifacts\보장only_EDA_리포트.html / .pdf</td><td>완성 (10p PDF)</td></tr>
+    <tr><td>4단계 시각판 리포트</td><td class="mono">artifacts\보장only_추가가입_예측_리포트.html</td><td>완성 (8절·후속 검증 포함)</td></tr>
+    <tr><td>발표 슬라이드</td><td class="mono">artifacts\보장only_추가가입_예측_1to3단계.html / .pptx</td><td>HTML 13장 · PPTX 12장(넘버링 9번 이후 1차이)</td></tr>
+    <tr><td>그림</td><td class="mono">output\</td><td>유효 16장 · archive_구라벨 25장</td></tr>
+    <tr><td>스크립트</td><td class="mono">scripts\</td><td>현 프레임 22개 · 구라벨 13 · 무관 31 (분류 완료)</td></tr>
+  </table>
+
+  <h2><span class="n">5</span>남은 것</h2>
+  <table>
+    <tr><th style="width:200px">구분</th><th>내용</th></tr>
+    <tr><td>미실행 검증 후보 4개</td><td>풀링 모델(T23+T24 고객 단위) · 비교 모델 1개(트리 계열) · 티어 경계 민감도 · '기타' 범주 편향 재점검</td></tr>
+    <tr><td>대기 항목 2개</td><td>transaction_amt 정의 확보(데이터 설명서 필요) · 콜 타이밍 시즌성(상담 기록 축적 후)</td></tr>
+    <tr><td>다음 실험 3개 (8절)</td><td>채널·접점 데이터 확보 → 특약·지역 원인 검증 / 담보 확장 라벨 재정의 / 최신 코호트 지평 재설정</td></tr>
+    <tr><td>자료 정합성 소목표</td><td>PPTX 12장 vs HTML 13장 넘버링 정리(원하면 PPTX도 13장으로)</td></tr>
+  </table>
+
+  <div class="foot">모든 수치는 재현 스크립트 실행값(반복 20회 기준)이며, 확정·판정 내용의 근거는 <span class="mono">1_2단계_확정본.md</span>와 <span class="mono">4단계_리포트.md</span>에 남겨 있습니다. · 2026-10-16</div>
+</div>
+<script>
+  const root=document.documentElement, btn=document.getElementById('themeBtn');
+  try{const s=localStorage.getItem('overview-theme'); if(s) root.dataset.theme=s;}catch(e){}
+  btn.onclick=()=>{const t=root.dataset.theme==='dark'?'light':'dark'; root.dataset.theme=t; try{localStorage.setItem('overview-theme',t);}catch(e){}};
+</script>
+</body>
+</html>

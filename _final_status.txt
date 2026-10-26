@@ -1,0 +1,17 @@
+FINAL STATUS (2026-10-16) - all target strings verified by reload/re-read
+
+1-a HTML deck S13 header+body ...: YES  (S13 step title -> "향후 활용 계획", 3-line body: wanryo/flow/experiments; old title gone)
+1-b HTML deck S1 source line ....: YES  (small gray 11px footer-style div appended at end of cover slide)
+2-1 Report footer source line ...: YES  (BO-jangonly_yecheuk report: <p> added under reproduction path line)
+2-2 EDA report foot div .........: YES  (same-class "foot" div added under existing one)
+2-3 Modeling report footer ......: YES  (<p> added inside <footer>)
+3-a PPTX S13 text replace .......: YES  (card "다음 단계 (4단계)" -> "향후 활용 계획" + 3 bullet lines)
+3-b PPTX S1 source textbox ......: YES  (Malgun Gothic 11pt, gray 0x808080, bottom of slide 1)
+3-c PPTX backup .................: YES  (artifacts\_이전\보장only_추가가입_예측_1to3단계.backup13.pptx, 51274 bytes, made BEFORE edit)
+3-d PPTX reload verify ..........: YES
+
+PPTX:13slides, S13OK=future YES/exp YES/tierA YES/old gone YES, S1OK=source YES/tail YES/font MalgunGothic-11pt
+
+HTML deck section count: 13 before -> 13 after (unchanged)
+Duplicate-guard pre-check: all 4 HTML files had 0 hits for new strings before editing (no ALREADY case)
+Errors: 1 non-fatal - verify log line used % formatting and crashed AFTER pptx save; edits unaffected, re-verified by standalone script

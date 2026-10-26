@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>상담 대상 순위 보드 — T=2024년 말 풀</title>
+<style>
+  body { font-family:'Malgun Gothic','맑은 고딕',sans-serif; margin:24px auto; max-width:1180px;
+         color:#232a33; background:#EEF1F4; padding:0 16px; }
+  h1 { font-size:22px; color:#16307a; margin:0 0 4px; }
+  h2 { font-size:15px; color:#16307a; margin:0 0 8px; }
+  .meta { color:#5b6572; font-size:12.5px; margin-bottom:16px; }
+  .tiles { display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+  .tile { background:#fff; border:1px solid #d6dce3; border-radius:6px;
+          padding:12px 18px; min-width:180px; }
+  .num { font-size:23px; font-weight:bold; color:#16307a; }
+  .lab { font-size:12px; color:#5b6572; margin-top:4px; }
+  .box { background:#fff; border:1px solid #d6dce3; border-radius:6px;
+         padding:13px 17px; margin-bottom:16px; font-size:13px; line-height:1.65; }
+  table { border-collapse:collapse; width:100%; background:#fff; font-size:12px; margin-bottom:6px; }
+  th, td { border:1px solid #ccd3db; padding:5px 7px; text-align:center; }
+  th { background:#e3e9f0; color:#16307a; }
+  td.l { text-align:left; }
+  td.sm { font-size:11px; color:#5b6572; }
+  .ok { color:#1a7f37; font-weight:bold; }
+  .note { font-size:12px; color:#7a5200; background:#fdf6e3; border:1px solid #e8d9a0;
+          border-radius:6px; padding:10px 14px; margin-bottom:16px; line-height:1.6; }
+  ul { margin:4px 0 0 18px; padding:0; }
+  .foot { font-size:11.5px; color:#5b6572; margin-top:10px; line-height:1.6; }
+</style>
+</head>
+<body>
+<h1>상담 대상 순위 보드 — T=2024년 말 풀</h1>
+<div class="meta">모델 v3 · 로지스틱 회귀(max_iter=2000 · class_weight=balanced · random_state=42) ·
+피처 13계열(범주 8 원핫 + 수치 5 + 연령×기혼 교차) · 2026-10-16 생성</div>
+
+<div class="box">
+<h2>기준</h2>
+<b>풀</b> : 2024년(T) 이전에 가입한 보험 상품을 1개 이상 보유한 고객 38,932명(고객 단위 1행)<br>
+<b>타깃</b> : 2025년(T 이후) 새 상품을 1개 이상 실제 가입하면 1 — 양성 1,137명(2.9%)<br>
+<b>score</b> : 전체 풀로 학습한 로지스틱 회귀의 2025년 가입 확률 예측값(높을수록 유망) —
+전체 풀 학습·전체 풀 스코어(in-sample)이므로 검증·운용 참고용<br>
+<b>운용순위</b> : score 내림차순이되 예외 3종(아래 운용 규칙)을 뒤로 민 순위
+</div>
+
+<div class="tiles">
+  <div class="tile"><div class="num">38,932</div><div class="lab">풀(보험 고객, T=2024년 말 보유)</div></div>
+  <div class="tile"><div class="num">1,137</div><div class="lab">양성(2025년 실제 신규 가입)</div></div>
+  <div class="tile"><div class="num">2.9%</div><div class="lab">양성 비율(기준선)</div></div>
+  <div class="tile"><div class="num">6,116</div><div class="lab">예외 후순위 대상(3종 합산, 중복 포함)</div></div>
+</div>
+
+<h2>TOP 50 (운용순위 기준)</h2>
+<table>
+<tr><th>운용순위</th><th>운용티어</th><th>customer_id</th><th>score</th><th>예외사유</th>
+<th>연령대</th><th>결혼</th><th>성별</th><th>지역</th><th>소득구간</th><th>위험등급</th>
+<th>신용등급</th><th>특약보유</th><th>보유수2이상</th><th>경과연수</th>
+<th>실제2025가입(검증용·관측됨)</th></tr>
+<tr><td>1</td><td>A</td><td class='l'>c75dc287aa1458246992a94f4d3900a2cfebe7b3a2c2b94d8d10c2b4f0217408</td><td>0.9300</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>13</td><td class='ok'>✓</td></tr>
+<tr><td>2</td><td>A</td><td class='l'>4f3cb080fdfc0062c89ef8c252f35621c7478cc5e87b9487eeaa8001fe6d4b0b</td><td>0.9261</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>9</td><td class='ok'></td></tr>
+<tr><td>3</td><td>A</td><td class='l'>52d4d6affb91bfee6af1d863eb3a1ab2ac8e5dca28e7232d8eb069a130326f93</td><td>0.9259</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>3000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>2</td><td class='ok'></td></tr>
+<tr><td>4</td><td>A</td><td class='l'>e1351c0e0cc50fdcf27a4e7e373a1c925ab10891a587e461a8f04faa9c71e21f</td><td>0.9246</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>13</td><td class='ok'></td></tr>
+<tr><td>5</td><td>A</td><td class='l'>9f14f16dfdaa2ff316039280336e7914a6ff938aa9b07cb1ebfc686532dc4507</td><td>0.9244</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>18</td><td class='ok'>✓</td></tr>
+<tr><td>6</td><td>A</td><td class='l'>d0910db4404b482966305e078b0207722313af968292b7096bb6e878f1873f44</td><td>0.9233</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>1</td><td class='ok'></td></tr>
+<tr><td>7</td><td>A</td><td class='l'>05578b01dd08bf54768dcc5e79c934e720bfdc9f1e9968fd8fe0ee3e64204e3a</td><td>0.9221</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>10</td><td class='ok'></td></tr>
+<tr><td>8</td><td>A</td><td class='l'>2ef58242fedeaef06e95dd8efd80da58756b1de103c6b058ed869ffa8679e1db</td><td>0.9195</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>1</td><td class='ok'>✓</td></tr>
+<tr><td>9</td><td>A</td><td class='l'>e32d727686d93ca3d73ab9e663a9aadf5b674319a24471ac4ef75b42f83c68ec</td><td>0.9194</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>10</td><td>A</td><td class='l'>e8d78d41014d9ba924001deb21e30a8e1abfaf78ea8bf0756e9760d2d89fe0d1</td><td>0.9188</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>3000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>11</td><td>A</td><td class='l'>6c72d1999c84658dd7c33892d3de5554d84c18fbd845c25268ed5eca9dea02dc</td><td>0.9187</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>1</td><td class='ok'>✓</td></tr>
+<tr><td>12</td><td>A</td><td class='l'>5118bb11fb30f733dddb40907b1a2b1c11158a22fea90f53a7783d5a2a9a95fd</td><td>0.9183</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>남</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>13</td><td class='ok'></td></tr>
+<tr><td>13</td><td>A</td><td class='l'>872b73448a94beb1b27903b592187498411a1dc2eb8b3eac29a03100c7a92bf2</td><td>0.9179</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>14</td><td>A</td><td class='l'>7e518d0c36e57df18024b42b5dc3261f18a1b0891235899186d9ba14a7f51621</td><td>0.9173</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>남</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>12</td><td class='ok'>✓</td></tr>
+<tr><td>15</td><td>A</td><td class='l'>deb9792553c0482d34b42560e83d667cc4ef5948ba2cd2547cb47cc0ce5317c2</td><td>0.9169</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>4</td><td class='ok'></td></tr>
+<tr><td>16</td><td>A</td><td class='l'>4c2992b717329f520cbbb07466fd304668f99156b489247fd94068070d02e562</td><td>0.9160</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'>✓</td></tr>
+<tr><td>17</td><td>A</td><td class='l'>d54649a5ac7e5bcf601ba062c9ec77bd0bf215ce7c3b0753c4013021187a1611</td><td>0.9148</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>1</td><td class='ok'></td></tr>
+<tr><td>18</td><td>A</td><td class='l'>f238abf00dcfe3fd017d99e862e174672fc9f643c4300a4b65734ffb969e0504</td><td>0.9140</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>19</td><td>A</td><td class='l'>aa30d4dc0158c7b51129e6aeb65faaf175893f9f72312c204e7a4e983c6d1046</td><td>0.9120</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>7</td><td class='ok'></td></tr>
+<tr><td>20</td><td>A</td><td class='l'>b3f739189ae41f3a78a2b4a96943b1456d32bb38546ca3c27f052f7f596b285b</td><td>0.9110</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>21</td><td>A</td><td class='l'>ad08581ce5abdf157e567ad33ef1efffa44e9e781c6664f6471fd7252ec0e3b1</td><td>0.9108</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>3000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>22</td><td>A</td><td class='l'>98bd4004d3388cab9bbdc372af1811ba6c261e381c7d5548dec27d2d2b3830a1</td><td>0.9104</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>23</td><td>A</td><td class='l'>0191ce2c0a1d5b1b21cf075a033a50f17035b35777bbad64c1dbe6258a73a370</td><td>0.9104</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>24</td><td>A</td><td class='l'>40631a03fe1eeb55a0d38265f1581d37f58203776875003413d3245fb1ef11eb</td><td>0.9100</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>3000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'>✓</td></tr>
+<tr><td>25</td><td>A</td><td class='l'>c54e7af929eadcbceaacfcd209c2d87e28ad5c77ac334ecaf0ac71bc95ee58b8</td><td>0.9099</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>26</td><td>A</td><td class='l'>5d6020aca11c025ab294daef2fa15bc96767f26a5f5f7065290f39c18e0b6ab7</td><td>0.9087</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>27</td><td>A</td><td class='l'>34278139275392c94fe813122ca76d47a6e073c8d3d816a9adfc3cb3f5470eed</td><td>0.9086</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>남</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>28</td><td>A</td><td class='l'>b216b157db92878c9e34a94928fdce3f2ed7cf02c40de9e68ca8dbca104325c4</td><td>0.9083</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'>✓</td></tr>
+<tr><td>29</td><td>A</td><td class='l'>63c86959317b8f95a9d774aa8f9ceecb667c3d7fb29d52f10ea937d38e14eeb5</td><td>0.9081</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>부산</td><td>3000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>3</td><td class='ok'></td></tr>
+<tr><td>30</td><td>A</td><td class='l'>7e3e6c0d05f0d9e63dd71249ad0047cfe2b97441a5f3a4a4362037cff6cd1279</td><td>0.9080</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경상도</td><td>3000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>31</td><td>A</td><td class='l'>d7ff9a0aa392e115c42ddfa80b27acd81450fe6a03189550eda67e6a4ee59e4a</td><td>0.9076</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>부산</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>3</td><td class='ok'></td></tr>
+<tr><td>32</td><td>A</td><td class='l'>48fe46de694aa4dc2aa21bfe04252a67e3b5394cee82f22a8459d2a1ca75fcbc</td><td>0.9071</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>남</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>33</td><td>A</td><td class='l'>33c141b4e9805f6488b325b7f3924179a6d9b8c85e6944c315ee3e3957aaf3b8</td><td>0.9071</td><td class='l sm'></td><td>40대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>3</td><td class='ok'></td></tr>
+<tr><td>34</td><td>A</td><td class='l'>f00aea0dac7a3b151406c30696e22954ecf93ba0c6fa9f8792968df4706d6532</td><td>0.9068</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>부산</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>35</td><td>A</td><td class='l'>fe1ebdfcd0663ff168c8d74a4578056a685f3586529a8ac184a536ace1c9f7b4</td><td>0.9067</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>3000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>36</td><td>A</td><td class='l'>86b1b97e25a6f7407ed9e1e2350fd168c6ff2aa4419ef899d8f59e740ecbc9c2</td><td>0.9059</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>서울</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>13</td><td class='ok'>✓</td></tr>
+<tr><td>37</td><td>A</td><td class='l'>ea8c6a167ec87ddbb5be65d09f93254a225d5ffc7b27b8468e3e6be147b5c6da</td><td>0.9056</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>2</td><td class='ok'></td></tr>
+<tr><td>38</td><td>A</td><td class='l'>15127c73e1e1fba07672ef64ecc1029c2469d65c34162859d29d11c43ca55ab9</td><td>0.9054</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경상도</td><td>3000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>39</td><td>A</td><td class='l'>2ff38722398252c6c6ba771ba165421c75e97785197b66aa25ce00579e09ffc7</td><td>0.9053</td><td class='l sm'></td><td>40대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>40</td><td>A</td><td class='l'>38939e2db8f4e4eef49ed522a122cfc1249e5cf3e66a149dcf44ca951f7ef345</td><td>0.9053</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>남</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>41</td><td>A</td><td class='l'>8287190125a45bf0dccf987a3e4d002bac60358d51a1d61fbf2c52b8218fe5fa</td><td>0.9038</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>남</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>42</td><td>A</td><td class='l'>f80bfc0dae4c13b2f050f15de9f2a0c97e19cccb1c3a8b28e0b6ea9c2597234f</td><td>0.9022</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>남</td><td>경기도</td><td>3000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>43</td><td>A</td><td class='l'>bd3019af42681280bf9831e9855de884f50196a73c898b92f7a44e169dc12fa6</td><td>0.9021</td><td class='l sm'></td><td>40대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'>✓</td></tr>
+<tr><td>44</td><td>A</td><td class='l'>b7f3d7ff75fd8fae4ebe8b57428845782c50e0dab5294f0d9e48dbd8682df4cb</td><td>0.9016</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>1</td><td class='ok'></td></tr>
+<tr><td>45</td><td>A</td><td class='l'>b5198d3674908538b3cc68119db9203c34e46c35825cb4ca653fba8184fa19ef</td><td>0.9015</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>46</td><td>A</td><td class='l'>02c7379e2b7f46c2765f06a100b733e9fcd7ecdec43dee72a4d658053f88901f</td><td>0.9009</td><td class='l sm'></td><td>50대</td><td>기혼</td><td>여</td><td>경상도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>5</td><td class='ok'></td></tr>
+<tr><td>47</td><td>A</td><td class='l'>ff4e9fd2aa91f48d8e70c3ec91baab1328584368731a66b7e9491563d4ab212a</td><td>0.9008</td><td class='l sm'></td><td>40대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>48</td><td>A</td><td class='l'>914a4cafaae8d8511bc086cde84d9a34a01f4baf2ce6cd0c88bdfae926d2a8c0</td><td>0.9005</td><td class='l sm'></td><td>40대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>1</td><td class='ok'></td></tr>
+<tr><td>49</td><td>A</td><td class='l'>33a5697685171267b27e594fe4357d0fbad6c6adf9c32346e0f6333aea825bf3</td><td>0.8999</td><td class='l sm'></td><td>40대</td><td>기혼</td><td>여</td><td>경기도</td><td>5000만원미만</td><td>A</td><td>800점대</td><td>✓</td><td>✓</td><td>0</td><td class='ok'></td></tr>
+<tr><td>50</td><td>A</td><td class='l'>30db0a2ec55d0a11d7f9a8b4515fd0c240a4a34804b41b1c23879d15ce6e7175</td><td>0.8998</td><td class='l sm'></td><td>60대</td><td>기혼</td><td>여</td><td>경상도</td><td>5000만원미만</td><td>A</td><td>900점대이상</td><td>✓</td><td>✓</td><td>10</td><td class='ok'>✓</td></tr>
+</table>
+<div class="cap" style="font-size:12px;color:#5b6572;margin-bottom:18px;">
+맨 오른쪽 실제2025가입 열은 이미 관측된 결과(검증용·관측됨) — 실제 운용 시점에는 알 수 없는 값.</div>
+
+<h2>상위 500명 구성 — 전체 풀과 비교</h2>
+<table>
+<tr><th>구성</th><th>TOP 500</th><th>전체 풀</th><th>차이</th></tr>
+<tr><td class='l'>특약보유</td><td>100.0%</td><td>75.2%</td><td>+24.8%p</td></tr>
+<tr><td class='l'>보유수2이상</td><td>66.6%</td><td>1.7%</td><td>+64.9%p</td></tr>
+<tr><td class='l'>기혼</td><td>97.8%</td><td>79.9%</td><td>+17.9%p</td></tr>
+<tr><td class='l'>여성</td><td>81.4%</td><td>52.8%</td><td>+28.6%p</td></tr>
+<tr><td class='l'>소득 5,000만원 미만</td><td>97.0%</td><td>76.5%</td><td>+20.5%p</td></tr>
+</table>
+<div class="cap" style="font-size:12px;color:#5b6572;margin-bottom:16px;">
+소득 5,000만원 미만 = 1000·3000·5000만원미만 구간 합계.</div>
+
+<div class="box">
+<h2>티어별 실제 가입률 (운용순위 기준 — 참고용)</h2>
+<ul>
+<li>상위 500명(티어 A): 실제 가입 67명 — 실제 가입률 13.4%</li>
+<li>상위 1,000명(티어 B): 실제 가입 108명 — 실제 가입률 10.8%</li>
+<li>상위 2,000명(티어 C): 실제 가입 198명 — 실제 가입률 9.9%</li>
+</ul>
+<div class="note"><b>유의</b> : 이 수치는 전체 풀로 학습한 스코어를 같은 풀에서 다시 세어본 것(in-sample)이라
+평가세트 수치(상위 500/1,000/2,000 = 9.7/8.2/6.7%)보다 높게 나올 수 있음 — 참고용으로만 볼 것.</div>
+</div>
+
+<div class="box">
+<h2>운용 규칙</h2>
+<b>운용티어</b> : 운용순위 1~500 = <b>A</b> · 501~1,000 = <b>B</b> · 1,001~2,000 = <b>C</b> · 그 외 = <b>-</b><br>
+<b>예외 후순위 3종</b> : ① 지역이 대구·대전·인천(저율지역 후순위) ② 20대이면서 기혼(20대 기혼 후순위)
+③ 신용 '300점대'(신용300 최후순위)<br>
+<b>적용 방식</b> : 예외 없는 고객을 score 내림차순으로 1~N 배치 → ①② 예외 고객을 score순으로 그 뒤에 →
+신용300(③)은 맨 마지막에 score순 배치. 예외가 겹치면 사유를 모두 표기하고, 신용300이 있으면 맨 마지막 그룹으로.
+</div>
+
+<div class="foot">
+<b>재현 경로</b> : python scripts/step4_rank_list.py<br>
+데이터 : [금융] 금융상품·서비스 및 소비자 특성 데이터/Training/02.라벨링데이터/TL_2.소비자.zip (utf-8-sig) ·
+산출물 : output/상담대상_순위_T2024.csv · output/상담대상_TOP50_T2024.csv · output/상담대상_순위보드_T2024.html
+</div>
+</body>
+</html>
